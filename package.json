@@ -1,0 +1,31 @@
+{
+  "name": "@augu/orchid",
+  "description": "🛬 Easier way to make a HTTP request",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "license": "MIT",
+  "types": "index.d.ts",
+  "files": [
+    "build",
+    "index.d.ts"
+  ],
+  "maintainers": [
+    {
+      "name": "August",
+      "email": "august@augu.dev",
+      "url": "https://augu.dev"
+    }
+  ],
+  "scripts": {
+    "build": "yarn lint && rm -fr build && tsc",
+    "lint": "eslint src --ext .ts --fix"
+  },
+  "devDependencies": {
+    "@augu/eslint-config": "1.5.2",
+    "@types/node": "14.0.1",
+    "@typescript-eslint/eslint-plugin": "2.33.0",
+    "@typescript-eslint/parser": "2.33.0",
+    "eslint": "7.0.0",
+    "typescript": "3.9.2"
+  }
+}
