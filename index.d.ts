@@ -18,17 +18,17 @@ declare module '@augu/orchid' {
       /**
        * Enables logging into Orchid
        */
-      export const logging: orchid.Middleware;
+      export const logging: () => orchid.Middleware;
 
       /**
        * Enables streams into Orchid
        */
-      export const streams: orchid.Middleware;
+      export const streams: () => orchid.Middleware;
 
       /**
        * Enables compressed data into Orchid
        */
-      export const compress: orchid.Middleware;
+      export const compress: () => orchid.Middleware;
     }
 
     interface Middleware {
