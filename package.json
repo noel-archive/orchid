@@ -1,7 +1,7 @@
 {
   "name": "@augu/orchid",
   "description": "🛬 Easier way to make a HTTP request",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",
@@ -17,6 +17,7 @@
     }
   ],
   "scripts": {
+    "prepare": "yarn build",
     "build": "yarn lint && rm -fr build && tsc",
     "lint": "eslint src --ext .ts --fix"
   },
