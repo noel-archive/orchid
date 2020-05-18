@@ -1,4 +1,3 @@
-import { CompressMiddleware } from './EnableCompressedData';
 import { Logger } from './Logging';
 
 /**
@@ -6,7 +5,7 @@ import { Logger } from './Logging';
  */
 export interface Container {
   [x: string]: any;
-  compress?: CompressMiddleware;
+  compress?: boolean;
   streams?: boolean;
   logger?: Logger;
 }
@@ -33,7 +32,7 @@ export default class MiddlewareContainer {
   /**
    * Gets the compressed data middleware
    */
-  get(name: 'compress'): CompressMiddleware | null;
+  get(name: 'compress'): boolean | null;
 
   /**
    * Gets the streams data middleware

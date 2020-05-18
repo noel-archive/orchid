@@ -23,28 +23,16 @@ export interface RequestOptions {
   timeout?: number;
 
   /** The method to use */
-  method: HttpMethod;
+  method: HttpMethod | HttpMethodAsString;
 
   /** Make this request into a stream */
   stream?: boolean;
-
-  /** Any lifecycle hooks to add */
-  hooks?: Hooks;
 
   /** Any packets of data to send */
   data?: any;
 
   /** The URL to make the request to */
   url: string | URL;
-}
-
-/** Interface of hooks to implement */
-interface Hooks {
-  /**
-   * Lifecycle hook when an error occurs (automatically added when the Logging middleware is injected)
-   * @param error 
-   */
-  onError?(error: HttpError): void;
 }
 
 export enum HttpMethod {
@@ -56,6 +44,14 @@ export enum HttpMethod {
   Post = 'post',
   Put = 'put',
   Get = 'get'
+}
+
+type HttpMethodAsString = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+  | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
+
+function isUppercase(text: string) {
+  const upper = text.toUpperCase();
+  return text === upper;
 }
 
 export default class HttpRequest {
@@ -81,10 +77,7 @@ export default class HttpRequest {
   public sendDataAs?: 'json' | 'buffer' | 'form' | 'string';
 
   /** The method to use */
-  public method: HttpMethod;
-
-  /** Any lifecycle hooks to add */
-  public hooks: Hooks;
+  public method: HttpMethodAsString;
 
   /** Any packets of data to send */
   public data: any;
@@ -111,8 +104,7 @@ export default class HttpRequest {
     this.#client = client;
     this.headers = options.hasOwnProperty('headers') ? options.headers! : {};
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
-    this.method = options.method;
-    this.hooks = options.hasOwnProperty('hooks') ? options.hooks! : {};
+    this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethodAsString) : options.method;
     this.data = options.hasOwnProperty('data') ? options.data! : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
@@ -252,21 +244,19 @@ export default class HttpRequest {
         let logger: any;
         if (this.#client.middleware.has('streams')) {
           const api = this.#client.middleware.get('streams');
-          
-          if (api === null && this.streaming) return reject(new Error('The streaming middleware was not injected'));
           this.streaming = api!;
         }
 
         if (this.#client.middleware.has('compress')) {
           const api = this.#client.middleware.get('compress');
-          this.compressData = api!.enabled;
+          this.compressData = api!;
         }
 
         if (this.#client.middleware.has('logger')) {
           logger = this.#client.middleware.get('logger')!;
         }
 
-        logger.info(`Made a request to ${this.url}!`);
+        if (logger) logger.info(`Made a request to ${this.url}!`);
         const response = new HttpResponse(res, this.streaming);
 
         if (this.compressData) {
@@ -291,14 +281,9 @@ export default class HttpRequest {
           return await req.execute();
         }
       
-        res.on('error', (error) => {
-          if (this.hooks.onError) this.hooks.onError(error);
-          return reject(error);
-        });
+        res.on('error', (error) => reject(new HttpError(1001, error.message)));
         res.on('data', chunk => response.addChunk(chunk));
-        res.on('end', () => {
-          resolve(response);
-        });
+        res.on('end', () => resolve(response));
       };
 
       const request = this.url.protocol === 'https:' ? https.request : http.request;
@@ -307,14 +292,11 @@ export default class HttpRequest {
       if (this.timeout) {
         req.setTimeout(this.timeout, () => {
           req.abort();
-          if (!this.streaming) reject(new Error('Timeout has reached'));
+          if (!this.streaming) reject(new HttpError(1002, 'Server has timed out'));
         });
       }
 
-      req.on('error', (error) => {
-        if (this.hooks.onError) this.hooks.onError(error);
-        return reject(error);
-      });
+      req.on('error', reject);
 
       if (this.data) {
         if (this.sendDataAs === 'json') req.write(JSON.stringify(this.data));

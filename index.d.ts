@@ -4,6 +4,7 @@
 //     - August <august@augu.dev>
 
 declare module '@augu/orchid' {
+  import { Deflate, Gunzip } from 'zlib';
   import { IncomingMessage } from 'http';
   import { URL } from 'url';
 
@@ -15,10 +16,19 @@ declare module '@augu/orchid' {
      * The middleware included into Orchid
      */
     namespace middleware {
+      interface LogOptions {
+        /**
+         * Add a custom binding function for logging
+         * @param level The level to use
+         * @param message The message that Orchid sends
+         */
+        binding?(level: 'error' | 'warn' | 'info', message: string): string;
+      }
+
       /**
        * Enables logging into Orchid
        */
-      export const logging: () => orchid.Middleware;
+      export const logging: (options?: orchid.middleware.LogOptions) => orchid.Middleware;
 
       /**
        * Enables streams into Orchid
@@ -30,6 +40,9 @@ declare module '@augu/orchid' {
        */
       export const compress: () => orchid.Middleware;
     }
+
+    type HttpMethodAsString = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+      | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
     interface Middleware {
       intertwine(this: orchid.HttpClient): void;
@@ -53,13 +66,10 @@ declare module '@augu/orchid' {
       timeout?: number;
     
       /** The method to use */
-      method: HttpMethod;
+      method: HttpMethod | HttpMethodAsString;
     
       /** Make this request into a stream */
       stream?: boolean;
-    
-      /** Any lifecycle hooks to add */
-      hooks?: Hooks;
     
       /** Any packets of data to send */
       data?: any;
@@ -67,25 +77,11 @@ declare module '@augu/orchid' {
       /** The URL to make the request to */
       url: string | URL;
     }
-    
-    /** Interface of hooks to implement */
-    interface Hooks {
-      /**
-       * Lifecycle hook when an error occurs (automatically added when the Logging middleware is injected)
-       * @param error 
-       */
-      onError?(error: Error): void;
-    }
 
     interface Logger {
       error(message: string): void;
       warn(message: string): void;
       info(message: string): void;
-    }
-
-    interface CompressMiddleware {
-      enabled: boolean;
-      type: 'gzip' | 'inflate';
     }
 
     /** Returns the version of Orchid */
@@ -137,7 +133,7 @@ declare module '@augu/orchid' {
       /**
        * Gets the compressed data middleware
        */
-      get(name: 'compress'): CompressMiddleware | null;
+      get(name: 'compress'): boolean | null;
 
       /**
        * Gets the streams data middleware
@@ -148,7 +144,7 @@ declare module '@augu/orchid' {
        * Gets the selected middleware from the container
        * @param name The name of the container
        */
-      get(name: string): any;
+      get<T = any>(name: string): T | null;
 
       /**
        * Adds the specified middleware to the container
@@ -187,10 +183,7 @@ declare module '@augu/orchid' {
       public sendDataAs?: 'json' | 'buffer' | 'form' | 'string';
 
       /** The method to use */
-      public method: HttpMethod;
-
-      /** Any lifecycle hooks to add */
-      public hooks: Hooks;
+      public method: HttpMethodAsString;
 
       /** Any packets of data to send */
       public data: any;
@@ -222,13 +215,6 @@ declare module '@augu/orchid' {
       query(name: string, value: string): this;
 
       /**
-       * Adds a query parameter to the URL
-       * @param name An object of key-value pairs of the queries
-       * @param value The value (if added)
-       */
-      query(name: string | { [x: string]: string }, value?: string): this;
-
-      /**
        * Adds a header to the request
        * @param obj The headers as an object of `key`=`value`
        */
@@ -242,15 +228,9 @@ declare module '@augu/orchid' {
       header(name: string, value: any): this;
 
       /**
-       * Adds a header to the request
-       * @param name An object of key-value pairs of the headers
-       * @param value The value (if added)
-       */
-      header(name: string | { [x: string]: string }, value?: any): this;
-
-      /**
        * Sends data to the server
        * @param packet The data packet to send
+       * @param sda Send Data As
        */
       body(packet: any, sda?: 'buffer' | 'json' | 'form'): this;
 
@@ -283,9 +263,9 @@ declare module '@augu/orchid' {
       text(): string;
 
       /**
-       * Returns a stream
+       * Returns the HTTP stream or the zlib stream (if it was compressed)
        */
-      stream(): IncomingMessage;
+      stream(): IncomingMessage | Deflate | Gunzip;
     }
   }
 

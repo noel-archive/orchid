@@ -1,5 +1,6 @@
 import { IncomingMessage } from 'http';
 import HttpError from './HttpError';
+import zlib from 'zlib';
 
 export default class HttpResponse {
   /** The core message */
@@ -40,10 +41,10 @@ export default class HttpResponse {
   }
 
   /**
-   * Returns a stream
+   * Returns the HTTP stream or the zlib stream if data was compressed
    */
-  stream() {
+  stream(): IncomingMessage | zlib.Deflate | zlib.Gunzip {
     if (!this.isStreaming) throw new Error('You didn\'t make this request into a Streamable object');
-    return this.core; // This is a stream, yes it is
+    return this.core as any; // This is a stream, yes it is
   }
 }
