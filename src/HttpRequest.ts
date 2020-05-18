@@ -23,7 +23,7 @@ export interface RequestOptions {
   timeout?: number;
 
   /** The method to use */
-  method: HttpMethod | HttpMethodAsString;
+  method: HttpMethod;
 
   /** Make this request into a stream */
   stream?: boolean;
@@ -35,18 +35,7 @@ export interface RequestOptions {
   url: string | URL;
 }
 
-export enum HttpMethod {
-  Options = 'options',
-  Connect = 'connect',
-  Delete = 'delete',
-  Trace = 'trace',
-  Head = 'head',
-  Post = 'post',
-  Put = 'put',
-  Get = 'get'
-}
-
-type HttpMethodAsString = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
   | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
 function isUppercase(text: string) {
@@ -77,7 +66,7 @@ export default class HttpRequest {
   public sendDataAs?: 'json' | 'buffer' | 'form' | 'string';
 
   /** The method to use */
-  public method: HttpMethodAsString;
+  public method: HttpMethod;
 
   /** Any packets of data to send */
   public data: any;
@@ -104,7 +93,7 @@ export default class HttpRequest {
     this.#client = client;
     this.headers = options.hasOwnProperty('headers') ? options.headers! : {};
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
-    this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethodAsString) : options.method;
+    this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method;
     this.data = options.hasOwnProperty('data') ? options.data! : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
@@ -256,7 +245,7 @@ export default class HttpRequest {
           logger = this.#client.middleware.get('logger')!;
         }
 
-        if (logger) logger.info(`Made a request to ${this.url}!`);
+        if (logger) logger.info(`Made a ${this.method.toUpperCase()} request to ${this.url}!`);
         const response = new HttpResponse(res, this.streaming);
 
         if (this.compressData) {
@@ -287,7 +276,14 @@ export default class HttpRequest {
       };
 
       const request = this.url.protocol === 'https:' ? https.request : http.request;
-      const req = request(this.url, onRequest);
+      const req = request({
+        protocol: this.url.protocol,
+        headers: this.headers,
+        method: this.method,
+        path: `${this.url.pathname}${this.url.search}`,
+        port: this.url.port,
+        host: this.url.hostname
+      }, onRequest);
 
       if (this.timeout) {
         req.setTimeout(this.timeout, () => {
