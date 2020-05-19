@@ -15,7 +15,7 @@ orchid
 
 orchid
   .request({
-    method: HttpMethod.Get,
+    method: 'get', // 'GET' also works!
     url: 'https://augu.dev'
   }).execute().then((res) => {
     console.log(res.text());
