@@ -1,7 +1,7 @@
 {
   "name": "@augu/orchid",
   "description": "🛬 Easier way to make a HTTP request",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",

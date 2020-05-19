@@ -28,20 +28,20 @@ declare module '@augu/orchid' {
       /**
        * Enables logging into Orchid
        */
-      export const logging: (options?: orchid.middleware.LogOptions) => orchid.Middleware;
+      export function logging(options?: LogOptions): orchid.Middleware;
 
       /**
        * Enables streams into Orchid
        */
-      export const streams: () => orchid.Middleware;
+      export function streams(): orchid.Middleware;
 
       /**
        * Enables compressed data into Orchid
        */
-      export const compress: () => orchid.Middleware;
+      export function compress(): orchid.Middleware;
     }
 
-    type HttpMethodAsString = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+    type HttpMethod= 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
       | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
     interface Middleware {
@@ -66,7 +66,7 @@ declare module '@augu/orchid' {
       timeout?: number;
     
       /** The method to use */
-      method: HttpMethod | HttpMethodAsString;
+      method: HttpMethod;
     
       /** Make this request into a stream */
       stream?: boolean;
@@ -86,20 +86,6 @@ declare module '@augu/orchid' {
 
     /** Returns the version of Orchid */
     export const version: string;
-
-    /**
-     * The methods to use
-     */
-    export enum HttpMethod {
-      Options = 'options',
-      Connect = 'connect',
-      Delete = 'delete',
-      Trace = 'trace',
-      Head = 'head',
-      Post = 'post',
-      Put = 'put',
-      Get = 'get'
-    }
 
     /** The base client for making requests and adding middleware to Orchid */
     export class HttpClient {
@@ -183,7 +169,7 @@ declare module '@augu/orchid' {
       public sendDataAs?: 'json' | 'buffer' | 'form' | 'string';
 
       /** The method to use */
-      public method: HttpMethodAsString;
+      public method: HttpMethod;
 
       /** Any packets of data to send */
       public data: any;
