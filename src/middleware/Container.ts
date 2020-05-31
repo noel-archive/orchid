@@ -8,6 +8,7 @@ export interface Container {
   compress?: boolean;
   streams?: boolean;
   logger?: Logger;
+  form?: boolean;
 }
 
 /**
@@ -38,6 +39,11 @@ export default class MiddlewareContainer {
    * Gets the streams data middleware
    */
   get(name: 'streams'): boolean | null;
+
+  /**
+   * Gets the form data middleware
+   */
+  get(name: 'form'): boolean | null;
 
   /**
    * Gets the selected middleware from the container
