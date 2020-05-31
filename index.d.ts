@@ -39,6 +39,11 @@ declare module '@augu/orchid' {
        * Enables compressed data into Orchid
        */
       export function compress(): orchid.Middleware;
+
+      /**
+       * Enables form data into Orchid
+       */
+      export function forms(): orchid.Middleware;
     }
 
     type HttpMethod= 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
@@ -132,7 +137,7 @@ declare module '@augu/orchid' {
       /**
        * Gets the form data middleware
        */
-      get(name: 'forms'): boolean | null;
+      get(name: 'form'): boolean | null;
 
       /**
        * Gets the selected middleware from the container
