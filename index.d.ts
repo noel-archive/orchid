@@ -90,10 +90,13 @@ declare module '@augu/orchid' {
     /** The base client for making requests and adding middleware to Orchid */
     export class HttpClient {
       /** Constructs a new instance of the Http Client */
-      constructor();
+      constructor(agent?: string);
 
       /** The middleware container */
       public middleware: orchid.Container;
+
+      /** The custom user agent */
+      public userAgent: string;
 
       /**
        * Adds middleware to Orchid
@@ -125,6 +128,11 @@ declare module '@augu/orchid' {
        * Gets the streams data middleware
        */
       get(name: 'streams'): boolean | null;
+
+      /**
+       * Gets the form data middleware
+       */
+      get(name: 'forms'): boolean | null;
 
       /**
        * Gets the selected middleware from the container
@@ -216,9 +224,8 @@ declare module '@augu/orchid' {
       /**
        * Sends data to the server
        * @param packet The data packet to send
-       * @param sda Send Data As
        */
-      body(packet: any, sda?: 'buffer' | 'json' | 'form'): this;
+      body(packet: any): this;
 
       /**
        * Sets a timeout to wait for

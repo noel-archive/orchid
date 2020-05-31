@@ -1,6 +1,7 @@
 import HttpResponse from './HttpResponse';
 import HttpClient from './HttpClient';
 import HttpError from './HttpError';
+import FormData from 'form-data';
 import { URL } from 'url';
 import https from 'https';
 import http from 'http';
@@ -62,9 +63,6 @@ export default class HttpRequest {
   /** If this request should return the HTTP stream */
   public streaming: boolean;
 
-  /** The data to send as */
-  public sendDataAs?: 'json' | 'buffer' | 'form' | 'string';
-
   /** The method to use */
   public method: HttpMethod;
 
@@ -87,7 +85,6 @@ export default class HttpRequest {
 
     this.followRedirects = options.hasOwnProperty('followRedirects') ? options.followRedirects! : false;
     this.compressData = options.hasOwnProperty('compress') ? options.compress! : false;
-    this.sendDataAs = undefined;
     this.streaming = options.hasOwnProperty('stream') ? options.stream! : false;
     this.attempts = options.hasOwnProperty('attempts') ? options.attempts! : 5;
     this.#client = client;
@@ -179,14 +176,29 @@ export default class HttpRequest {
    * Sends data to the server
    * @param packet The data packet to send
    */
-  body(packet: any, sda?: 'buffer' | 'json' | 'form') {
-    const qs = require('querystring');
-    const a = packet instanceof Object && !this.sendDataAs && !Buffer.isBuffer(packet) 
-      ? 'json' 
-      : sda!.toLowerCase();
+  body(packet: unknown) {
+    // Check if the packet is a string
+    if (typeof packet === 'string') {
+      this.data = packet;
+    } else if (packet instanceof Object) {
+      // Check if it's an object
+      this.data = packet;
+      if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json') this.headers['content-type'] = 'application/json';
+    } else if (packet instanceof Buffer) {
+      // Check if it's a Buffer
+      this.data = packet;
+    } else if (packet instanceof FormData) {
+      // Check if it's an instance of `FormData`
+      if (!this.#client.middleware.has('form')) throw new Error('Forms Middleware was not in the container');
 
-    this.sendDataAs = a as any;
-    this.data = sda === 'json' ? JSON.stringify(packet) : sda === 'form' ? qs.stringify(packet) : packet;
+      this.data = packet.getBuffer();
+      if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/x-www-form-urlencoded') this.headers['content-type'] = 'application/x-www-form-urlencoded';
+      if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
+    } else {
+      const logger = this.#client.middleware.get('logger');
+      if (logger) logger.warn(`Invalid data packet type: ${typeof packet}, not gonna pass in data.`);
+    }
+
     return this;
   }
 
@@ -214,20 +226,7 @@ export default class HttpRequest {
    */
   execute() {
     return new Promise<HttpResponse>((resolve, reject) => {
-      if (this.data) {
-        if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = `Orchid/${require('../package.json').version} (https://github.com/auguwu/Orchid)`;
-        if (
-          this.sendDataAs === 'json' && 
-          !this.headers.hasOwnProperty('content-type') || 
-          this.headers['content-type'] !== 'application/json'
-        ) this.headers['content-type'] = 'application/json';
-
-        if (this.sendDataAs === 'form') {
-          const ENCODING = 'application/x-www-form-urlencoded';
-          if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== ENCODING) this.headers['content-type'] = ENCODING;
-          if (!this.headers.hasOwnProperty('content-length')) this.headers['content-length'] = Buffer.byteLength(this.data);
-        }
-      }
+      if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.#client.userAgent;
 
       const onRequest = async (res: http.IncomingMessage) => {
         let logger: any;
@@ -295,7 +294,6 @@ export default class HttpRequest {
       req.on('error', reject);
 
       if (this.data) {
-        if (this.sendDataAs === 'json') req.write(JSON.stringify(this.data));
         if (this.data instanceof Object) req.write(JSON.stringify(this.data));
         else req.write(this.data);
       }

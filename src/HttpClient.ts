@@ -12,10 +12,16 @@ export default class HttpClient {
   public middleware: MiddlewareContainer;
 
   /**
+   * The custom user agent
+   */
+  public userAgent: string;
+
+  /**
    * Create a new instance of the Http Client
    */
-  constructor() {
+  constructor(agent?: string) {
     this.middleware = new MiddlewareContainer();
+    this.userAgent = agent ? agent : `Orchid (v${require('../package.json').version}, https://github.com/auguwu/Orchid)`;
   }
 
   /**
