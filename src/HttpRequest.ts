@@ -44,6 +44,24 @@ function isUppercase(text: string) {
   return text === upper;
 }
 
+function figureData(this: HttpRequest, packet: unknown): any {
+  if (typeof packet === 'string') return packet;
+  if (packet instanceof Object) {
+    if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json') {
+      this.headers['content-type'] = 'application/json';
+    }
+
+    return packet;
+  }
+  if (packet instanceof Buffer) return packet;
+  if (packet instanceof FormData) {
+    if (!this._has('form')) throw new Error('Missing "forms" middleware');
+    if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/x-www-form-urlencoded') this.headers['content-type'] = 'application/x-www-form-urlencoded';
+    if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
+    return packet.getBuffer();
+  }
+}
+
 export default class HttpRequest {
   /** If we should follow redirects */
   public followRedirects: boolean;
@@ -91,9 +109,13 @@ export default class HttpRequest {
     this.headers = options.hasOwnProperty('headers') ? options.headers! : {};
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
     this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method;
-    this.data = options.hasOwnProperty('data') ? options.data! : null;
+    this.data = options.hasOwnProperty('data') ? figureData.apply(this, [options.data!]) : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
+
+  _has(name: string) {
+    return this.#client.middleware.has(name);
+  }  
 
   /**
    * Make this request into a stream (must add the Streams middleware or it'll error!)
@@ -177,28 +199,7 @@ export default class HttpRequest {
    * @param packet The data packet to send
    */
   body(packet: unknown) {
-    // Check if the packet is a string
-    if (typeof packet === 'string') {
-      this.data = packet;
-    } else if (packet instanceof Object) {
-      // Check if it's an object
-      this.data = packet;
-      if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json') this.headers['content-type'] = 'application/json';
-    } else if (packet instanceof Buffer) {
-      // Check if it's a Buffer
-      this.data = packet;
-    } else if (packet instanceof FormData) {
-      // Check if it's an instance of `FormData`
-      if (!this.#client.middleware.has('form')) throw new Error('Forms Middleware was not in the container');
-
-      this.data = packet.getBuffer();
-      if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/x-www-form-urlencoded') this.headers['content-type'] = 'application/x-www-form-urlencoded';
-      if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
-    } else {
-      const logger = this.#client.middleware.get('logger');
-      if (logger) logger.warn(`Invalid data packet type: ${typeof packet}, not gonna pass in data.`);
-    }
-
+    this.data = figureData.apply(this, [packet]);
     return this;
   }
 
