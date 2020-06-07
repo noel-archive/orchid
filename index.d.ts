@@ -3,6 +3,8 @@
 // Definitions by:
 //     - August <august@augu.dev>
 
+import HttpResponse from './src/HttpResponse';
+
 declare module '@augu/orchid' {
   import { Deflate, Gunzip } from 'zlib';
   import { IncomingMessage } from 'http';
@@ -159,7 +161,7 @@ declare module '@augu/orchid' {
       has(name: string): boolean;
     }
 
-    class HttpRequest {
+    class HttpRequest extends Promise<HttpResponse> {
       /** If we should follow redirects */
       public followRedirects: boolean;
 
@@ -242,11 +244,6 @@ declare module '@augu/orchid' {
        * If we should follow redirects
        */
       redirect(): this;
-
-      /**
-       * Execute the request
-       */
-      execute(): Promise<orchid.HttpResponse>;
     }
 
     class HttpResponse {

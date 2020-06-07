@@ -43,6 +43,7 @@ function logging(options?: LogOptions): Middleware {
       };
   
       logger.info('Enabled Logging middleware, now you get secret logging! (Best used in Development)');
+      logger.warn('Reminder: HttpRequest#execute is now removed, please use .then/.catch!');
       this.middleware.add('logger', logger);
     }
   };

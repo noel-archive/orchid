@@ -14,9 +14,6 @@ export interface RequestOptions {
   /** If we should compress the data */
   compress?: boolean;
 
-  /** An amount of attempts before closing this request */
-  attempts?: number;
-
   /** Any additional headers to add (you can add more with `HttpRequest#header`) */
   headers?: { [x: string]: any };
 
@@ -69,14 +66,14 @@ export default class HttpRequest {
   /** If we should compress the data */
   public compressData: boolean;
 
-  /** An amount of attempts before closing this request */
-  public attempts: number;
-
   /** Any additional headers to add (you can add more with `HttpRequest#header`) */
   public headers: { [x: string]: any };
 
   /** The abort timeout until the request times out */
   public timeout: number | null;
+
+  /** The client that is private to this class */
+  private client: HttpClient;
 
   /** If this request should return the HTTP stream */
   public streaming: boolean;
@@ -90,9 +87,6 @@ export default class HttpRequest {
   /** The URL to make the request to */
   public url: URL;
 
-  /** The client that is private to this class */
-  #client: HttpClient;
-
   /**
    * Creates a new HTTP request
    * @param client The client
@@ -104,24 +98,23 @@ export default class HttpRequest {
     this.followRedirects = options.hasOwnProperty('followRedirects') ? options.followRedirects! : false;
     this.compressData = options.hasOwnProperty('compress') ? options.compress! : false;
     this.streaming = options.hasOwnProperty('stream') ? options.stream! : false;
-    this.attempts = options.hasOwnProperty('attempts') ? options.attempts! : 5;
-    this.#client = client;
     this.headers = options.hasOwnProperty('headers') ? options.headers! : {};
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
+    this.client = client;
     this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method;
     this.data = options.hasOwnProperty('data') ? figureData.apply(this, [options.data!]) : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
 
   _has(name: string) {
-    return this.#client.middleware.has(name);
+    return this.client.middleware.has(name);
   }  
 
   /**
    * Make this request into a stream (must add the Streams middleware or it'll error!)
    */
   stream() {
-    if (!this.#client.middleware.has('stream')) throw new Error('Missing the Stream middleware');
+    if (!this.client.middleware.has('stream')) throw new Error('Missing the Stream middleware');
     this.streaming = true;
 
     return this;
@@ -131,7 +124,7 @@ export default class HttpRequest {
    * Make this request compress data (must add the Compress middleware)
    */
   compress() {
-    if (!this.#client.middleware.has('compress')) throw new Error('Missing the Compress Data middleware');
+    if (!this.client.middleware.has('compress')) throw new Error('Missing the Compress Data middleware');
     if (!this.headers.hasOwnProperty('accept-encoding')) this.headers['accept-encoding'] = 'gzip, deflate';
     this.compressData = true;
 
@@ -222,27 +215,34 @@ export default class HttpRequest {
     return this;
   }
 
+  then(resolve?: (res: HttpResponse) => void, reject?: (error: HttpError) => void) {
+    return this.execute()
+      .then(resolve, reject);
+  }
+
+  catch(callback: (error: HttpError) => void) {
+    return this.then(undefined, callback);
+  }
+
   /**
    * Execute the request
    */
-  execute() {
+  protected execute(fromThen: boolean = false) {
+    const logger = this.client.middleware.get('logger');
+    if (logger && !fromThen) logger.warn(`Now making a request to "${this.method.toUpperCase()} ${this.url}"`);
+
     return new Promise<HttpResponse>((resolve, reject) => {
-      if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.#client.userAgent;
+      if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
 
       const onRequest = async (res: http.IncomingMessage) => {
-        let logger: any;
-        if (this.#client.middleware.has('streams')) {
-          const api = this.#client.middleware.get('streams');
+        if (this.client.middleware.has('streams')) {
+          const api = this.client.middleware.get('streams');
           this.streaming = api!;
         }
 
-        if (this.#client.middleware.has('compress')) {
-          const api = this.#client.middleware.get('compress');
+        if (this.client.middleware.has('compress')) {
+          const api = this.client.middleware.get('compress');
           this.compressData = api!;
-        }
-
-        if (this.#client.middleware.has('logger')) {
-          logger = this.#client.middleware.get('logger')!;
         }
 
         if (logger) logger.info(`Made a ${this.method.toUpperCase()} request to ${this.url}!`);
@@ -262,7 +262,7 @@ export default class HttpRequest {
 
         if (res.headers.hasOwnProperty('location') && this.followRedirects) {
           const url = new URL(res.headers.location!, this.url);
-          const req = new (this.constructor as typeof HttpRequest)(this.#client, {
+          const req = new (this.constructor as typeof HttpRequest)(this.client, {
             method: this.method,
             url
           });
@@ -270,7 +270,11 @@ export default class HttpRequest {
           return await req.execute();
         }
       
-        res.on('error', (error) => reject(new HttpError(1001, error.message)));
+        res.on('error', (error) => {
+          const httpError = new HttpError(1003, `Tried to serialize data, was unsuccessful (${error.message})`);
+          if (logger) logger.error(`Tried to serialize data, was unsuccessful (${error.message})`);
+          return reject(httpError);
+        });
         res.on('data', chunk => response.addChunk(chunk));
         res.on('end', () => resolve(response));
       };
@@ -292,7 +296,11 @@ export default class HttpRequest {
         });
       }
 
-      req.on('error', reject);
+      req.on('error', (error) => {
+        const httpError = new HttpError(1004, `Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
+        if (logger) logger.error(`Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
+        return reject(httpError);
+      });
 
       if (this.data) {
         if (this.data instanceof Object) req.write(JSON.stringify(this.data));
