@@ -14,5 +14,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-  }
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
 }

@@ -3,11 +3,9 @@
 // Definitions by:
 //     - August <august@augu.dev>
 
-import HttpResponse from './src/HttpResponse';
-
 declare module '@augu/orchid' {
+  import { IncomingMessage, IncomingHttpHeaders } from 'http';
   import { Deflate, Gunzip } from 'zlib';
-  import { IncomingMessage } from 'http';
   import { URL } from 'url';
 
   /**
@@ -48,7 +46,7 @@ declare module '@augu/orchid' {
       export function forms(): orchid.Middleware;
     }
 
-    type HttpMethod= 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+    type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
       | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
     interface Middleware {
@@ -247,6 +245,18 @@ declare module '@augu/orchid' {
     }
 
     class HttpResponse {
+      /** Returns the status of the response */
+      public statusCode: number;
+
+      /** The headers that were fetched */
+      public headers: IncomingHttpHeaders;
+
+      /** Returns a prettified version of the status */
+      public status: string;
+
+      /** If it was successful or not */
+      public successful: boolean;
+
       /**
        * Turns the body into a JSON response
        */
