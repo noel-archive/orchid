@@ -23,7 +23,7 @@ orchid
 ```
 
 ## Middleware
-Orchid allows anyone to apply custom middleware very easily but you can extend the functionality of Orchid by using the Extensions API, so you can add extensions to the client, request, or response classes. Middleware (except `form`, `logging`, `compress`, and `streams`) will run when the request is being requested, readyed, etc (using Middleware#cycleType).
+Orchid allows anyone to apply custom middleware very easily, middleware except `form`, `logging`, `compress`, and `streams` will run when the request is being requested, readyed, etc (using Middleware#cycleType).
 
 To make custom middleware, it's easy as cake! All you need is a function to return a Middleware object, like so:
 
