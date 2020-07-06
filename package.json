@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",
+  "repository": "https://github.com/auguwu/Orchid",
   "files": [
     "build",
     "index.d.ts"
