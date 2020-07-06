@@ -31,10 +31,10 @@ To make custom middleware, it's easy as cake! All you need is a function to retu
 const { CycleType } = require('@augu/orchid');
 
 module.exports = () => ({
-  cycleType: CycleType.RUN_BEFORE,
+  cycleType: CycleType.Execute,
   name: 'my:mid',
   intertwine() {
-    this.middleware.add('my:mid', 'test string');
+    // Now we do stuff here, we don't add the middleware since it does itself
   }
 });
 ```

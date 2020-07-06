@@ -128,17 +128,10 @@ declare module '@augu/orchid' {
       public userAgent: string;
 
       /**
-       * Uses middleware if the cycle type is CycleType#None
+       * Injects middleware to the Orchid instance
        * @param middleware Middleware instance
        */
       use<T = unknown>(middleware: orchid.Middleware): this;
-
-      /**
-       * Uses middleware if the cycle type is not CycleType#None
-       * @param middleware Middleware instance
-       * @param value The value itself to add
-       */
-      use<T = unknown>(middleware: orchid.Middleware, value: T): this;
 
       /**
        * Makes a request
