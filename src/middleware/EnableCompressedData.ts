@@ -1,4 +1,4 @@
-import { Middleware } from '.';
+import { Middleware, CycleType } from '.';
 
 /**
  * Enables incoming data to be compressed
@@ -7,6 +7,7 @@ import { Middleware } from '.';
  */
 const compress = (): Middleware => ({
   name: 'compress',
+  cycleType: CycleType.None,
   intertwine() {
     this.middleware.add('compress', true);
     if (this.middleware.has('logger')) {

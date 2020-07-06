@@ -1,4 +1,4 @@
-import { Middleware } from '.';
+import { Middleware, CycleType } from '.';
 
 export interface Logger {
   error(message: string): void;
@@ -7,18 +7,21 @@ export interface Logger {
 }
 
 interface LogOptions {
+  /** The default namespace of the logger, default is `Orchid` */
+  namespace?: string;
+
   /**
    * A binding function to add your own custom attributes for messages
    */
-  binding?(level: 'error' | 'warn' | 'info', message: string): string;
+  binding?(ns: string, level: 'error' | 'warn' | 'info', message: string): string;
 }
 
-const defaultBinding = (level: 'error' | 'warn' | 'info', message: string) => {
+const defaultBinding = (ns: string, level: 'error' | 'warn' | 'info', message: string) => {
   const escape = (type: any) => `0${type}`.slice(-2);
   const date = new Date();
   const l = level.split(' ').map(key => `${key.charAt(0).toUpperCase()}${key.slice(1)}`).join(' ');
 
-  return `[${escape(date.getHours())}:${escape(date.getMinutes())}:${escape(date.getSeconds())}] [Orchid/${l}] <=> ${message}`;
+  return `[${escape(date.getHours())}:${escape(date.getMinutes())}:${escape(date.getSeconds())}] [${ns}/${process.pid}/${l}] <=> ${message}`;
 };
 
 /**
@@ -33,17 +36,22 @@ function logging(options?: LogOptions): Middleware {
       ? options.binding! 
       : defaultBinding;
 
+  const ns = options === undefined 
+    ? 'Orchid' 
+    : options.hasOwnProperty('namespace') 
+      ? options.namespace! 
+      : 'Orchid';
+
   return {
     name: 'logger',
+    cycleType: CycleType.None,
     intertwine() {
       const logger: Logger = {
-        error: (message: string) => console.error(binding('error', message)),
-        warn: (message: string) => console.warn(binding('warn', message)),
-        info: (message: string) => console.hasOwnProperty('info') ? console.info(binding('info', message)) : console.log(binding('info', message))
+        error: (message: string) => console.error(binding(ns, 'error', message)),
+        warn: (message: string) => console.warn(binding(ns, 'warn', message)),
+        info: (message: string) => console.hasOwnProperty('info') ? console.info(binding(ns, 'info', message)) : console.log(binding(ns, 'info', message))
       };
   
-      logger.info('Enabled Logging middleware, now you get secret logging! (Best used in Development)');
-      logger.warn('Reminder: HttpRequest#execute is now removed, please use .then/.catch!');
       this.middleware.add('logger', logger);
     }
   };

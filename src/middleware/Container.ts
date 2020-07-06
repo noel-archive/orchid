@@ -1,3 +1,4 @@
+import { CycleType, Middleware } from '.';
 import { Logger } from './Logging';
 
 /**
@@ -33,24 +34,29 @@ export default class MiddlewareContainer {
   /**
    * Gets the compressed data middleware
    */
-  get(name: 'compress'): boolean | null;
+  get(name: 'compress'): boolean;
 
   /**
    * Gets the streams data middleware
    */
-  get(name: 'streams'): boolean | null;
+  get(name: 'streams'): boolean;
 
   /**
    * Gets the form data middleware
    */
-  get(name: 'form'): boolean | null;
+  get(name: 'form'): boolean;
 
   /**
    * Gets the selected middleware from the container
    * @param name The name of the container
    */
   get(name: string) {
-    return this._container.hasOwnProperty(name) ? this._container[name] : null;
+    // TODO: Make this a bit cleaner
+    if (['compress', 'streams', 'form'].includes(name)) {
+      return this._container[name] || false;
+    } else {
+      return this._container[name] || null;
+    }
   }
 
   /**
@@ -71,5 +77,17 @@ export default class MiddlewareContainer {
    */
   has(name: string) {
     return this._container.hasOwnProperty(name);
+  }
+
+  filter(type: CycleType): Middleware[] {
+    const results: Middleware[] = [];
+    for (const key in this._container) {
+      const ware = this._container[key] as Middleware;
+
+      if (ware.cycleType === CycleType.None) continue;
+      if (ware.cycleType === type) results.push(ware);
+    }
+
+    return results;
   }
 }

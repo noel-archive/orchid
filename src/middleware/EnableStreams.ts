@@ -1,4 +1,4 @@
-import { Middleware } from '.';
+import { Middleware, CycleType } from '.';
 
 /**
  * Enables streams to pipe data easier
@@ -6,8 +6,9 @@ import { Middleware } from '.';
  */
 const streams = (): Middleware => ({
   name: 'streams',
+  cycleType: CycleType.None,
   intertwine() {
-    this.middleware.add<boolean>('streams', true);
+    this.middleware.add('streams', true);
 
     const logger = this.middleware.get('logger');
     if (logger) logger.info('Enabled streams, now you have access to Response#stream');    

@@ -1,3 +1,4 @@
+import { CycleType } from './middleware';
 import HttpResponse from './HttpResponse';
 import HttpClient from './HttpClient';
 import HttpError from './HttpError';
@@ -227,27 +228,26 @@ export default class HttpRequest {
   /**
    * Execute the request
    */
-  protected execute(fromThen: boolean = false) {
+  protected execute() {
     const logger = this.client.middleware.get('logger');
-    if (logger && !fromThen) logger.warn(`Now making a request to "${this.method.toUpperCase()} ${this.url}"`);
+    if (logger) logger.info(`Attempting to make a request to "${this.method.toUpperCase()} ${this.url}"`);
+
+    const middleware = this.client.middleware.filter(CycleType.Execute);
+    for (const ware of middleware) ware.intertwine.apply(this.client);
 
     return new Promise<HttpResponse>((resolve, reject) => {
       if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
 
       const onRequest = async (res: http.IncomingMessage) => {
         if (this.client.middleware.has('streams')) {
-          const api = this.client.middleware.get('streams');
-          this.streaming = api!;
+          this.streaming = this.client.middleware.get('streams');
         }
 
         if (this.client.middleware.has('compress')) {
-          const api = this.client.middleware.get('compress');
-          this.compressData = api!;
+          this.compressData = this.client.middleware.get('compress');
         }
 
-        if (logger) logger.info(`Made a ${this.method.toUpperCase()} request to ${this.url}!`);
         const response = new HttpResponse(res, this.streaming);
-
         if (this.compressData) {
           switch (res.headers['content-encoding']) {
             case 'gzip': {
@@ -271,12 +271,20 @@ export default class HttpRequest {
         }
       
         res.on('error', (error) => {
-          const httpError = new HttpError(1003, `Tried to serialize data, was unsuccessful (${error.message})`);
-          if (logger) logger.error(`Tried to serialize data, was unsuccessful (${error.message})`);
+          const httpError = new HttpError(1003, `Tried to serialise data, was unsuccessful (${error.message})`);
+          if (logger) logger.error(`Tried to serialise data, was unsuccessful (${error.message})`);
           return reject(httpError);
         });
         res.on('data', chunk => response.addChunk(chunk));
-        res.on('end', () => resolve(response));
+        res.on('end', () => {
+          if (!response.successful) return reject(new HttpError(response.statusCode, response.status.replace(`${response.statusCode} `, '')));
+          else {
+            const middleware = this.client.middleware.filter(CycleType.Done);
+            for (const ware of middleware) ware.intertwine.apply(this.client);
+
+            return resolve(response);
+          }
+        });
       };
 
       const request = this.url.protocol === 'https:' ? https.request : http.request;

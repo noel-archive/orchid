@@ -6,7 +6,14 @@ import forms from './FormData';
 
 export interface Middleware {
   intertwine(this: Client): void;
+  cycleType: CycleType;
   name: string;
+}
+
+export enum CycleType {
+  Execute = 'execute',
+  Done = 'done',
+  None = 'none'
 }
 
 export { compress, streams, logging, forms };

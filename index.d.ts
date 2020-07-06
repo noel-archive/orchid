@@ -19,10 +19,11 @@ declare module '@augu/orchid' {
       interface LogOptions {
         /**
          * Add a custom binding function for logging
+         * @param ns The logger's namespace
          * @param level The level to use
          * @param message The message that Orchid sends
          */
-        binding?(level: 'error' | 'warn' | 'info', message: string): string;
+        binding?(ns: string, level: 'error' | 'warn' | 'info', message: string): string;
       }
 
       /**
@@ -51,6 +52,7 @@ declare module '@augu/orchid' {
 
     interface Middleware {
       intertwine(this: orchid.HttpClient): void;
+      cycleType: CycleType;
       name: string;
     }
 
@@ -89,13 +91,35 @@ declare module '@augu/orchid' {
       info(message: string): void;
     }
 
+    export enum CycleType {
+      Execute = 'execute',
+      Done = 'done',
+      None = 'none'
+    }
+
     /** Returns the version of Orchid */
     export const version: string;
 
     /** The base client for making requests and adding middleware to Orchid */
     export class HttpClient {
-      /** Constructs a new instance of the Http Client */
+      /**
+       * Creates a new instance of the Http Client
+       * @param agent The user agent to set
+       */
       constructor(agent?: string);
+      
+      /**
+       * Creates a new instance of the Http Client
+       * @param middleware Any middleware to inject
+       */
+      constructor(middleware?: Middleware[]);
+
+      /**
+       * Create a new instance of the Http Client
+       * @param middleware Any middleware to inject
+       * @param agent The agent to use
+       */
+      constructor(middleware?: Middleware[], agent?: string);
 
       /** The middleware container */
       public middleware: orchid.Container;
@@ -104,11 +128,17 @@ declare module '@augu/orchid' {
       public userAgent: string;
 
       /**
-       * Adds middleware to Orchid
-       * @param middleware The middleware to add
-       * @returns This client to chain methods
+       * Uses middleware if the cycle type is CycleType#None
+       * @param middleware Middleware instance
        */
-      use(middleware: orchid.Middleware): this;
+      use<T = unknown>(middleware: orchid.Middleware): this;
+
+      /**
+       * Uses middleware if the cycle type is not CycleType#None
+       * @param middleware Middleware instance
+       * @param value The value itself to add
+       */
+      use<T = unknown>(middleware: orchid.Middleware, value: T): this;
 
       /**
        * Makes a request
@@ -127,17 +157,17 @@ declare module '@augu/orchid' {
       /**
        * Gets the compressed data middleware
        */
-      get(name: 'compress'): boolean | null;
+      get(name: 'compress'): boolean;
 
       /**
        * Gets the streams data middleware
        */
-      get(name: 'streams'): boolean | null;
+      get(name: 'streams'): boolean;
 
       /**
        * Gets the form data middleware
        */
-      get(name: 'form'): boolean | null;
+      get(name: 'form'): boolean;
 
       /**
        * Gets the selected middleware from the container

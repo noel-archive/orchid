@@ -1,4 +1,4 @@
-import { Middleware } from '.';
+import { Middleware, CycleType } from '.';
 
 /** Enables the ability to pass in Forms */
 export default (): Middleware => ({
@@ -7,7 +7,7 @@ export default (): Middleware => ({
       require('form-data');
     } catch {
       const logger = this.middleware.get('logger');
-      if (logger) logger.warn('Unable to find package `form-data`');      
+      if (logger) logger.warn('Unable to find package `form-data`, skipping...');      
     }
 
     const logger = this.middleware.get('logger');
@@ -15,5 +15,6 @@ export default (): Middleware => ({
 
     this.middleware.add('form', true);
   },
+  cycleType: CycleType.None,
   name: 'form'
 });
