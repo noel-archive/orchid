@@ -97,29 +97,27 @@ declare module '@augu/orchid' {
       None = 'none'
     }
 
+    interface HttpClientOptions {
+      /** Any middleware to add */
+      middleware?: Middleware[];
+
+      /** The base URL */
+      baseUrl?: string;
+
+      /** The user agent */
+      agent?: string;
+    }
+
     /** Returns the version of Orchid */
     export const version: string;
 
     /** The base client for making requests and adding middleware to Orchid */
     export class HttpClient {
       /**
-       * Creates a new instance of the Http Client
-       * @param agent The user agent to set
-       */
-      constructor(agent?: string);
-      
-      /**
-       * Creates a new instance of the Http Client
-       * @param middleware Any middleware to inject
-       */
-      constructor(middleware?: Middleware[]);
-
-      /**
        * Create a new instance of the Http Client
-       * @param middleware Any middleware to inject
-       * @param agent The agent to use
+       * @param options Any additional options
        */
-      constructor(middleware?: Middleware[], agent?: string);
+      constructor(options?: HttpClientOptions);
 
       /** The middleware container */
       public middleware: orchid.Container;
@@ -127,11 +125,14 @@ declare module '@augu/orchid' {
       /** The custom user agent */
       public userAgent: string;
 
+      /** The base URL */
+      public baseUrl: string | null;
+
       /**
        * Injects middleware to the Orchid instance
        * @param middleware Middleware instance
        */
-      use<T = unknown>(middleware: orchid.Middleware): this;
+      use(middleware: orchid.Middleware): this;
 
       /**
        * Makes a request
