@@ -44,17 +44,10 @@ function isUppercase(text: string) {
 
 function figureData(this: HttpRequest, packet: unknown): any {
   if (typeof packet === 'string') return packet;
-  if (packet instanceof Object) {
-    if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json') {
-      this.headers['content-type'] = 'application/json';
-    }
-
-    return packet;
-  }
+  if (packet instanceof Object) return packet;
   if (packet instanceof Buffer) return packet;
   if (packet instanceof FormData) {
     if (!this._has('form')) throw new Error('Missing "forms" middleware');
-    if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/x-www-form-urlencoded') this.headers['content-type'] = 'application/x-www-form-urlencoded';
     if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
     return packet;
   }
