@@ -43,5 +43,26 @@ By putting this in your Orchid instance (in the constructor or using HttpClient#
 
 The type varies from it's callee, so if you wanna run it WHEN we call HttpRequest#execute, then use CycleType.EXECUTE
 
+## Migrating
+### v1.0 / v1.1 -> v1.2
+All this version really does is add `middleware` or `agent` (or both!) to the constructor
+
+```js
+new HttpClient([]); // adds middleware only
+new HttpClient('my agent'); // adds the agent only
+new HttpClient([], 'my agent'); // adds middleware and the agent
+```
+
+### v1.2 -> v1.3
+Now the HttpClient's constructor is an object like this:
+
+```ts
+interface HttpClientOptions {
+  middleware?: Middleware[]; // add any middleware
+  baseUrl?: string; // Use a base URL
+  agent?: string; // Adds an agent
+}
+```
+
 ## License
 **Orchid** is released under the MIT License, read [here](/LICENSE) for more information
