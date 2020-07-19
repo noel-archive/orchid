@@ -56,8 +56,19 @@ function figureData(this: HttpRequest, packet: unknown): any {
     if (!this._has('form')) throw new Error('Missing "forms" middleware');
     if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/x-www-form-urlencoded') this.headers['content-type'] = 'application/x-www-form-urlencoded';
     if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
-    return packet.getBuffer();
+    return packet;
   }
+}
+
+function isCorrectUrl(data: string | URL) {
+  if (typeof data === 'string') return true;
+  if (data instanceof URL) return true;
+
+  return false;
+}
+
+function isObject(data: unknown): data is object { // eslint-disable-line
+  return typeof data === 'object';
 }
 
 export default class HttpRequest {
@@ -94,7 +105,7 @@ export default class HttpRequest {
    * @param options The options to use
    */
   constructor(client: HttpClient, options: RequestOptions) {
-    if (typeof options.url !== 'string') throw new Error('The request URL was not a String');
+    if (!isCorrectUrl(options.url)) throw new Error('The request URL was not a String');
 
     this.followRedirects = options.hasOwnProperty('followRedirects') ? options.followRedirects! : false;
     this.compressData = options.hasOwnProperty('compress') ? options.compress! : false;
@@ -237,6 +248,13 @@ export default class HttpRequest {
 
     return new Promise<HttpResponse>((resolve, reject) => {
       if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
+      if (this.data) {
+        if (this.data instanceof FormData) {
+          this.headers['content-type'] = this.data.getHeaders()['content-type'];
+        } else if (isObject(this.data)) {
+          this.headers['content-type'] = 'application/json';
+        }
+      }
 
       const onRequest = async (res: http.IncomingMessage) => {
         if (this.client.middleware.has('streams')) {
@@ -263,10 +281,17 @@ export default class HttpRequest {
         if (res.headers.hasOwnProperty('location') && this.followRedirects) {
           const url = new URL(res.headers.location!, this.url);
           const req = new (this.constructor as typeof HttpRequest)(this.client, {
+            followRedirects: this.followRedirects,
+            compress: this.compressData,
+            timeout: this.timeout ? this.timeout : undefined,
+            headers: this.headers,
+            stream: this.streaming,
             method: this.method,
+            data: this.data,
             url
           });
 
+          res.resume();
           return await req.execute();
         }
       

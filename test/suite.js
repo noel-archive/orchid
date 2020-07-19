@@ -1,30 +1,20 @@
-const { HttpClient, middleware, CycleType } = require('../build');
+const { HttpClient, middleware } = require('../build');
+const FormData = require('form-data');
 
-const orchid = new HttpClient([
-  middleware.logging({ namespace: 'Suite #1' }), 
-  middleware.forms(),
-  {
-    name: 'uwu',
-    cycleType: CycleType.Execute,
-    intertwine() {
-      console.log(this.middleware.get('uwu'));
-    }
-  },
-  {
-    name: 'owo',
-    cycleType: CycleType.Done,
-    intertwine() {
-      console.log(this.middleware.get('owo'));
-    }
-  }
-]);
+const orchid = new HttpClient({
+  baseUrl: 'https://httpbin.org',
+  middleware: [
+    middleware.logging({ namespace: 'Suite #1' }), 
+    middleware.forms()
+  ]
+});
+
+const data = new FormData();
+data.append('a', 'b');
 
 orchid
   .request({
     method: 'post',
-    url: 'http://httpbin.org/post',
-    data: new (require('form-data'))().append('a', 'b'),
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }).then(console.log).catch(console.error);
+    url: '/post',
+    data
+  }).then(res => console.log(res.json())).catch(console.error);
