@@ -1,4 +1,5 @@
 import { Middleware, CycleType } from '.';
+import getOption from '../util/getOption';
 
 export interface Logger {
   error(message: string): void;
@@ -6,14 +7,35 @@ export interface Logger {
   info(message: string): void;
 }
 
+/**
+ * A binding function to add your own custom attributes for messages
+ * @param ns The namespace that it's using
+ * @param level The log level
+ * @param message The message
+ */
+type LogBinding = (ns: string, level: 'error' | 'warn' | 'info', message: string) => string;
+
+/**
+ * Caller function to call any logging library
+ * @param level The level to use
+ * @param message The message
+ */
+type CallerFunction = (level: 'error' | 'warn' | 'info', message: string) => void;
+
 interface LogOptions {
+  /** If we should actually log it or not */
+  useConsole?: boolean;
+
   /** The default namespace of the logger, default is `Orchid` */
   namespace?: string;
+
+  /** The coller function (`useConsole` must be false to use it) */
+  caller?: CallerFunction; // eslint-disable-line
 
   /**
    * A binding function to add your own custom attributes for messages
    */
-  binding?(ns: string, level: 'error' | 'warn' | 'info', message: string): string;
+  binding?: LogBinding;
 }
 
 const defaultBinding = (ns: string, level: 'error' | 'warn' | 'info', message: string) => {
@@ -30,26 +52,38 @@ const defaultBinding = (ns: string, level: 'error' | 'warn' | 'info', message: s
  * @returns A middleware function to add to `HttpClient#use`
  */
 function logging(options?: LogOptions): Middleware {
-  const binding = options === undefined 
-    ? defaultBinding 
-    : options.hasOwnProperty('binding') 
-      ? options.binding! 
-      : defaultBinding;
-
-  const ns = options === undefined 
-    ? 'Orchid' 
-    : options.hasOwnProperty('namespace') 
-      ? options.namespace! 
-      : 'Orchid';
+  const useConsole = getOption<LogOptions, boolean>('useConsole', false, options);
+  const binding = getOption<LogOptions, LogBinding>('binding', defaultBinding, options);
+  const caller = getOption<LogOptions, CallerFunction | undefined>('caller', undefined, options); // eslint-disable-line
+  const ns = getOption<LogOptions, string>('namespace', 'Orchid', options);
 
   return {
     name: 'logger',
     cycleType: CycleType.None,
     intertwine() {
       const logger: Logger = {
-        error: (message: string) => console.error(binding(ns, 'error', message)),
-        warn: (message: string) => console.warn(binding(ns, 'warn', message)),
-        info: (message: string) => console.hasOwnProperty('info') ? console.info(binding(ns, 'info', message)) : console.log(binding(ns, 'info', message))
+        error: (message: string) => {
+          // This feels bad but I have no idea what to do lol
+          if (useConsole && typeof caller !== 'undefined') throw new Error('You can\'t provide a caller function if you are using console logging');
+          if (!useConsole && typeof caller === 'undefined') throw new Error('You must provide a caller function if you\'re not gonna use console logging');
+
+          const msg = binding(ns, 'error', message);
+          return useConsole ? console.warn(msg) : caller!('error', message);
+        },
+        warn: (message: string) => {
+          if (useConsole && typeof caller !== 'undefined') throw new Error('You can\'t provide a caller function if you are using console logging');
+          if (!useConsole && typeof caller === 'undefined') throw new Error('You must provide a caller function if you\'re not gonna use console logging');
+
+          const msg = binding(ns, 'warn', message);
+          return useConsole ? console.warn(msg) : caller!('warn', message);
+        },
+        info: (message: string) => {
+          if (useConsole && typeof caller !== 'undefined') throw new Error('You can\'t provide a caller function if you are using console logging');
+          if (!useConsole && typeof caller === 'undefined') throw new Error('You must provide a caller function if you\'re not gonna use console logging');
+
+          const msg = binding(ns, 'info', message);
+          return useConsole ? console.warn(msg) : caller!('info', message);
+        }
       };
   
       this.middleware.add('logger', logger);
