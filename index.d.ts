@@ -16,14 +16,35 @@ declare module '@augu/orchid' {
      * The middleware included into Orchid
      */
     namespace middleware {
+      /**
+       * A binding function to add your own custom attributes for messages
+       * @param ns The namespace that it's using
+       * @param level The log level
+       * @param message The message
+       */
+      type LogBinding = (ns: string, level: 'error' | 'warn' | 'info', message: string) => string;
+
+      /**
+       * Caller function to call any logging library
+       * @param level The level to use
+       * @param message The message
+       */
+      type CallerFunction = (level: 'error' | 'warn' | 'info', message: string) => void;
+
       interface LogOptions {
+        /** If we should actually log it or not */
+        useConsole?: boolean;
+
+        /** The default namespace of the logger, default is `Orchid` */
+        namespace?: string;
+
+        /** The coller function (`useConsole` must be false to use it) */
+        caller?: CallerFunction; // eslint-disable-line
+
         /**
-         * Add a custom binding function for logging
-         * @param ns The logger's namespace
-         * @param level The level to use
-         * @param message The message that Orchid sends
+         * A binding function to add your own custom attributes for messages
          */
-        binding?(ns: string, level: 'error' | 'warn' | 'info', message: string): string;
+        binding?: LogBinding;
       }
 
       /**
