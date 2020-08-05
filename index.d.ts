@@ -119,14 +119,16 @@ declare module '@augu/orchid' {
     }
 
     interface HttpClientOptions {
-      /** Any middleware to add */
       middleware?: Middleware[];
-
-      /** The base URL */
-      baseUrl?: string;
-
-      /** The user agent */
+      defaults?: DefaultRequestOptions;
       agent?: string;
+    }
+    
+    interface DefaultRequestOptions {
+      followRedirects?: boolean;
+      headers?: { [x: string]: any }
+      timeout?: number;
+      baseUrl?: string;
     }
 
     /** Returns the version of Orchid */

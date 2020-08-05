@@ -1,15 +1,23 @@
-import HttpRequest, { RequestOptions } from './HttpRequest';
+import HttpRequest, { RequestOptions, NullableRequestOptions } from './HttpRequest';
 import { Middleware, CycleType } from './middleware';
 import MiddlewareContainer from './middleware/Container';
 import getOption from './util/getOption';
 import { URL } from 'url';
+import { url } from 'inspector';
 
 const DEFAULT_USER_AGENT = `Orchid (v${require('../package.json').version}, https://github.com/auguwu/Orchid)`;
 
 interface HttpClientOptions {
   middleware?: Middleware[];
-  baseUrl?: string;
+  defaults?: DefaultRequestOptions;
   agent?: string;
+}
+
+interface DefaultRequestOptions {
+  followRedirects?: boolean;
+  headers?: { [x: string]: any }
+  timeout?: number;
+  baseUrl?: string;
 }
 
 /**
@@ -26,8 +34,10 @@ export default class HttpClient {
    */
   public userAgent: string;
 
-  /** The base URL or null if none was provided */
-  public baseUrl: string | null;
+  /** 
+   * The default request options
+   */
+  public defaults: DefaultRequestOptions | null;
 
   /**
    * Create a new instance of the Http Client
@@ -36,7 +46,7 @@ export default class HttpClient {
   constructor(options?: HttpClientOptions) {
     this.middleware = new MiddlewareContainer();
     this.userAgent = getOption<HttpClientOptions, string>('agent', DEFAULT_USER_AGENT, options);
-    this.baseUrl = getOption<HttpClientOptions, string | null>('baseUrl', null, options);
+    this.defaults = getOption<HttpClientOptions, DefaultRequestOptions | null>('defaults', {}, options);
   
     if (options && options.hasOwnProperty('middleware')) {
       const middleware = options.middleware!;
@@ -79,15 +89,21 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   request(options: RequestOptions) {
-    if (this.baseUrl !== null) {
-      if (options.url instanceof URL) {
-        const url = new URL(options.url.pathname, this.baseUrl);
-        options.url = url;
-      } else if (typeof options.url === 'string') {
-        const url = new URL(`${this.baseUrl}${options.url.startsWith('/') ? options.url : `/${options.url}`}`);
-        options.url = url;
-      } else {
-        throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof options.url}`);
+    if (this.defaults !== null) {
+      options = Object.assign<NullableRequestOptions, RequestOptions>({
+        followRedirects: getOption('followRedirects', false, this.defaults),
+        headers: getOption('headers', {}, this.defaults),
+        timeout: getOption('timeout', 30000, this.defaults)
+      }, options);
+
+      if (this.defaults.baseUrl !== undefined) {
+        if (options.url instanceof URL) {
+          options.url = new URL(options.url.pathname, this.defaults.baseUrl);
+        } else if (typeof options.url === 'string') {
+          options.url = new URL(`${this.defaults.baseUrl}${options.url.startsWith('/') ? options.url : `/${options.url}`}`);
+        } else {
+          throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof options.url}`);
+        }
       }
     }
 

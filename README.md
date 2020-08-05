@@ -64,5 +64,23 @@ interface HttpClientOptions {
 }
 ```
 
+### v1.3 -> v1.4
+The HttpClient's constructor is now like:
+
+```ts
+interface HttpClientOptions {
+  middleware?: Middleware[];
+  defaults?: DefaultRequestOptions;
+  agent?: string;
+}
+    
+interface DefaultRequestOptions {
+  followRedirects?: boolean;
+  headers?: { [x: string]: any }
+  timeout?: number;
+  baseUrl?: string;
+}
+```
+
 ## License
 **Orchid** is released under the MIT License, read [here](/LICENSE) for more information

@@ -4,7 +4,9 @@ const { Signale } = require('signale');
 
 const logger = new Signale({ scope: 'Suite #2' });
 const orchid = new HttpClient({
-  baseUrl: 'https://httpbin.org',
+  defaults: {
+    baseUrl: 'https://httpbin.org'
+  },
   middleware: [
     middleware.logging({ namespace: 'Suite #1', useConsole: true }),
     middleware.forms()
@@ -12,7 +14,7 @@ const orchid = new HttpClient({
 });
 
 const augu = new HttpClient({
-  baseUrl: 'https://augu.dev',
+  defaults: { baseUrl: 'https://augu.dev' },
   middleware: [middleware.logging({ binding: (_, __, message) => message, useConsole: false, caller: (level, message) => logger[level](message) })]
 });
 
@@ -24,6 +26,6 @@ orchid
     method: 'post',
     url: '/post',
     data
-  }).catch(console.error);
+  }).then(console.log).catch(console.error);
 
-augu.request({ method: 'get', url: '/' }).catch(console.error);
+augu.request({ method: 'get', url: '/' }).then(console.log).catch(console.error);

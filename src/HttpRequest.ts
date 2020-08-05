@@ -34,6 +34,32 @@ export interface RequestOptions {
   url: string | URL;
 }
 
+export interface NullableRequestOptions {
+  /** If we should follow redirects */
+  followRedirects?: boolean;
+
+  /** If we should compress the data */
+  compress?: boolean;
+
+  /** Any additional headers to add (you can add more with `HttpRequest#header`) */
+  headers?: { [x: string]: any };
+
+  /** The abort timeout until the request times out */
+  timeout?: number;
+
+  /** The method to use */
+  method?: HttpMethod;
+
+  /** Make this request into a stream */
+  stream?: boolean;
+
+  /** Any packets of data to send */
+  data?: any;
+
+  /** The URL to make the request to */
+  url?: string | URL;
+}
+
 type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
   | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
