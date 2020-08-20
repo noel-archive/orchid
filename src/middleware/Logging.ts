@@ -48,8 +48,8 @@ const defaultBinding = (ns: string, level: 'error' | 'warn' | 'info', message: s
 
 /**
  * Enables logging to track errors, throttle, and attempts
- * @param options The options to use
- * @returns A middleware function to add to `HttpClient#use`
+ * @param {LogOptions} options The options to use
+ * @returns {Middleware} A middleware function to add to `HttpClient#use`
  */
 function logging(options?: LogOptions): Middleware {
   const useConsole = getOption<LogOptions, boolean>('useConsole', false, options);

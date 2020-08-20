@@ -22,7 +22,7 @@ export interface RequestOptions {
   timeout?: number;
 
   /** The method to use */
-  method: HttpMethod;
+  method?: HttpMethod;
 
   /** Make this request into a stream */
   stream?: boolean;
@@ -60,7 +60,7 @@ export interface NullableRequestOptions {
   url?: string | URL;
 }
 
-type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
+export type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
   | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
 
 function isUppercase(text: string) {
@@ -120,8 +120,8 @@ export default class HttpRequest {
 
   /**
    * Creates a new HTTP request
-   * @param client The client
-   * @param options The options to use
+   * @param {HttpClient} client The client
+   * @param {RequestOptions} options The options to use
    */
   constructor(client: HttpClient, options: RequestOptions) {
     if (!isCorrectUrl(options.url)) throw new Error('The request URL was not a String');
@@ -132,7 +132,7 @@ export default class HttpRequest {
     this.headers = options.hasOwnProperty('headers') ? options.headers! : {};
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
     this.client = client;
-    this.method = isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method;
+    this.method = options.method ? isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method : 'GET';
     this.data = options.hasOwnProperty('data') ? figureData.apply(this, [options.data!]) : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
@@ -143,6 +143,7 @@ export default class HttpRequest {
 
   /**
    * Make this request into a stream (must add the Streams middleware or it'll error!)
+   * @returns {this} This instance to chain methods
    */
   stream() {
     if (!this.client.middleware.has('stream')) throw new Error('Missing the Stream middleware');
@@ -153,6 +154,7 @@ export default class HttpRequest {
 
   /**
    * Make this request compress data (must add the Compress middleware)
+   * @returns {this} This instance to chain methods
    */
   compress() {
     if (!this.client.middleware.has('compress')) throw new Error('Missing the Compress Data middleware');
@@ -177,8 +179,9 @@ export default class HttpRequest {
 
   /**
    * Adds a query parameter to the URL
-   * @param name An object of key-value pairs of the queries
-   * @param value The value (if added)
+   * @param {string | object} name An object of key-value pairs of the queries
+   * @param {string} [value] The value (if added)
+   * @returns {this} This instance to chain methods
    */
   query(name: string | { [x: string]: string }, value?: string) {
     if (name instanceof Object) {
@@ -205,10 +208,11 @@ export default class HttpRequest {
 
   /**
    * Adds a header to the request
-   * @param name An object of key-value pairs of the headers
-   * @param value The value (if added)
+   * @param {string | object} name An object of key-value pairs of the headers
+   * @param {any} value The value (if added)
+   * @returns {this} This instance to chain methods
    */
-  header(name: string | { [x: string]: string }, value?: any) {
+  header(name: string | { [x: string]: any }, value?: any) {
     if (name instanceof Object) {
       for (const [key, val] of Object.entries(name)) this.headers[key] = val;
     } else {
@@ -220,7 +224,8 @@ export default class HttpRequest {
 
   /**
    * Sends data to the server
-   * @param packet The data packet to send
+   * @param {unknown} packet The data packet to send
+   * @returns {this} This instance to chain methods
    */
   body(packet: unknown) {
     this.data = figureData.apply(this, [packet]);
@@ -229,7 +234,8 @@ export default class HttpRequest {
 
   /**
    * Sets a timeout to wait for
-   * @param timeout The timeout to wait for
+   * @param {number} timeout The timeout to wait for
+   * @returns {this} This instance to chain methods
    */
   setTimeout(timeout: number) {
     if (isNaN(timeout)) throw new Error('Timeout was not a number.');
@@ -240,6 +246,7 @@ export default class HttpRequest {
 
   /**
    * If we should follow redirects
+   * @returns {this} This instance to chain methods
    */
   redirect() {
     this.followRedirects = true;
@@ -257,6 +264,7 @@ export default class HttpRequest {
 
   /**
    * Execute the request
+   * @returns {Promise<HttpResponse>} The response
    */
   protected execute() {
     const logger = this.client.middleware.get('logger');

@@ -1,6 +1,6 @@
 import { IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
 import HttpError from './HttpError';
-import zlib from 'zlib';
+import type zlib from 'zlib';
 
 export default class HttpResponse {
   /** If the response should use `stream` */
@@ -38,7 +38,8 @@ export default class HttpResponse {
 
   /**
    * Adds a chunk to the body
-   * @param chunk The chunk to add
+   * @param {any} chunk The chunk to add
+   * @returns {void}
    */
   addChunk(chunk: any) {
     this.body = Buffer.concat([this.body, chunk]);
@@ -46,24 +47,38 @@ export default class HttpResponse {
 
   /**
    * Turns the body into a JSON response
+   * @returns {T} The response as the typed object
    */
-  json<T = any>(): T {
+  json<T = { [x: string]: any }>(): T {
     try {
       return JSON.parse(this.body.toString());
     } catch {
-      throw new HttpError(500, 'Unable to parse body into a JSON structure');
+      throw new HttpError(1006, 'Unable to parse body into a JSON structure');
     }
   }
 
   /**
    * Turns the body into a string
+   * @returns {string} The text itself
    */
   text() {
     return this.body.toString();
   }
 
   /**
+   * Returns the raw buffer
+   * @returns {Buffer} The buffer itself
+   */
+  raw() {
+    return this.body;
+  }
+
+  /**
    * Returns the HTTP stream or the zlib stream if data was compressed
+   * @returns {IncomingMessage | zlib.Deflate | zlib.Gunzip} Returns the following:
+   * - **IncomingMessage**: Nothing was changed, i.e HttpRequest#compress wasn't called
+   * - **zlib.Deflate**: Returns the deflate that zlib has used
+   * - **zlib.Gunzip**: Returns a deflate but gun-zipped
    */
   stream(): IncomingMessage | zlib.Deflate | zlib.Gunzip {
     if (!this.shouldStream) throw new Error('You didn\'t make this request into a Streamable object');

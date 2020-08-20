@@ -1,6 +1,9 @@
 import { Middleware, CycleType } from '.';
 
-/** Enables the ability to pass in Forms */
+/** 
+ * Enables the ability to pass in Forms 
+ * @returns {Middleware}
+ */
 export default (): Middleware => ({
   intertwine() {
     try {

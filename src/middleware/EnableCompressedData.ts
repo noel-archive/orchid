@@ -2,8 +2,7 @@ import { Middleware, CycleType } from '.';
 
 /**
  * Enables incoming data to be compressed
- * @param type The type of compressing to do with
- * @returns A middleware function to use with `HttpClient#use`
+ * @returns {Middleware} A middleware function to use with `HttpClient#use`
  */
 const compress = (): Middleware => ({
   name: 'compress',

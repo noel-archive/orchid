@@ -162,6 +162,70 @@ declare module '@augu/orchid' {
        * @param options The options to use
        */
       request(options: orchid.RequestOptions): orchid.HttpRequest;
+
+      /**
+       * Makes a request as a GET request
+       * @param {string | RequestOptions} url The URL string or the options itself
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      get(url: string | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a PUT request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      put(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a POST request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      post(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a OPTIONS request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      head(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a TRACE request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      trace(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a DELETE request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      delete(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a CONNECT request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      connect(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+
+      /**
+       * Makes a request as a OPTIONS request
+       * @param {string | RequestOptions} url The URL string or the request options
+       * @param {RequestOptions} [options] The request options
+       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       */
+      options(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
     }
 
     /** The middleware container itself */
@@ -307,7 +371,7 @@ declare module '@augu/orchid' {
       /**
        * Turns the body into a JSON response
        */
-      json<T = any>(): T;
+      json<T = { [x: string]: any }>(): T;
 
       /**
        * Turns the body into a string
@@ -315,7 +379,16 @@ declare module '@augu/orchid' {
       text(): string;
 
       /**
-       * Returns the HTTP stream or the zlib stream (if it was compressed)
+       * Returns the raw buffer
+       */
+      raw(): Buffer;
+
+      /**
+       * Returns the HTTP stream or the zlib stream if data was compressed
+       * @returns Returns the following:
+       * - **IncomingMessage**: Nothing was changed, i.e HttpRequest#compress wasn't called
+       * - **zlib.Deflate**: Returns the deflate that zlib has used
+       * - **zlib.Gunzip**: Returns a deflate but gun-zipped
        */
       stream(): IncomingMessage | Deflate | Gunzip;
     }

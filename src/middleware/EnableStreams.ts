@@ -2,7 +2,7 @@ import { Middleware, CycleType } from '.';
 
 /**
  * Enables streams to pipe data easier
- * @returns A middleware function to use with `HttpClient#use`
+ * @returns {Middleware} A middleware function to use with `HttpClient#use`
  */
 const streams = (): Middleware => ({
   name: 'streams',
