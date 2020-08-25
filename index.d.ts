@@ -3,11 +3,10 @@
 // Definitions by:
 //     - August <august@augu.dev>
 
-import { Readable } from 'form-data';
-
 declare module '@augu/orchid' {
   import { IncomingMessage, IncomingHttpHeaders } from 'http';
   import { Deflate, Gunzip } from 'zlib';
+  import { Readable } from 'stream';
   import { URL } from 'url';
 
   /**
