@@ -1,8 +1,9 @@
+import type Client from '../HttpClient';
 import compress from './EnableCompressedData';
 import streams from './EnableStreams';
 import logging from './Logging';
-import Client from '../HttpClient';
 import forms from './FormData';
+import blobs from './Blob';
 
 export interface Middleware {
   intertwine(this: Client): void;
@@ -16,4 +17,4 @@ export enum CycleType {
   None = 'none'
 }
 
-export { compress, streams, logging, forms };
+export { compress, streams, logging, forms, blobs };

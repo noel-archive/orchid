@@ -1,4 +1,4 @@
-import HttpRequest, { RequestOptions, NullableRequestOptions, HttpMethod } from './HttpRequest';
+import HttpRequest, { RequestOptions, NullableRequestOptions } from './HttpRequest';
 import { Middleware, CycleType } from './middleware';
 import MiddlewareContainer from './middleware/Container';
 import getOption from './util/getOption';
@@ -59,11 +59,11 @@ export default class HttpClient {
    * Adds middleware to the container
    * 
    * Before you make a request, make sure you added all of your middleware
-   * or Orchird will add the middleware *when* a request is made, so we can reuse it.
+   * or Orchid will add the middleware *when* a request is made, so we can reuse it.
    * You can also append middleware when you construct this http client, in it's constructor.
    * 
-   * @param {Middleware} middleware The middleware to append
-   * @returns {this} This instance to chain methods
+   * @param middleware The middleware to append
+   * @returns This instance to chain methods
    */
   use(middleware: Middleware) {
     if (middleware.cycleType === CycleType.None) middleware.intertwine.apply(this);
@@ -74,8 +74,8 @@ export default class HttpClient {
 
   /**
    * Sets an custom user agent
-   * @param {string} agent The agent to use
-   * @returns {this} This instance to chain methods
+   * @param agent The agent to use
+   * @returns This instance to chain methods
    */
   setAgent(agent: string) {
     this.userAgent = agent;
@@ -84,8 +84,8 @@ export default class HttpClient {
 
   /**
    * Makes a request to a server on the internet
-   * @param {RequestOptions} options The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   request(options: RequestOptions) {
     if (this.defaults !== null) {
@@ -111,9 +111,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a GET request
-   * @param {string | RequestOptions} url The URL string or the options itself
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the options itself
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   get(url: string | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -177,9 +177,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a PUT request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   put(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -243,9 +243,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a POST request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   post(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -309,9 +309,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a OPTIONS request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   head(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -375,9 +375,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a TRACE request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   trace(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -441,9 +441,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a DELETE request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   delete(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -507,9 +507,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a CONNECT request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   connect(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -573,9 +573,9 @@ export default class HttpClient {
 
   /**
    * Makes a request as a OPTIONS request
-   * @param {string | RequestOptions} url The URL string or the request options
-   * @param {RequestOptions} [options] The request options
-   * @returns {HttpRequest} A new Request instance to add metadata, etc
+   * @param url The URL string or the request options
+   * @param options The request options
+   * @returns A new Request instance to add metadata, etc
    */
   options(url: string | URL | RequestOptions, options?: RequestOptions) {
     if ((typeof url === 'string' || url instanceof URL) && options === undefined) {

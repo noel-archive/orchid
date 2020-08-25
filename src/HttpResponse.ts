@@ -1,6 +1,7 @@
 import { IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
-import HttpError from './HttpError';
+import HttpError from './errors/HttpError';
 import type zlib from 'zlib';
+import Blob from './internals/Blob';
 
 export default class HttpResponse {
   /** If the response should use `stream` */
@@ -18,7 +19,7 @@ export default class HttpResponse {
   /** The body as a Buffer */
   private body: Buffer;
 
-  constructor(core: IncomingMessage, isStreaming: boolean) {
+  constructor(core: IncomingMessage, isStreaming: boolean, private canBlob: boolean) {
     this.shouldStream = isStreaming;
     this.statusCode = core.statusCode ? core.statusCode! : 200;
     this.headers = core.headers;
@@ -38,8 +39,7 @@ export default class HttpResponse {
 
   /**
    * Adds a chunk to the body
-   * @param {any} chunk The chunk to add
-   * @returns {void}
+   * @param chunk The chunk to add
    */
   addChunk(chunk: any) {
     this.body = Buffer.concat([this.body, chunk]);
@@ -47,7 +47,7 @@ export default class HttpResponse {
 
   /**
    * Turns the body into a JSON response
-   * @returns {T} The response as the typed object
+   * @returns The response as the typed object
    */
   json<T = { [x: string]: any }>(): T {
     try {
@@ -59,7 +59,7 @@ export default class HttpResponse {
 
   /**
    * Turns the body into a string
-   * @returns {string} The text itself
+   * @returns The text itself
    */
   text() {
     return this.body.toString();
@@ -67,10 +67,18 @@ export default class HttpResponse {
 
   /**
    * Returns the raw buffer
-   * @returns {Buffer} The buffer itself
+   * @returns The buffer itself
    */
   raw() {
     return this.body;
+  }
+
+  /**
+   * Returns a Blob of the response
+   */
+  blob() {
+    if (!this.canBlob) throw new Error('Missing `blob` middleware');
+    return new Blob([this.raw()], this.headers.hasOwnProperty('content-type') ? { type: this.headers['content-type']! } : { type: '' });
   }
 
   /**

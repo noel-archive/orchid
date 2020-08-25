@@ -3,6 +3,8 @@
 // Definitions by:
 //     - August <august@augu.dev>
 
+import { Readable } from 'form-data';
+
 declare module '@augu/orchid' {
   import { IncomingMessage, IncomingHttpHeaders } from 'http';
   import { Deflate, Gunzip } from 'zlib';
@@ -66,6 +68,11 @@ declare module '@augu/orchid' {
        * Enables form data into Orchid
        */
       export function forms(): orchid.Middleware;
+
+      /**
+       * Enables blob structures into Orchid
+       */
+      export function blobs(): orchid.Middleware;
     }
 
     type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
@@ -165,65 +172,65 @@ declare module '@augu/orchid' {
 
       /**
        * Makes a request as a GET request
-       * @param {string | RequestOptions} url The URL string or the options itself
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       get(url: string | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a PUT request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       put(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a POST request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       post(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a OPTIONS request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       head(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a TRACE request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       trace(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a DELETE request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       delete(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a CONNECT request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       connect(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
 
       /**
        * Makes a request as a OPTIONS request
-       * @param {string | RequestOptions} url The URL string or the request options
-       * @param {RequestOptions} [options] The request options
-       * @returns {HttpRequest} A new Request instance to add metadata, etc
+       * @param url The URL string or the request options
+       * @param options The request options
+       * @returns A new Request instance to add metadata, etc
        */
       options(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
     }
@@ -384,6 +391,11 @@ declare module '@augu/orchid' {
       raw(): Buffer;
 
       /**
+       * Returns a Blob instance
+       */
+      blob(): orchid.Blob;
+
+      /**
        * Returns the HTTP stream or the zlib stream if data was compressed
        * @returns Returns the following:
        * - **IncomingMessage**: Nothing was changed, i.e HttpRequest#compress wasn't called
@@ -392,6 +404,121 @@ declare module '@augu/orchid' {
        */
       stream(): IncomingMessage | Deflate | Gunzip;
     }
+
+    type BlobPart = ArrayBufferLike | ArrayBufferView | Blob | Buffer | string;
+    export class Blob {
+      /**
+       * Constructor for a `Blob` object, The content
+       * of the blob consists of the concatenation of the values given
+       * in the parameter array.
+       * 
+       * @param parts The parts of the blob
+       * @param options Options to use
+       */
+      constructor(parts: BlobPart[], options: { type?: string });
+    
+      /**
+       * Returns the MIME type of the Blob
+       */
+      get type(): string;
+    
+      /**
+       * Gets the size of this blob
+       */
+      size(): number;
+    
+      /**
+       * String containing the contents of the blob interpreted at UTF-8
+       */
+      text(): Promise<string>;
+    
+      /**
+       * Returns the binary data as an ArrayBuffer
+       */
+      raw(): Promise<ArrayBuffer>;
+    
+      /**
+       * Returns a Readable stream
+       */
+      stream(): Readable;
+    
+      /**
+       * Returns a new Blob object containing data from a subset of points from this Blob
+       * @param start The start
+       * @param end The end
+       * @param type The type
+       */
+      slice(start?: number, end?: number, type?: string): Blob;
+    }
+
+    interface SingularMethodOptions extends RequestOptions {
+      middleware?: Middleware[];
+      agent?: string;
+    }
+
+    /**
+     * Makes a request as a GET request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function get(url: string | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a PUT request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function put(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a POST request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function post(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a HEAD request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function head(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a TRACE request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function trace(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a DELETE request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function del(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a CONNECT request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function connect(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a OPTIONS request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function options(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
   }
 
   export = orchid;

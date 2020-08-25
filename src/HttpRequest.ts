@@ -1,12 +1,14 @@
+import TimeoutError from './errors/TimeoutError';
 import { CycleType } from './middleware';
 import HttpResponse from './HttpResponse';
 import HttpClient from './HttpClient';
-import HttpError from './HttpError';
+import HttpError from './errors/HttpError';
 import FormData from 'form-data';
 import { URL } from 'url';
 import https from 'https';
 import http from 'http';
 import zlib from 'zlib';
+import Blob from './internals/Blob';
 
 export interface RequestOptions {
   /** If we should follow redirects */
@@ -72,6 +74,7 @@ function figureData(this: HttpRequest, packet: unknown): any {
   if (typeof packet === 'string') return packet;
   if (packet instanceof Object) return packet;
   if (packet instanceof Buffer) return packet;
+  if (packet instanceof Blob) return packet.raw();
   if (packet instanceof FormData) {
     if (!this._has('form')) throw new Error('Missing "forms" middleware');
     if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
@@ -124,7 +127,7 @@ export default class HttpRequest {
    * @param {RequestOptions} options The options to use
    */
   constructor(client: HttpClient, options: RequestOptions) {
-    if (!isCorrectUrl(options.url)) throw new Error('The request URL was not a String');
+    if (!isCorrectUrl(options.url)) throw new Error('Malformed URL; must be `string` or `URL` (package: "url")');
 
     this.followRedirects = options.hasOwnProperty('followRedirects') ? options.followRedirects! : false;
     this.compressData = options.hasOwnProperty('compress') ? options.compress! : false;
@@ -143,7 +146,7 @@ export default class HttpRequest {
 
   /**
    * Make this request into a stream (must add the Streams middleware or it'll error!)
-   * @returns {this} This instance to chain methods
+   * @returns This instance to chain methods
    */
   stream() {
     if (!this.client.middleware.has('stream')) throw new Error('Missing the Stream middleware');
@@ -154,7 +157,7 @@ export default class HttpRequest {
 
   /**
    * Make this request compress data (must add the Compress middleware)
-   * @returns {this} This instance to chain methods
+   * @returns This instance to chain methods
    */
   compress() {
     if (!this.client.middleware.has('compress')) throw new Error('Missing the Compress Data middleware');
@@ -179,9 +182,9 @@ export default class HttpRequest {
 
   /**
    * Adds a query parameter to the URL
-   * @param {string | object} name An object of key-value pairs of the queries
-   * @param {string} [value] The value (if added)
-   * @returns {this} This instance to chain methods
+   * @param name An object of key-value pairs of the queries
+   * @param [value] The value (if added)
+   * @returns This instance to chain methods
    */
   query(name: string | { [x: string]: string }, value?: string) {
     if (name instanceof Object) {
@@ -208,9 +211,9 @@ export default class HttpRequest {
 
   /**
    * Adds a header to the request
-   * @param {string | object} name An object of key-value pairs of the headers
-   * @param {any} value The value (if added)
-   * @returns {this} This instance to chain methods
+   * @param name An object of key-value pairs of the headers
+   * @param value The value (if added)
+   * @returns This instance to chain methods
    */
   header(name: string | { [x: string]: any }, value?: any) {
     if (name instanceof Object) {
@@ -224,8 +227,8 @@ export default class HttpRequest {
 
   /**
    * Sends data to the server
-   * @param {unknown} packet The data packet to send
-   * @returns {this} This instance to chain methods
+   * @param packet The data packet to send
+   * @returns This instance to chain methods
    */
   body(packet: unknown) {
     this.data = figureData.apply(this, [packet]);
@@ -234,8 +237,8 @@ export default class HttpRequest {
 
   /**
    * Sets a timeout to wait for
-   * @param {number} timeout The timeout to wait for
-   * @returns {this} This instance to chain methods
+   * @param timeout The timeout to wait for
+   * @returns This instance to chain methods
    */
   setTimeout(timeout: number) {
     if (isNaN(timeout)) throw new Error('Timeout was not a number.');
@@ -246,7 +249,7 @@ export default class HttpRequest {
 
   /**
    * If we should follow redirects
-   * @returns {this} This instance to chain methods
+   * @returns This instance to chain methods
    */
   redirect() {
     this.followRedirects = true;
@@ -264,7 +267,7 @@ export default class HttpRequest {
 
   /**
    * Execute the request
-   * @returns {Promise<HttpResponse>} The response
+   * @returns The response
    */
   protected execute() {
     const logger = this.client.middleware.get('logger');
@@ -273,7 +276,7 @@ export default class HttpRequest {
     const middleware = this.client.middleware.filter(CycleType.Execute);
     for (const ware of middleware) ware.intertwine.apply(this.client);
 
-    return new Promise<HttpResponse>((resolve, reject) => {
+    return new Promise<HttpResponse>(async (resolve, reject) => {
       if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
       if (this.data) {
         if (this.data instanceof FormData) {
@@ -292,17 +295,10 @@ export default class HttpRequest {
           this.compressData = this.client.middleware.get('compress');
         }
 
-        const response = new HttpResponse(res, this.streaming);
+        const response = new HttpResponse(res, this.streaming, this._has('blob'));
         if (this.compressData) {
-          switch (res.headers['content-encoding']) {
-            case 'gzip': {
-              res.pipe(zlib.createGunzip());
-            } break;
-
-            case 'deflate': {
-              res.pipe(zlib.createDeflate());
-            } break;
-          }
+          if (res.headers['content-encoding'] === 'gzip') res.pipe(zlib.createGunzip());
+          if (res.headers['content-encoding'] === 'deflate') res.pipe(zlib.createDeflate());
         }
 
         if (res.headers.hasOwnProperty('location') && this.followRedirects) {
@@ -319,7 +315,7 @@ export default class HttpRequest {
           });
 
           res.resume();
-          return await req.execute();
+          return resolve(await req.execute());
         }
       
         res.on('error', (error) => {
@@ -349,21 +345,25 @@ export default class HttpRequest {
         host: this.url.hostname
       }, onRequest);
 
-      if (this.timeout) {
-        req.setTimeout(this.timeout, () => {
+      if (this.timeout !== null) {
+        setTimeout(() => {
+          if (req.aborted) return;
+
           req.abort();
-          if (!this.streaming) reject(new HttpError(1002, 'Server has timed out'));
-        });
+          return reject(new TimeoutError(this.url.toString(), this.timeout!));
+        }, this.timeout);
       }
 
       req.on('error', (error) => {
         const httpError = new HttpError(1004, `Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
         if (logger) logger.error(`Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
+        
         return reject(httpError);
       });
 
       if (this.data) {
         if (this.data instanceof Object) req.write(JSON.stringify(this.data));
+        else if (this.data instanceof Promise) req.write(await this.data);
         else req.write(this.data);
       }
 

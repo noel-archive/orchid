@@ -1,5 +1,5 @@
 import { CycleType, Middleware } from '.';
-import { Logger } from './Logging';
+import type { Logger } from './Logging';
 
 /**
  * Basic structure of what the middleware container should be like
@@ -10,6 +10,7 @@ export interface Container {
   streams?: boolean;
   logger?: Logger;
   form?: boolean;
+  blob?: boolean;
 }
 
 /**
@@ -48,8 +49,8 @@ export default class MiddlewareContainer {
 
   /**
    * Gets the selected middleware from the container
-   * @param {string} name The name of the container
-   * @returns {T | null} The middleware or `null` if not found
+   * @param name The name of the container
+   * @returns The middleware or `null` if not found
    */
   get(name: string) {
     // TODO: Make this a bit cleaner
@@ -62,8 +63,8 @@ export default class MiddlewareContainer {
 
   /**
    * Adds the specified middleware to the container
-   * @param {string} name The name of the middleware
-   * @param {string} data The middleware itself
+   * @param name The name of the middleware
+   * @param data The middleware itself
    */
   add<T = any>(name: string, data: T) {
     this._container[name] = data;
@@ -74,8 +75,8 @@ export default class MiddlewareContainer {
 
   /**
    * Checks if this container contains the middleware that was[n't] injected
-   * @param {string} name The middleware's name
-   * @returns {boolean} If the container has it or not
+   * @param name The middleware's name
+   * @returns If the container has it or not
    */
   has(name: string) {
     return this._container.hasOwnProperty(name);
@@ -83,8 +84,8 @@ export default class MiddlewareContainer {
 
   /**
    * Filters out anything by it's cycle type
-   * @param {CycleType} type The middleware type
-   * @returns {Middleware[]} The middleware
+   * @param type The middleware type
+   * @returns The middleware
    */
   filter(type: CycleType) {
     const results: Middleware[] = [];
