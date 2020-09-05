@@ -90,7 +90,10 @@ function isCorrectUrl(data: string | URL) {
 }
 
 function isObject(data: unknown): data is object { // eslint-disable-line
-  return typeof data === 'object';
+  return data !== undefined 
+    && data !== null 
+    && typeof data === 'object' 
+    && !Array.isArray(data);
 }
 
 export default class HttpRequest {

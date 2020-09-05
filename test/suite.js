@@ -1,6 +1,5 @@
 const { HttpClient, middleware, get } = require('../build');
 const FormData = require('form-data');
-const { URL } = require('url');
 
 const orchid = new HttpClient({
   defaults: {
