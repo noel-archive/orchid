@@ -277,9 +277,12 @@ export default class HttpRequest {
     if (logger) logger.info(`Attempting to make a request to "${this.method.toUpperCase()} ${this.url}"`);
 
     const middleware = this.client.middleware.filter(CycleType.Execute);
-    for (const ware of middleware) ware.intertwine.apply(this.client);
+    for (let i = 0; i < middleware.length; i++) {
+      const ware = middleware[i];
+      ware.intertwine.call(this.client);
+    }
 
-    return new Promise<HttpResponse>(async (resolve, reject) => {
+    return new Promise<HttpResponse>((resolve, reject) => {
       if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
       if (this.data) {
         if (this.data instanceof FormData) {
@@ -331,7 +334,10 @@ export default class HttpRequest {
           if (!response.successful) return reject(new HttpError(response.statusCode, response.status.replace(`${response.statusCode} `, '')));
           else {
             const middleware = this.client.middleware.filter(CycleType.Done);
-            for (const ware of middleware) ware.intertwine.apply(this.client);
+            for (let i = 0; i < middleware.length; i++) {
+              const ware = middleware[i];
+              ware.intertwine.call(this.client);
+            }
 
             return resolve(response);
           }
@@ -366,8 +372,10 @@ export default class HttpRequest {
 
       if (this.data) {
         if (this.data instanceof Object) req.write(JSON.stringify(this.data));
-        else if (this.data instanceof Promise) req.write(await this.data);
-        else req.write(this.data);
+        else if (this.data instanceof Promise) {
+          this.data
+            .then((data) => req.write(data));
+        } else req.write(this.data);
       }
 
       req.end();

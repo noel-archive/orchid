@@ -98,4 +98,12 @@ export default class MiddlewareContainer {
 
     return results;
   }
+
+  /**
+   * Returns if the container is empty
+   */
+  isEmpty() {
+    const keys = Object.keys(this._container);
+    return keys.length === 0;
+  }
 }

@@ -49,7 +49,9 @@ for (const method of ['OPTIONS', 'CONNECT', 'DEL', 'TRACE', 'HEAD', 'POST', 'PUT
       ? opts
       : url instanceof URL && typeof url === 'string'
         ? { method: httpMethod, url }
-        : url as Options;
+        : typeof url === 'object' && !(url instanceof URL)
+          ? url
+          : { method: httpMethod, url };
 
     delete options.middleware;
     delete options.agent;
