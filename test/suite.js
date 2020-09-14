@@ -28,3 +28,5 @@ augu.get('/').then(() => console.log('cutie!')).catch(console.error);
 get('https://derpyenterprises.org', {
   middleware: [middleware.logging({ namespace: 'Suite #3', useConsole: true })]
 }).then(() => console.log('derpy!')).catch(console.error);
+
+process.exit(0);

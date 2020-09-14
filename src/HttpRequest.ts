@@ -78,7 +78,7 @@ function figureData(this: HttpRequest, packet: unknown): any {
   if (packet instanceof FormData) {
     if (!this._has('form')) throw new Error('Missing "forms" middleware');
     if (!this.headers.hasOwnProperty('content-type')) this.headers['content-length'] = Buffer.byteLength(packet.getBuffer());
-    return packet;
+    return packet.getBuffer();
   }
 }
 
@@ -139,7 +139,7 @@ export default class HttpRequest {
     this.timeout = options.hasOwnProperty('timeout') ? options.timeout! : null;
     this.client = client;
     this.method = options.method ? isUppercase(options.method) ? (options.method.toLowerCase() as HttpMethod) : options.method : 'GET';
-    this.data = options.hasOwnProperty('data') ? figureData.apply(this, [options.data!]) : null;
+    this.data = options.hasOwnProperty('data') ? figureData.call(this, options.data) : null;
     this.url = (options.url as any) instanceof URL ? (options.url as any as URL) : new URL(options.url as string);
   }
 

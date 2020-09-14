@@ -3,6 +3,7 @@ import { Middleware, CycleType } from './middleware';
 import MiddlewareContainer from './middleware/Container';
 import getOption from './util/getOption';
 import { URL } from 'url';
+import merge from './util/merge';
 
 const DEFAULT_USER_AGENT = `Orchid (v${require('../package.json').version}, https://github.com/auguwu/Orchid)`;
 
@@ -89,17 +90,17 @@ export default class HttpClient {
    */
   request(options: RequestOptions) {
     if (this.defaults !== null) {
-      options = Object.assign<NullableRequestOptions, RequestOptions>({
+      options = merge<NullableRequestOptions, RequestOptions>(options, {
         followRedirects: getOption('followRedirects', false, this.defaults),
         headers: getOption('headers', {}, this.defaults),
         timeout: getOption('timeout', 30000, this.defaults)
-      }, options);
+      });
 
       if (this.defaults.baseUrl !== undefined) {
         if (options.url instanceof URL) {
           options.url = new URL(options.url.pathname, this.defaults.baseUrl);
         } else if (typeof options.url === 'string') {
-          options.url = new URL(`${this.defaults.baseUrl}${options.url.startsWith('/') ? options.url : `/${options.url}`}`);
+          options.url = new URL(options.url, this.defaults.baseUrl);
         } else {
           throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof options.url}`);
         }
