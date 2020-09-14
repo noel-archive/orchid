@@ -27,9 +27,19 @@ async function make() {
   }
 }
 
-// Research -- courtesy of 06/09/2020 @ 03:37
-// 1 request takes 100-140ms to complete
-// 10 requests takes 89-120ms to complete
+// Research -- courtesy of 14/09/2020 @ 12:35
+// 1 request takes 200ms to complete
+// 10 requests takes 120-170ms to complete
+
+// -- Note: Thanks to my best friend, Ice (https://github.com/IceeMC)
+// this is what he gotten:
+// 1 request takes 210ms (which is bad...)
+// 10 requests takes 65-85ms (which is good)
+
+// -- Note: Thanks to my other friend, David (https://github.com/ohlookitsderpy)
+// this is what he gotten:
+// 1 request takes 116ms (which is semi-good?)
+// 10 requests takes 65-95ms
 
 make()
   .then(() => process.exit(0))

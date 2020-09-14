@@ -3,7 +3,11 @@ const FormData = require('form-data');
 
 const orchid = new HttpClient({
   defaults: {
-    baseUrl: 'https://httpbin.org'
+    baseUrl: 'https://httpbin.org',
+    headers: {
+      a: 'b',
+      c: 'd'
+    }
   },
   middleware: [
     middleware.logging({ namespace: 'Suite #1', useConsole: true }),
@@ -19,7 +23,7 @@ const augu = new HttpClient({
 const data = new FormData();
 data.append('a', 'b');
 
-orchid.post('/post', { data }).then(() => console.log('gay api')).catch(console.error);
+orchid.post('/post', { data: [data] }).then((res) => console.log(res.json())).catch(console.error);
 augu.get('/').then(() => console.log('cutie!')).catch(console.error);
 get('https://derpyenterprises.org', {
   middleware: [middleware.logging({ namespace: 'Suite #3', useConsole: true })]
