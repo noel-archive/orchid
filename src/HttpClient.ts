@@ -90,25 +90,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   request(options: RequestOptions) {
-    if (this.defaults !== null) {
-      options = merge<NullableRequestOptions, RequestOptions>(options, {
-        followRedirects: getOption('followRedirects', false, this.defaults),
-        headers: getOption('headers', {}, this.defaults),
-        timeout: getOption('timeout', 30000, this.defaults)
-      });
-
-      if (this.defaults.baseUrl !== undefined) {
-        if (options.url instanceof URL) {
-          options.url = new URL(options.url.pathname, this.defaults.baseUrl);
-        } else if (typeof options.url === 'string') {
-          options.url = new URL(options.url, this.defaults.baseUrl);
-        } else {
-          throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof options.url}`);
-        }
-      }
-    }
-
-    return new HttpRequest(this, options);
+    return createRequest.call(this, options.url, options.method || 'get', options);
   }
 
   /**

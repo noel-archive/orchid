@@ -23,10 +23,8 @@ const augu = new HttpClient({
 const data = new FormData();
 data.append('a', 'b');
 
-orchid.post('/post', { data: [data] }).then((res) => console.log(res.json())).catch(console.error);
+orchid.post('/post', { data }).then((res) => console.log(res.json())).catch(console.error);
 augu.get('/').then(() => console.log('cutie!')).catch(console.error);
 get('https://derpyenterprises.org', {
   middleware: [middleware.logging({ namespace: 'Suite #3', useConsole: true })]
 }).then(() => console.log('derpy!')).catch(console.error);
-
-process.exit(0);
