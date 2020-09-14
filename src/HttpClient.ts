@@ -1,6 +1,7 @@
 import HttpRequest, { RequestOptions, NullableRequestOptions } from './HttpRequest';
 import { Middleware, CycleType } from './middleware';
 import MiddlewareContainer from './middleware/Container';
+import createRequest from './util/createRequest';
 import getOption from './util/getOption';
 import { URL } from 'url';
 import merge from './util/merge';
@@ -117,63 +118,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   get(url: string | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'GET', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'GET', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'GET', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'get', options);
   }
 
   /**
@@ -183,63 +128,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   put(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'PUT', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'PUT', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'PUT', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'put', options);
   }
 
   /**
@@ -249,129 +138,17 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   post(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'POST', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'POST', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'POST', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'post', options);
   }
 
   /**
-   * Makes a request as a OPTIONS request
+   * Makes a request as a HEAD request
    * @param url The URL string or the request options
    * @param options The request options
    * @returns A new Request instance to add metadata, etc
    */
   head(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'HEAD', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'HEAD', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'HEAD', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'head', options);
   }
 
   /**
@@ -381,63 +158,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   trace(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'TRACE', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'TRACE', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'TRACE', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'trace', options);
   }
 
   /**
@@ -447,63 +168,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   delete(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'DELETE', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'DELETE', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'DELETE', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'delete', options);
   }
 
   /**
@@ -513,63 +178,7 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   connect(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'CONNECT', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'CONNECT', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'CONNECT', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'connect', options);
   }
 
   /**
@@ -579,62 +188,6 @@ export default class HttpClient {
    * @returns A new Request instance to add metadata, etc
    */
   options(url: string | URL | RequestOptions, options?: RequestOptions) {
-    if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
-      let newUrl: URL | string = url;
-
-      if (this.defaults !== null) {
-        if (this.defaults.hasOwnProperty('baseUrl')) {
-          if (url instanceof URL) newUrl = new URL(url.pathname, this.defaults.baseUrl);
-          else if (typeof url === 'string') newUrl = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          else throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-        }
-      }
-
-      return new HttpRequest(this, { method: 'OPTIONS', url: newUrl });
-    } else if ((typeof url === 'string' || url instanceof URL) && options !== undefined) {
-      if (this.defaults !== null) {
-        options = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, options);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (url instanceof URL) {
-            options.url = new URL(url.pathname, this.defaults.baseUrl);
-          } else if (typeof url === 'string') {
-            options.url = new URL(`${this.defaults.baseUrl}${url.startsWith('/') ? url : `/${url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'OPTIONS', ...options });
-    } else if (!(url instanceof URL) && url instanceof Object && options === undefined) {
-      if (this.defaults !== null) {
-        const opts = Object.assign<NullableRequestOptions, RequestOptions>({
-          followRedirects: getOption('followRedirects', false, this.defaults),
-          headers: getOption('headers', {}, this.defaults),
-          timeout: getOption('timeout', 30000, this.defaults)
-        }, url);
-  
-        if (this.defaults.baseUrl !== undefined) {
-          if (opts.url instanceof URL) {
-            opts.url = new URL(opts.url.pathname, this.defaults.baseUrl);
-          } else if (typeof opts.url === 'string') {
-            opts.url = new URL(`${this.defaults.baseUrl}${opts.url.startsWith('/') ? opts.url : `/${opts.url}`}`);
-          } else {
-            throw new TypeError(`Expected "string" or URL (package: 'url') but gotten ${typeof opts.url}`);
-          }
-        }
-      }
-  
-      return new HttpRequest(this, { method: 'OPTIONS', ...url });
-    } else if (url instanceof Object && options !== undefined) {
-      throw new TypeError('Parameter `options` shouldn\'t be added in');
-    } else {
-      throw new TypeError(`Expecting 'string', RequestOptions, or an instanceof URL but gotten ${typeof url} (options: ${typeof options})`);
-    }
+    return createRequest.call(this, url, 'options', options);
   }
 }
