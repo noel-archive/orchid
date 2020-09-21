@@ -29,7 +29,7 @@ export default class HttpResponse {
 
   /** If the response is successful or not */
   get successful() {
-    return this.statusCode <= 200 || this.statusCode > 300;
+    return this.statusCode >= 200 || this.statusCode < 300;
   }
 
   /** Returns a prettified version of the status */
