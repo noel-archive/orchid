@@ -27,7 +27,7 @@
     "@augu/eslint-config": "1.8.2",
     "@types/node": "14.11.2",
     "@typescript-eslint/eslint-plugin": "4.3.0",
-    "@typescript-eslint/parser": "4.2.0",
+    "@typescript-eslint/parser": "4.3.0",
     "eslint": "7.10.0",
     "jest": "26.4.2",
     "ts-jest": "26.4.0",
