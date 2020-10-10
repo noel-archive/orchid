@@ -12,9 +12,9 @@ import merge from './merge';
  * @returns The http request
  */
 export default function createRequest(
-  this: HttpClient, 
-  url: string | URL | RequestOptions, 
-  method: HttpMethod, 
+  this: HttpClient,
+  url: string | URL | RequestOptions,
+  method: HttpMethod,
   options?: RequestOptions
 ) {
   if ((typeof url === 'string' || url instanceof URL) && options === undefined) {
@@ -35,7 +35,7 @@ export default function createRequest(
         followRedirects: getOption('followRedirects', false, this.defaults),
         headers: getOption('headers', {}, this.defaults),
         timeout: getOption('timeout', 30000, this.defaults)
-      });  
+      });
 
       if (this.defaults.baseUrl !== undefined) {
         if (url instanceof URL) {

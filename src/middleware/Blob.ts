@@ -1,6 +1,6 @@
 import { Middleware, CycleType } from '.';
 
-/** 
+/**
  * Enables the ability to pass in Blob-data structures
  */
 export default (): Middleware => ({

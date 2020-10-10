@@ -40,12 +40,12 @@ for (const method of ['OPTIONS', 'CONNECT', 'DEL', 'TRACE', 'HEAD', 'POST', 'PUT
     }
 
     if (opts && !opts.hasOwnProperty('url')) opts.url = url as (string | URL);
-  
+
     // Not needed
     if (opts) delete opts.method;
 
     const httpMethod: HttpMethod = method === 'del' ? 'delete' : method as HttpMethod;
-    const options = opts !== undefined 
+    const options = opts !== undefined
       ? opts
       : url instanceof URL && typeof url === 'string'
         ? { method: httpMethod, url }

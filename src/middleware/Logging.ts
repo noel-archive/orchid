@@ -85,7 +85,7 @@ function logging(options?: LogOptions): Middleware {
           return useConsole ? console.warn(msg) : caller!('info', message);
         }
       };
-  
+
       this.middleware.add('logger', logger);
     }
   };

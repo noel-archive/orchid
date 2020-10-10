@@ -28,7 +28,7 @@ export default class Blob {
    * Constructor for a `Blob` object, The content
 	 * of the blob consists of the concatenation of the values given
 	 * in the parameter array.
-   * 
+   *
    * @param parts The parts of the blob
    * @param options Options to use
    */
@@ -43,12 +43,12 @@ export default class Blob {
       else if (element instanceof Blob) buffer = element;
       else buffer = Buffer.from(typeof element === 'string' ? element : String(element));
 
-      size += buffer instanceof Buffer 
-        ? buffer.length 
-        : buffer instanceof Blob 
+      size += buffer instanceof Buffer
+        ? buffer.length
+        : buffer instanceof Blob
           ? buffer.size()
           : 0;
-        
+
       return buffer;
     });
 
@@ -133,7 +133,7 @@ export default class Blob {
         if (added >= span) break;
       }
     }
-  
+
     const blob = new Blob([], { type });
     Object.assign(source.get(blob)!, { size: span, parts: blobs });
 

@@ -11,7 +11,7 @@ const streams = (): Middleware => ({
     this.middleware.add('streams', true);
 
     const logger = this.middleware.get('logger');
-    if (logger) logger.info('Enabled streams, now you have access to Response#stream');    
+    if (logger) logger.info('Enabled streams, now you have access to Response#stream');
   }
 });
 

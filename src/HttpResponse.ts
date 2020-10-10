@@ -37,6 +37,11 @@ export default class HttpResponse {
     return `${this.statusCode} ${STATUS_CODES[this.statusCode]}`;
   }
 
+  /** Returns if the body of the response is empty */
+  get isEmpty() {
+    return this.body.length === 0;
+  }
+
   /**
    * Adds a chunk to the body
    * @param chunk The chunk to add

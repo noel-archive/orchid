@@ -90,9 +90,9 @@ function isCorrectUrl(data: string | URL) {
 }
 
 function isObject(data: unknown): data is object { // eslint-disable-line
-  return data !== undefined 
-    && data !== null 
-    && typeof data === 'object' 
+  return data !== undefined
+    && data !== null
+    && typeof data === 'object'
     && !Array.isArray(data);
 }
 
@@ -145,7 +145,7 @@ export default class HttpRequest {
 
   _has(name: string) {
     return this.client.middleware.has(name);
-  }  
+  }
 
   /**
    * Make this request into a stream (must add the Streams middleware or it'll error!)
@@ -191,7 +191,7 @@ export default class HttpRequest {
    */
   query(name: string | { [x: string]: string }, value?: string) {
     if (name instanceof Object) {
-      for (const [key, val] of Object.entries(name)) this.url.searchParams[key] = val; 
+      for (const [key, val] of Object.entries(name)) this.url.searchParams[key] = val;
     } else {
       this.url.searchParams[name as string] = value!;
     }
@@ -282,7 +282,7 @@ export default class HttpRequest {
       ware.intertwine.call(this.client);
     }
 
-    return new Promise<HttpResponse>((resolve, reject) => {
+    return new Promise<HttpResponse>(async (resolve, reject) => {
       if (!this.headers.hasOwnProperty('user-agent')) this.headers['user-agent'] = this.client.userAgent;
       if (this.data) {
         if (this.data instanceof FormData) {
@@ -323,7 +323,7 @@ export default class HttpRequest {
           res.resume();
           return resolve(await req.execute());
         }
-      
+
         res.on('error', (error) => {
           const httpError = new HttpError(1003, `Tried to serialise data, was unsuccessful (${error.message})`);
           if (logger) logger.error(`Tried to serialise data, was unsuccessful (${error.message})`);
@@ -366,20 +366,30 @@ export default class HttpRequest {
       req.on('error', (error) => {
         const httpError = new HttpError(1004, `Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
         if (logger) logger.error(`Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
-        
+
         return reject(httpError);
       });
 
       if (this.data) {
         if (this.data instanceof Object && !Array.isArray(this.data)) req.write(JSON.stringify(this.data));
-        else if (this.data instanceof Promise) this.data.then(req.write);
-        else if (Array.isArray(this.data)) {
+        else if (this.data instanceof Promise) {
+          const d = await this.data;
+          req.write(d);
+        } else if (Array.isArray(this.data)) {
           for (let i = 0; i < this.data.length; i++) {
             const data = this.data[i];
-            
-            if (typeof data === 'object') req.write(JSON.stringify(data));
-            else if (this.data instanceof Promise) data.then(req.write);
-            else req.write(data);
+
+            if (this.data instanceof Object) {
+              if (this.data instanceof Promise) {
+                const d = await this.data;
+                req.write(JSON.stringify(d));
+                continue;
+              }
+
+              req.write(JSON.stringify(data));
+            } else {
+              req.write(data);
+            }
           }
         }
       }

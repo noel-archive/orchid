@@ -35,7 +35,7 @@ export default class HttpClient {
    */
   public userAgent: string;
 
-  /** 
+  /**
    * The default request options
    */
   public defaults: DefaultRequestOptions | null;
@@ -48,7 +48,7 @@ export default class HttpClient {
     this.middleware = new MiddlewareContainer();
     this.userAgent = getOption<HttpClientOptions, string>('agent', DEFAULT_USER_AGENT, options);
     this.defaults = getOption<HttpClientOptions, DefaultRequestOptions | null>('defaults', {}, options);
-  
+
     if (options && options.hasOwnProperty('middleware')) {
       const middleware = options.middleware!;
       if (Array.isArray(middleware)) {
@@ -59,11 +59,11 @@ export default class HttpClient {
 
   /**
    * Adds middleware to the container
-   * 
+   *
    * Before you make a request, make sure you added all of your middleware
    * or Orchid will add the middleware *when* a request is made, so we can reuse it.
    * You can also append middleware when you construct this http client, in it's constructor.
-   * 
+   *
    * @param middleware The middleware to append
    * @returns This instance to chain methods
    */

@@ -70,7 +70,7 @@ describe('orchid.HttpRequest', () => {
 
     expect(res).toBeInstanceOf(HttpResponse);
 
-    const data = res.json<JsonPlaceholder>();
+    const data = res.json();
     expect(data).toStrictEqual<JsonPlaceholder>({
       completed: false,
       userId: 1,
