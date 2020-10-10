@@ -74,8 +74,8 @@ declare module '@augu/orchid' {
       export function blobs(): orchid.Middleware;
     }
 
-    type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get'
-      | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET';
+    type HttpMethod = 'options' | 'connect' | 'delete' | 'trace' | 'head' | 'post' | 'put' | 'get' | 'patch'
+      | 'OPTIONS' | 'CONNECT' | 'DELETE' | 'TRACE' | 'HEAD' | 'POST' | 'PUT' | 'GET' | 'PATCH';
 
     interface Middleware {
       intertwine(this: orchid.HttpClient): void;
@@ -86,30 +86,59 @@ declare module '@augu/orchid' {
     interface RequestOptions {
       /** If we should follow redirects */
       followRedirects?: boolean;
-    
+
       /** If we should compress the data */
       compress?: boolean;
-    
+
       /** An amount of attempts before closing this request */
       attempts?: number;
-    
+
       /** Any additional headers to add (you can add more with `HttpRequest#header`) */
       headers?: { [x: string]: any };
-    
+
       /** The abort timeout until the request times out */
       timeout?: number;
-    
+
       /** The method to use */
       method: HttpMethod;
-    
+
       /** Make this request into a stream */
       stream?: boolean;
-    
+
       /** Any packets of data to send */
       data?: any;
-    
+
       /** The URL to make the request to */
       url: string | URL;
+    }
+
+    interface NullableRequestOptions {
+      /** If we should follow redirects */
+      followRedirects?: boolean;
+
+      /** If we should compress the data */
+      compress?: boolean;
+
+      /** An amount of attempts before closing this request */
+      attempts?: number;
+
+      /** Any additional headers to add (you can add more with `HttpRequest#header`) */
+      headers?: { [x: string]: any };
+
+      /** The abort timeout until the request times out */
+      timeout?: number;
+
+      /** The method to use */
+      method: HttpMethod;
+
+      /** Make this request into a stream */
+      stream?: boolean;
+
+      /** Any packets of data to send */
+      data?: any;
+
+      /** The URL to make the request to */
+      url?: string | URL;
     }
 
     interface Logger {
@@ -129,7 +158,7 @@ declare module '@augu/orchid' {
       defaults?: DefaultRequestOptions;
       agent?: string;
     }
-    
+
     interface DefaultRequestOptions {
       followRedirects?: boolean;
       headers?: { [x: string]: any }
@@ -175,7 +204,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      get(url: string | RequestOptions, options?: RequestOptions): HttpRequest;
+      get(url: string | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a PUT request
@@ -183,7 +212,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      put(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      put(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a POST request
@@ -191,7 +220,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      post(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      post(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a OPTIONS request
@@ -199,7 +228,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      head(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      head(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a TRACE request
@@ -207,7 +236,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      trace(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      trace(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a DELETE request
@@ -215,7 +244,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      delete(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      delete(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a CONNECT request
@@ -223,7 +252,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      connect(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      connect(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
 
       /**
        * Makes a request as a OPTIONS request
@@ -231,7 +260,7 @@ declare module '@augu/orchid' {
        * @param options The request options
        * @returns A new Request instance to add metadata, etc
        */
-      options(url: string | URL | RequestOptions, options?: RequestOptions): HttpRequest;
+      options(url: string | URL | RequestOptions, options?: NullableRequestOptions): HttpRequest;
     }
 
     /** The middleware container itself */
@@ -374,6 +403,9 @@ declare module '@augu/orchid' {
       /** If it was successful or not */
       public successful: boolean;
 
+      /** Getter to see if the body was empty or not */
+      public isEmpty: boolean;
+
       /**
        * Turns the body into a JSON response
        */
@@ -410,37 +442,37 @@ declare module '@augu/orchid' {
        * Constructor for a `Blob` object, The content
        * of the blob consists of the concatenation of the values given
        * in the parameter array.
-       * 
+       *
        * @param parts The parts of the blob
        * @param options Options to use
        */
       constructor(parts: BlobPart[], options: { type?: string });
-    
+
       /**
        * Returns the MIME type of the Blob
        */
       get type(): string;
-    
+
       /**
        * Gets the size of this blob
        */
       size(): number;
-    
+
       /**
        * String containing the contents of the blob interpreted at UTF-8
        */
       text(): Promise<string>;
-    
+
       /**
        * Returns the binary data as an ArrayBuffer
        */
       raw(): Promise<ArrayBuffer>;
-    
+
       /**
        * Returns a Readable stream
        */
       stream(): Readable;
-    
+
       /**
        * Returns a new Blob object containing data from a subset of points from this Blob
        * @param start The start
@@ -450,7 +482,7 @@ declare module '@augu/orchid' {
       slice(start?: number, end?: number, type?: string): Blob;
     }
 
-    interface SingularMethodOptions extends RequestOptions {
+    interface SingularMethodOptions extends NullableRequestOptions {
       middleware?: Middleware[];
       agent?: string;
     }
@@ -461,7 +493,7 @@ declare module '@augu/orchid' {
      * @param options The request options
      * @returns A new Request instance to add metadata, etc
      */
-    export function get(url: string | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+    export function get(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
 
     /**
      * Makes a request as a PUT request
@@ -518,6 +550,14 @@ declare module '@augu/orchid' {
      * @returns A new Request instance to add metadata, etc
      */
     export function options(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
+
+    /**
+     * Makes a request as a PATCH request
+     * @param url The URL string or the request options
+     * @param options The request options
+     * @returns A new Request instance to add metadata, etc
+     */
+    export function patch(url: string | URL | RequestOptions, options?: SingularMethodOptions): HttpRequest;
   }
 
   export = orchid;
