@@ -371,27 +371,9 @@ export default class HttpRequest {
       });
 
       if (this.data) {
-        if (this.data instanceof Object && !Array.isArray(this.data)) req.write(JSON.stringify(this.data));
-        else if (this.data instanceof Promise) {
-          const d = await this.data;
-          req.write(d);
-        } else if (Array.isArray(this.data)) {
-          for (let i = 0; i < this.data.length; i++) {
-            const data = this.data[i];
-
-            if (this.data instanceof Object) {
-              if (this.data instanceof Promise) {
-                const d = await this.data;
-                req.write(JSON.stringify(d));
-                continue;
-              }
-
-              req.write(JSON.stringify(data));
-            } else {
-              req.write(data);
-            }
-          }
-        }
+        if (this.data instanceof Object) req.write(JSON.stringify(this.data));
+        else if (this.data instanceof Promise) req.write(await this.data);
+        else req.write(this.data);
       }
 
       req.end();
