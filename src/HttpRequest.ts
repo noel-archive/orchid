@@ -9,6 +9,7 @@ import https from 'https';
 import http from 'http';
 import zlib from 'zlib';
 import Blob from './internals/Blob';
+import { runInNewContext } from 'vm';
 
 export interface RequestOptions {
   /** If we should follow redirects */
@@ -364,16 +365,23 @@ export default class HttpRequest {
       }
 
       req.on('error', (error) => {
-        const httpError = new HttpError(1004, `Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
+        const httpError = new HttpError(10004, `Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
         if (logger) logger.error(`Unable to make a ${this.method.toUpperCase()} request to ${this.url} (${error.message})`);
 
         return reject(httpError);
       });
 
       if (this.data) {
-        if (this.data instanceof Object) req.write(JSON.stringify(this.data));
-        else if (this.data instanceof Promise) req.write(await this.data);
-        else req.write(this.data);
+        if (Array.isArray(this.data)) {
+          if (this.data.some(Buffer.isBuffer)) this.data.map(buf => req.write(buf));
+          else req.write(JSON.stringify(this.data));
+        } else if (typeof this.data === 'object' && !Array.isArray(this.data)) {
+          req.write(JSON.stringify(this.data));
+        } else if (this.data instanceof Promise) {
+          req.write(await this.data);
+        } else {
+          req.write(this.data);
+        }
       }
 
       req.end();
