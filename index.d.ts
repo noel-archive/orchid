@@ -434,6 +434,22 @@ declare module '@augu/orchid' {
        * - **zlib.Gunzip**: Returns a deflate but gun-zipped
        */
       stream(): IncomingMessage | Deflate | Gunzip;
+
+      /**
+       * Sets the encoding of this Response
+       * @param encoding The encoding to use
+       * @returns This instance to chain methods
+       */
+      setEncoding(encoding: BufferEncoding): this;
+
+      /**
+       * Pipes any writable stream from this Response
+       * @param item The item to pipe down
+       * @param options Any additional options to pass in
+       * @returns The writable stream that was piped
+       * from this Response
+       */
+      pipe<T extends NodeJS.WritableStream>(item: T, options?: { end?: boolean; }): T;
     }
 
     type BlobPart = ArrayBufferLike | ArrayBufferView | Blob | Buffer | string;

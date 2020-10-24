@@ -43,6 +43,15 @@ export default class HttpResponse {
   }
 
   /**
+   * Sets the encoding of the response
+   * @param encoding The encoding to set
+   */
+  setEncoding(encoding: BufferEncoding) {
+    this.core.setEncoding(encoding);
+    return this;
+  }
+
+  /**
    * Adds a chunk to the body
    * @param chunk The chunk to add
    */
@@ -96,5 +105,15 @@ export default class HttpResponse {
   stream(): IncomingMessage | zlib.Deflate | zlib.Gunzip {
     if (!this.shouldStream) throw new Error('You didn\'t make this request into a Streamable object');
     return this.core as any; // This is a stream, yes it is
+  }
+
+  /**
+   * Pipes anything to this [Response] instance
+   * @param item The item to use Stream.pipe in
+   * @param options The options to use
+   * @returns That stream's instance
+   */
+  pipe<T extends NodeJS.WritableStream>(item: T, options?: { end?: boolean }) {
+    return this.core.pipe(item, options);
   }
 }
