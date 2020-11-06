@@ -52,7 +52,7 @@ const defaultBinding = (ns: string, level: 'error' | 'warn' | 'info', message: s
  * @returns {Middleware} A middleware function to add to `HttpClient#use`
  */
 function logging(options?: LogOptions): Middleware {
-  const useConsole = getOption<LogOptions, boolean>('useConsole', false, options);
+  const useConsole = getOption<LogOptions, boolean>('useConsole', true, options);
   const binding = getOption<LogOptions, LogBinding>('binding', defaultBinding, options);
   const caller = getOption<LogOptions, CallerFunction | undefined>('caller', undefined, options); // eslint-disable-line
   const ns = getOption<LogOptions, string>('namespace', 'Orchid', options);
@@ -68,7 +68,7 @@ function logging(options?: LogOptions): Middleware {
           if (!useConsole && typeof caller === 'undefined') throw new Error('You must provide a caller function if you\'re not gonna use console logging');
 
           const msg = binding(ns, 'error', message);
-          return useConsole ? console.warn(msg) : caller!('error', message);
+          return useConsole ? console.error(msg) : caller!('error', message);
         },
         warn: (message: string) => {
           if (useConsole && typeof caller !== 'undefined') throw new Error('You can\'t provide a caller function if you are using console logging');
@@ -82,7 +82,7 @@ function logging(options?: LogOptions): Middleware {
           if (!useConsole && typeof caller === 'undefined') throw new Error('You must provide a caller function if you\'re not gonna use console logging');
 
           const msg = binding(ns, 'info', message);
-          return useConsole ? console.warn(msg) : caller!('info', message);
+          return useConsole ? console.info(msg) : caller!('info', message);
         }
       };
 
