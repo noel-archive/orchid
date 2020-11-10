@@ -4,6 +4,17 @@
 ## Usage
 v2 Usage soon
 
+### Browsers
+Add this to your style tag to expose the `orchid` object
+
+```html
+<!-- This will add the latest build of Orchid, best recommended to use this! -->
+<script src='https://cdn.floofy.dev/libraries/orchid/latest/orchid.js'></script>
+
+<!-- This will target a specific build, it's best recommended to use the latest build -->
+<script src='https://cdn.floofy.dev/libraries/orchid/<version>/orchid.js'></script>
+```
+
 ## Middleware
 v2 Usage soon
 
