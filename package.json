@@ -1,15 +1,13 @@
 {
   "name": "@augu/orchid",
-  "description": "🛬 Simple and fast way to make a HTTP request in Node.js",
-  "version": "1.8.1",
-  "main": "build/index.js",
+  "description": "Simple and fast way to make a HTTP request in Node.js and the browser!",
+  "version": "2.0.0",
+  "main": "src/index.js",
   "license": "MIT",
   "types": "index.d.ts",
   "repository": "https://github.com/auguwu/Orchid",
-  "files": [
-    "build",
-    "index.d.ts"
-  ],
+  "bugs": "https://github.com",
+  "files": ["src", "index.d.ts"],
   "maintainers": [
     {
       "name": "Chris \"August\" Hernandez",
@@ -18,22 +16,10 @@
     }
   ],
   "scripts": {
-    "prepare": "yarn build",
-    "build": "yarn lint && rm -fr build && tsc",
-    "lint": "eslint src --ext .ts --fix",
-    "test": "jest --config jest.config.js"
+    "prepare": "rm -fr node_modules/@types/**/node_modules"
   },
   "devDependencies": {
-    "@augu/eslint-config": "1.8.3",
-    "@types/node": "14.14.6",
-    "@typescript-eslint/eslint-plugin": "4.6.1",
-    "@typescript-eslint/parser": "4.6.1",
-    "eslint": "7.12.1",
-    "jest": "26.6.3",
-    "ts-jest": "26.4.3",
-    "typescript": "4.0.5"
-  },
-  "optionalDependencies": {
-    "form-data": "3.0.0"
+    "@augu/eslint-config": "1.9.0",
+    "eslint": "7.13.0"
   }
 }
