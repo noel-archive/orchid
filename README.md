@@ -5,7 +5,7 @@
 v2 Usage soon
 
 ### Browsers
-Add this to your style tag to expose the `orchid` object
+Add this to your style tag to expose the `orchid` window object
 
 ```html
 <!-- This will add the latest build of Orchid, best recommended to use this! -->
@@ -17,68 +17,6 @@ Add this to your style tag to expose the `orchid` object
 
 ## Middleware
 v2 Usage soon
-
-## Serializers
-> :warning: **This feature is under v2 or higher and will not work in v1.**
-
-Serializers in Orchid is a way to serialize data without doing it yourself in your code and will be injected into `HttpResponse`, so you can do `HttpResponse.json()` for the **JsonSerializer** as an example.
-
-```js
-const { Serializer } = require('@augu/orchid');
-
-// Define it as a [Serializer] object, will be infered as `Serializer`
-const serializer = {
-  name: 'json',
-  type: 'application/json', // content type
-
-  // `data` => Buffer
-  serialize(data) {
-    const body = data.toString();
-    return JSON.parse(body);
-  }
-};
-
-// Define it as a class, must be extended
-class JsonSerializer extends Serializer {
-  constructor() {
-    super({
-      name: 'json',
-      type: 'application/json'
-    });
-  }
-
-  // data => Buffer
-  serialize(data) {
-    const body = data.toString();
-    return JSON.parse(body);
-  }
-}
-```
-
-To apply your serializer, you must add it when creating a `HttpClient` or `BrowserHttpClient` or pass in by `serializers` when using the methods.
-
-```js
-// HttpClient/BrowserHttpClient
-const { HttpClient } = require('@augu/orchid');
-const MySerializer = require('./path/to/my/serializer');
-
-const client = new HttpClient({
-  serializers: [Serializer]
-});
-
-client
-  .get('https://some-api.com/:version/cat', {
-    serialize: 'cat'
-    params: {
-      version: '1'
-    }
-  })
-  .then(res => {
-    // Data will be inferred as the custom serializer (if you named it `cat`)
-    const data = res.data();
-    console.log(`Cat Image: ${data.cat}`);
-  });
-```
 
 ## Migration Guide
 ### v1.0 / v1.1 -> v1.2
