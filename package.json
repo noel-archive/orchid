@@ -15,9 +15,6 @@
       "url": "https://augu.dev"
     }
   ],
-  "scripts": {
-    "prepare": "rm -fr node_modules/@types/**/node_modules"
-  },
   "devDependencies": {
     "@augu/eslint-config": "1.9.0",
     "eslint": "7.13.0"

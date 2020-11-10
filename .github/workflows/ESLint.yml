@@ -27,5 +27,3 @@ jobs:
         run: npm i
       - name: Lints the repository
         run: npm run lint
-      - name: Unit testing o_O
-        run: npm test
