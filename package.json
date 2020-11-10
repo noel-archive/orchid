@@ -7,7 +7,10 @@
   "types": "index.d.ts",
   "repository": "https://github.com/auguwu/Orchid",
   "bugs": "https://github.com",
-  "files": ["src", "index.d.ts"],
+  "files": [
+    "src",
+    "index.d.ts"
+  ],
   "maintainers": [
     {
       "name": "Chris \"August\" Hernandez",
@@ -15,8 +18,13 @@
       "url": "https://augu.dev"
     }
   ],
+  "scripts": {
+    "compile": "webpack --config webpack.config.js"
+  },
   "devDependencies": {
     "@augu/eslint-config": "1.9.0",
-    "eslint": "7.13.0"
+    "eslint": "7.13.0",
+    "webpack": "5.4.0",
+    "webpack-cli": "4.2.0"
   }
 }
