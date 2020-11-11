@@ -49,7 +49,7 @@ module.exports = class HttpClient {
    * ```js
    * // Create a new instance with defaults
    * const client = new HttpClient();
-   * 
+   *
    * // Create a new instance with options
    * const client = new HttpClient({
    *   // options object
@@ -108,12 +108,21 @@ module.exports = class HttpClient {
   }
 
   /**
+   * Statically validate the options object
+   * @param {HttpClientOptions} options The options to validate
+   * @private
+   */
+  static validate(options) {
+    // todo: this
+  }
+
+  /**
    * Function to apply middleware to this [HttpClient] instance.
    * This will add it to the callstack and will be run when we reached by
    * it's `type`. This will call the `setup` function if it's `type` is "none",
    * if the type is "none", it must be added yourself when basic functionality
    * is finished.
-   * 
+   *
    * @param {import('./Middleware')} middleware The middleware object
    * @returns {this} Returns this instance to chain methods
    */
@@ -152,7 +161,7 @@ module.exports = class HttpClient {
  * @prop {DefaultHttpRequestOptions} [defaults] Any defaults to apply when creating a request
  * @prop {string} [baseUrl] The base URL to use, so we can append a path only. If this
  * isn't set, you will have to apply the full URL.
- * 
+ *
  * @typedef {object} DefaultHttpRequestOptions
  * @prop {boolean} [followRedirects=true] If we should respect following redirects
  * @prop {{ [x: string]: any }} [headers] Any default headers to apply when creating a request
