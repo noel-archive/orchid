@@ -85,6 +85,12 @@ module.exports = class HttpClient {
       timeout: 30000
     });
 
+    /**
+     * The base URL, if any
+     * @type {string}
+     */
+    this.baseUrl = options.baseUrl;
+
     if (options.middleware) {
       for (let i = 0; i < options.middleware.length; i++) {
         const middleware = options.middleware[i];
@@ -145,7 +151,7 @@ module.exports = class HttpClient {
    * as a Promise, so you can use `await` with this function if needed!
    */
   request(url, options) {
-    return utils.createRequest(url, options);
+    return utils.createRequest(this, url, options.method || 'get', options);
   }
 };
 
