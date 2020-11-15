@@ -40,4 +40,62 @@ const TYPES = [
 /**
  * Represents a class to create [Middleware]
  */
-module.exports = class Middleware {};
+module.exports = class Middleware {
+  /**
+   * Creates a new [Middleware] instance
+   * @param {string} name The name of the middleware
+   * @param {'none' | 'request' | 'response' | 'execute' | 'called'} type The type to use
+   */
+  constructor(name, type) {
+    if (typeof type !== 'string') throw new TypeError(`Expected \`string\`, but gotten ${typeof type}`);
+    if (!TYPES.includes(types)) throw new TypeError(`Middleware type "${type}" doesn't exist`);
+
+    /**
+     * The middleware's name
+     * @type {string}
+     */
+    this.name = name;
+
+    /**
+     * The type of middleware it is,
+     * this is determined by the `setup` function.
+     *
+     * @type {'none' | 'request' | 'response' | 'execute' | 'called'}
+     */
+    this.type = type;
+  }
+
+  /**
+   * Sets up a Middleware object
+   * @param {(new () => Middleware)} cls The class instance
+   * @returns {MiddlewareBlock}
+   */
+  static setupMod(cls) {
+    if (cls instanceof Middleware) return {
+      setup: cls.setup.bind(cls),
+      type: cls.type,
+      name: cls.name
+    };
+
+    const clazz = new cls();
+
+    return {
+      setup: clazz.setup.bind(clazz),
+      type: clazz.type,
+      name: clazz.name
+    };
+  }
+
+  setup(...args) {
+    throw new TypeError('Missing over-ridded `setup` function');
+  }
+};
+
+/**
+ * @typedef {(...args: any[]) => void} SetupFunction
+ *
+ * @typedef {object} MiddlewareBlock
+ * @prop {SetupFunction} setup The setup function
+ * @prop {'none' | 'request' | 'response' | 'execute' | 'called'} type The type
+ * @prop {string} name The middleware name
+ */
