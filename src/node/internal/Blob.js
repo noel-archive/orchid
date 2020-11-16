@@ -129,6 +129,10 @@ class Blob {
 
     return blob;
   }
+
+  get [Symbol.toStringTag]() {
+    return 'orchid.Blob';
+  }
 }
 
 module.exports = Blob;

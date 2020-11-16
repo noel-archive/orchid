@@ -2,9 +2,11 @@
 // Didn't want to add external dependencies
 
 const { Collection } = require('@augu/immutable');
+const { basename } = require('path');
 const { Readable } = require('stream');
 const { inspect } = require('util');
 const utils = require('../utils');
+const File = require('./File');
 
 /**
  * Returns a random string
@@ -19,18 +21,6 @@ const randomString = (len = 8) => {
   for (let i = 0; i < len; i++) str += possible[Math.floor(Math.randon() * possible.length)];
   return str;
 };
-
-/**
- * Returns if [value] is a Blob/File-like object
- * @param {unknown} value The value
- * @return {value is (Blob | File)}
- */
-const isBlob = (value) =>
-  utils.is.object(value) &&
-  utils.is.string(value.type) &&
-  utils.is.function(value.arrayBuffer) &&
-  ['Blob', 'File'].includes(value[Symbol.toStringTag] || value.constructor.name)  &&
-  utils.has('size', value);
 
 module.exports = class FormData {
 
@@ -72,7 +62,7 @@ module.exports = class FormData {
    * Creates a new [Readable] stream of this [FormData] instance
    */
   stream() {
-    return Readable.from(this.readContents());
+    return Readable.from(this.read());
   }
 
   /**
@@ -139,7 +129,7 @@ module.exports = class FormData {
         const item = content.values[key];
 
         yield this.getHeader(name, item.filename);
-        if (isBlob(item.value)) yield* item.value.stream();
+        if (utils.is.blob(item.value)) yield* item.value.stream();
         if (utils.is.stream(item.value)) yield* item.value;
         else yield item.value;
 
@@ -157,6 +147,32 @@ module.exports = class FormData {
     for await (const value of this.fields()) {
       yield Buffer.isBuffer(value) ? value : Buffer.from(String(value));
     }
+  }
+
+  /**
+   * Appends a key value pair to this [FormData] instance
+   * @template T The data type to add
+   * @param {string} name The name to place it in
+   * @param {T} value The value to add. It can be any primitive, `null`, `undefined`, and Buffer / Readable streams.
+   * Objects and Arrays get converted to a string with the content type: `application/json`
+   *
+   * @param {string} [filename=undefined] The file name to use, this is mainly used for Buffer and Readable streams
+   * @param {{ size: number; }} [options] Any additional options to add
+   */
+  append(
+    name,
+    value,
+    filename = undefined,
+    options = {}
+  ) {
+    if (!name || !value) throw new TypeError('Missing `name` and `value` options in [FormData.append]');
+
+    if (filename && !(utils.is.blob(value) || utils.is.stream(value) || !Buffer.isBuffer(value)))
+      throw new TypeError('"filename" parameter doesn\'t accept anything but \`Blob\`, \`Buffer\` and a readable stream');
+
+    if (Buffer.isBuffer(value) && filename) filename = basename(filename);
+    else if (utils.is.blob(value)) filename = basename(value.name);
+    else if (utils.is.stream(value) && (value.path || filename)) filename = basename(value.path || filename);
   }
 
 };

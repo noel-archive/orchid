@@ -230,7 +230,26 @@ const util = {
      * @param {unknown} value The value to check
      * @returns {value is Function}
      */
-    function: (value) => typeof value === 'function'
+    function: (value) => typeof value === 'function',
+
+    /**
+     * Returns if [value] is a Blob/File-like object
+     * @param {unknown} value The value
+     * @return {value is (Blob | File | import('./internal/Blob') | import('./internal/File'))}
+     */
+    blob: (value) =>
+      this.is.object(value) &&
+      this.is.string(value.type) &&
+      this.is.function(value.raw) &&
+      ['orchid.Blob', 'orchid.File'].includes(value[Symbol.toStringTag] || value.constructor.name)  &&
+      this.has('size', value),
+
+    /**
+     * Returns if [value] is a [ReadStream]
+     * @param {unknown} value The value
+     * @return {value is import('fs').ReadStream}
+     */
+    stream: (value) => value instanceof (require('fs')).ReadStream
 
   }
 

@@ -134,8 +134,7 @@ module.exports = class HttpClient {
    */
   use(middleware) {
     if (middleware.type === 'none') {
-      const setup = middleware.setup.bind(this);
-      setup();
+      middleware.setup(client);
     } else {
       this.middleware.set(middleware.name, middleware);
     }
