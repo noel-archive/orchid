@@ -60,6 +60,24 @@ const util = {
     return _createRequestInternal.apply(client, [url, method, options]);
   },
 
+  /**
+   * Gets a value from an object, if not defined, it'll return the default value
+   * passed down.
+   *
+   * @template T: The data object
+   * @param {T} obj The data object
+   * @param {keyof T} key The key to fetch
+   * @param {T[keyof T]} defaultValue The default value
+   */
+  get(obj, key, defaultValue) {
+    if (!this.is.object(obj)) throw new TypeError('Object passed down was not an object.');
+
+    if (obj === undefined || obj === null) return defaultValue;
+    if (this.has(obj, key)) return obj[key];
+
+    return defaultValue;
+  },
+
   getStatuses() {
     if (this.extractNodeVersion() > 10) return (require('http')).STATUS_CODES;
 
@@ -249,7 +267,14 @@ const util = {
      * @param {unknown} value The value
      * @return {value is import('fs').ReadStream}
      */
-    stream: (value) => value instanceof (require('fs')).ReadStream
+    stream: (value) => value instanceof (require('fs')).ReadStream,
+
+    /**
+     * Checks if [value] is a URI-like object
+     * @param {unknown} value The value
+     * @returns {value is string | import('url').URL}
+     */
+    uriLike: (value) => typeof value === 'string' || value instanceof require('url').URL
 
   }
 
