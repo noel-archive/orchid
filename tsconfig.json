@@ -9,12 +9,12 @@
     "strict": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
-    "types": ["node", "@types/jest"],
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "exclude": ["node_modules", "src/tests"],
+  "exclude": ["node_modules"],
   "include": ["src/**/*"]
 }
