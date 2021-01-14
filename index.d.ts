@@ -129,7 +129,7 @@ declare module '@augu/orchid' {
       timeout?: number;
 
       /** The method to use */
-      method: HttpMethod;
+      method?: HttpMethod;
 
       /** Make this request into a stream */
       stream?: boolean;
