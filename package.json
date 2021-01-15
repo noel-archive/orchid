@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",
-  "repository": "https://github.com/auguwu/Orchid",
+  "repository": "https://github.com/auguwu/orchid",
   "files": [
     "build",
     "index.d.ts"
@@ -13,13 +13,13 @@
   "maintainers": [
     {
       "name": "Chris \"August\" Hernandez",
-      "email": "august@augu.dev",
-      "url": "https://augu.dev"
+      "email": "cutie@floofy.dev",
+      "url": "https://floofy.dev"
     }
   ],
   "scripts": {
-    "prepare": "yarn build",
-    "build": "yarn lint && rm -fr build && tsc",
+    "prepare": "npm run build",
+    "build": "npm run lint && rm -fr build && tsc",
     "lint": "eslint src --ext .ts --fix",
     "test": "jest --config jest.config.js"
   },
