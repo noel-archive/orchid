@@ -1,6 +1,5 @@
 node_modules/
 build/
 
-package-*.json
 *.lock
 *.log
