@@ -20,4 +20,72 @@
  * SOFTWARE.
  */
 
-export default {};
+import { MiddlewareType, OnRequestMiddlewareDefinition, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
+import type { HttpClient, Request, Response } from '..';
+
+export interface LogInterface {
+  verbose(message: string): void;
+  error(message: string): void;
+  debug(message: string): void;
+  warn(message: string): void;
+  info(message: string): void;
+}
+
+export enum LogLevel {
+  Info = 1 << 0,
+  Error = 1 << 1,
+  Warning = 1 << 2,
+  Verbose = 1 << 3,
+  Debug = 1 << 4
+}
+
+type LogLevelAsString = 'info' | 'error' | 'warn' | 'verbose' | 'debug' | 'log';
+
+interface LoggingOptions {
+  useConsole?: boolean;
+  caller?: (level: LogLevelAsString, message: string) => any;
+  level?: LogLevel | LogLevel[];
+}
+
+const convertLogLevelAsString = (level: LogLevel): LogLevelAsString => {
+  switch (level) {
+    case LogLevel.Info:
+      return 'info';
+
+    case LogLevel.Debug:
+      return 'debug';
+
+    case LogLevel.Error:
+      return 'error';
+
+    case LogLevel.Verbose:
+      return 'verbose';
+
+    case LogLevel.Warning:
+      return 'warn';
+
+    default:
+      return 'log';
+  }
+};
+
+const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequestExecuteMiddlewareDefinition | OnResponseMiddlewareDefinition | OnRequestMiddlewareDefinition => ({
+  type: [MiddlewareType.None, MiddlewareType.OnRequest, MiddlewareType.OnResponse],
+  name: 'logger',
+
+  run(this: HttpClient, type: MiddlewareType, reqOrRes?: Request, res?: Response) {
+    if (type === MiddlewareType.None) {
+      const opts: LoggingOptions = Object.assign({
+        useConsole: true,
+        level: LogLevel.Info
+      }, options);
+
+      if (!opts.useConsole && opts.caller === undefined)
+        throw new TypeError('Missing `caller` function in `options`');
+
+      const level = typeof opts.level === 'number' ? opts.level! : opts.level?.map(val => val).flat() ?? LogLevel.Info as number;
+    }
+  }
+});
+
+export default logging;

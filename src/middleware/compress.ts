@@ -20,4 +20,21 @@
  * SOFTWARE.
  */
 
-export default {};
+import { MiddlewareType, GenericMiddlewareDefinition } from '../structures/Middleware';
+
+const compress: GenericMiddlewareDefinition = {
+  name: 'compress',
+  type: MiddlewareType.None,
+
+  run() {
+    const logger = this.middleware('logger');
+    logger?.info('Injected middleware "compress", you have access to pass in `Request.compress()`');
+
+    this.middleware.set('compress', true);
+  }
+};
+
+/**
+ * Installs the compression middleware into orchid
+ */
+export default compress;

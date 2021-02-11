@@ -22,4 +22,12 @@
 
 import Serializer from '../structures/Serializer';
 
-export default class TextSerializer extends Serializer<string> {}
+export default class TextSerializer extends Serializer<string> {
+  constructor() {
+    super('*');
+  }
+
+  serialize(data: Buffer) {
+    return data.toString();
+  }
+}

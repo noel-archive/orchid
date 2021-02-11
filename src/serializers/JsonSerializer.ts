@@ -22,4 +22,12 @@
 
 import Serializer from '../structures/Serializer';
 
-export default class JsonSerializer<T extends object = object> extends Serializer<T> {}
+export default class JsonSerializer<T extends object = object> extends Serializer<T> {
+  constructor() {
+    super('application/json');
+  }
+
+  serialize(data: Buffer) {
+    return JSON.parse(data.toString()) as T;
+  }
+}

@@ -71,8 +71,9 @@ export const HttpMethods: Readonly<HttpMethod[]> = [
   'PATCH'
 ] as const;
 
+export { MiddlewareDefinition, MiddlewareType } from './structures/Middleware';
+export { default as HttpClient } from './HttpClient';
 export { default as Serializer } from './structures/Serializer';
-export { MiddlewareDefinition } from './structures/Middleware';
 export { default as Response } from './structures/Response';
 export { default as Request } from './structures/Request';
 
