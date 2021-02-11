@@ -26,6 +26,8 @@ orchid
 ```
 
 ## Install
+@augu/orchid requires Node.js v14 or higher to use since it uses ES2020 features like optional chaining (`?.`)
+
 ```sh
 $ npm install @augu/orchid
 ```

@@ -23,6 +23,9 @@
     "lint": "eslint src --ext .ts --fix",
     "test": "jest --config jest.config.js"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "@augu/collections": "1.0.3",
     "@augu/utils": "1.0.0",
