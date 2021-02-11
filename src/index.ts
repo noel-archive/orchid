@@ -20,4 +20,68 @@
  * SOFTWARE.
  */
 
-console.log('hello world!');
+import type { RequestOptions } from './structures/Request';
+import { URL } from 'url';
+
+const { version: pkgVersion } = require('../package.json');
+
+/** All of the http methods available for the HttpClient */
+export type HttpMethod =
+  | 'options'
+  | 'connect'
+  | 'delete'
+  | 'trace'
+  | 'head'
+  | 'post'
+  | 'put'
+  | 'get'
+  | 'patch'
+  | 'OPTIONS'
+  | 'CONNECT'
+  | 'DELETE'
+  | 'TRACE'
+  | 'HEAD'
+  | 'POST'
+  | 'PUT'
+  | 'GET'
+  | 'PATCH';
+
+/** Returns the version of `@augu/orchid` */
+export const version: string = pkgVersion;
+
+/** Returns the http methods as an Array */
+export const HttpMethods: Readonly<HttpMethod[]> = [
+  'options',
+  'connect',
+  'delete',
+  'trace',
+  'head',
+  'post',
+  'put',
+  'get',
+  'patch',
+  'OPTIONS',
+  'CONNECT',
+  'DELETE',
+  'TRACE',
+  'HEAD',
+  'POST',
+  'PUT',
+  'GET',
+  'PATCH'
+] as const;
+
+export { default as Serializer } from './structures/Serializer';
+export { MiddlewareDefinition } from './structures/Middleware';
+export { default as Response } from './structures/Response';
+export { default as Request } from './structures/Request';
+
+export { RequestOptions };
+export * from './serializers';
+export * from './middleware';
+
+for (const method of HttpMethods.filter(r => r.toLowerCase() === r)) {
+  exports[method] = function onMethod(url: string | URL | RequestOptions, options?: RequestOptions) {
+    // TODO: this
+  };
+}
