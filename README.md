@@ -1,7 +1,10 @@
 # @augu/orchid
-> :flight_arrival: **| Simple, lightweight and customizable HTTP client**
-> 
-> [Documentation](https://docs.augu.dev/orchid) **|** [NPM](https://npmjs.com/package/@augu/orchid)
+> :flight_arrival: **Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.**
+
+## Features
+- Middleware: Orchid has a Express-like interface for creating middleware to extend classes like Request, Response, and HttpClient.
+- Serialization: Orchid provides a serialization system to serialize the response body from the Content Type from the server, so far JSON and Text are supported.
+- Simple: Orchid has a simple API so there is no steep learning curve.
 
 ## Usage
 ```ts
@@ -20,6 +23,11 @@ orchid
   }).execute().then((res) => {
     console.log(res.text());
   }).catch(console.error);
+```
+
+## Install
+```sh
+$ npm install @augu/orchid
 ```
 
 ## Middleware
@@ -43,7 +51,7 @@ By putting this in your Orchid instance (in the constructor or using HttpClient#
 
 The type varies from it's callee, so if you wanna run it WHEN we call HttpRequest#execute, then use CycleType.EXECUTE
 
-## Migrating
+## Migration Guide
 ### v1.0 / v1.1 -> v1.2
 All this version really does is add `middleware` or `agent` (or both!) to the constructor
 
@@ -82,5 +90,8 @@ interface DefaultRequestOptions {
 }
 ```
 
+## v1.x -> v2.x
+Orchid allows you to have Serialization and new middleware API, read [here](#) for more information.
+
 ## License
-**Orchid** is released under the MIT License, read [here](/LICENSE) for more information
+**@augu/orchid** is released under the MIT License, read [here](/LICENSE) for more information. :heart:
