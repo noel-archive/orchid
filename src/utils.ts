@@ -20,32 +20,30 @@
  * SOFTWARE.
  */
 
+import type { RequestOptions } from './structures/Request';
+import type { UrlLike } from './HttpClient';
+import { HttpMethods } from '.';
+import { URL } from 'url';
+
 /**
- * Represents a [Serializer] class, which serializes objects from a specific content-type
- *
- * __**Built-in Serializers**__
- * - `application/json`: JsonSerializer
- * - `*`: TextSerializer
+ * Checks if a specific value is [UrlLike]
+ * @param like The value
+ * @returns if it is or not
  */
-export default class Serializer<T = unknown> {
-  /** The content-type to use to serialize */
-  public contentType: RegExp | string;
+export function isUrlLike(like: unknown): like is UrlLike {
+  return typeof like === 'string' || (
+    like instanceof URL &&
+    like.origin !== undefined
+  );
+}
 
-  /**
-   * Constructs a new instance of [Serializer]
-   * @param contentType The content-type to use to serialize
-   */
-  constructor(contentType: string | RegExp) {
-    this.contentType = contentType;
-  }
-
-  /**
-   * Serializes data and returns the output
-   * @param data The data (that is a Buffer) to serialize
-   * @returns The data represented as [T].
-   * @throws {SyntaxError} When the user hasn't overloaded this function
-   */
-  serialize(data: Buffer): T {
-    throw new SyntaxError(`Serializer.serialize was not over-ridden (contentType=${this.contentType})`);
-  }
+/**
+ * Check if [value] is related to [RequestOptions]
+ * @param value The value
+ */
+export function isRequestLike(value: unknown): value is RequestOptions {
+  return typeof value === 'object' && (
+    ((value as RequestOptions).method !== undefined && HttpMethods.includes((value as RequestOptions).method!)) ||
+    isUrlLike((value as RequestOptions).url)
+  );
 }

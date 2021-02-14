@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { MiddlewareType, OnRequestMiddlewareDefinition, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
+import { MiddlewareType, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
 import type { HttpClient, Request, Response } from '..';
 
 export interface LogInterface {
@@ -42,38 +42,38 @@ export enum LogLevel {
 type LogLevelAsString = 'info' | 'error' | 'warn' | 'verbose' | 'debug' | 'log';
 
 interface LoggingOptions {
+  /** If we should opt to `console` or not */
   useConsole?: boolean;
+
+  /**
+   * Custom caller function for external logging libraries
+   * @param level The log level
+   * @param message The message that was logged
+   */
   caller?: (level: LogLevelAsString, message: string) => any;
+
+  /**
+   * Format function if we are using the `useConsole` option
+   *
+   * - `{{level}}`: The log level that was used
+   * - `{{message}}`: The message
+   */
+  format?: string;
+
+  /** The log level(s) to use */
   level?: LogLevel | LogLevel[];
 }
 
-const convertLogLevelAsString = (level: LogLevel): LogLevelAsString => {
-  switch (level) {
-    case LogLevel.Info:
-      return 'info';
+const refineFormat = (format: string, { level, message }: { level: LogLevelAsString; message: string }) =>
+  format
+    .replace(/{{level}}/, level)
+    .replace(/{{message}}/, message);
 
-    case LogLevel.Debug:
-      return 'debug';
-
-    case LogLevel.Error:
-      return 'error';
-
-    case LogLevel.Verbose:
-      return 'verbose';
-
-    case LogLevel.Warning:
-      return 'warn';
-
-    default:
-      return 'log';
-  }
-};
-
-const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequestExecuteMiddlewareDefinition | OnResponseMiddlewareDefinition | OnRequestMiddlewareDefinition => ({
-  type: [MiddlewareType.None, MiddlewareType.OnRequest, MiddlewareType.OnResponse],
+const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequestExecuteMiddlewareDefinition | OnResponseMiddlewareDefinition => ({
+  type: [MiddlewareType.None, MiddlewareType.OnResponse, MiddlewareType.Executed],
   name: 'logger',
 
-  run(this: HttpClient, type: MiddlewareType, reqOrRes?: Request, res?: Response) {
+  run(this: HttpClient, type: MiddlewareType, reqOrRes?: Request | Response, res?: Response) {
     if (type === MiddlewareType.None) {
       const opts: LoggingOptions = Object.assign({
         useConsole: true,
@@ -83,7 +83,87 @@ const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequ
       if (!opts.useConsole && opts.caller === undefined)
         throw new TypeError('Missing `caller` function in `options`');
 
-      const level = typeof opts.level === 'number' ? opts.level! : opts.level?.map(val => val).flat() ?? LogLevel.Info as number;
+      const level: number = typeof opts.level === 'number'
+        ? opts.level ?? LogLevel.Info
+        : opts.level?.reverse().reduce((prev, curr, idx) => prev + (curr * (2 ** idx)), 0) ?? LogLevel.Info;
+
+      const logger: LogInterface = {
+        verbose(message) {
+          if (!(level & LogLevel.Verbose)) return;
+
+          if (opts.useConsole) {
+            const format = opts.format ?? `[verbose :: ${process.pid}]  ~  {{message}}`;
+            console.log(refineFormat(format, { level: 'verbose', message }));
+          } else {
+            opts.caller?.('verbose', message);
+          }
+        },
+
+        error(message) {
+          if (!(level & LogLevel.Error)) return;
+
+          if (opts.useConsole) {
+            const format = opts.format ?? `[error :: ${process.pid}]  ~  {{message}}`;
+            console.log(refineFormat(format, { level: 'error', message }));
+          } else {
+            opts.caller?.('error', message);
+          }
+        },
+
+        debug(message) {
+          if (!(level & LogLevel.Debug)) return;
+
+          if (opts.useConsole) {
+            const format = opts.format ?? `[debug :: ${process.pid}]  ~  {{message}}`;
+            console.log(refineFormat(format, { level: 'debug', message }));
+          } else {
+            opts.caller?.('debug', message);
+          }
+        },
+
+        warn(message) {
+          if (!(level & LogLevel.Verbose)) return;
+
+          if (opts.useConsole) {
+            const format = opts.format ?? `[warn :: ${process.pid}]  ~  {{message}}`;
+            console.log(refineFormat(format, { level: 'warn', message }));
+          } else {
+            opts.caller?.('warn', message);
+          }
+        },
+
+        info(message) {
+          if (opts.useConsole) {
+            const format = opts.format ?? `[info :: ${process.pid}]  ~  {{message}}`;
+            console.log(refineFormat(format, { level: 'info', message }));
+          } else {
+            opts.caller?.('info', message);
+          }
+        }
+      };
+
+      this.middleware.set('logger', logger);
+
+      const shouldDebug = !!(level & LogLevel.Debug);
+      logger.info(`Installed the logger middleware${shouldDebug ? ', you will now get debug information.' : '!'}`);
+
+      return;
+    }
+
+    if (type === MiddlewareType.Executed) {
+      const logger = this.middleware.get('logger') as LogInterface | undefined;
+      const req = reqOrRes as Request;
+
+      logger?.info(`Now making a request to "${req.method} ${req.url}" (User-Agent: ${req.headers['user-agent'] ?? 'unknown'})`);
+
+      return;
+    }
+
+    if (type === MiddlewareType.OnResponse) {
+      const logger = this.middleware.get('logger') as LogInterface | undefined;
+      logger?.info(`Made a request to "${req.method} ${req.url}" | ${res!.statusText}`);
+
+      return;
     }
   }
 });

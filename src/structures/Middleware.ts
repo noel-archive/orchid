@@ -131,14 +131,8 @@ export default class Middleware {
    * @param client The http client for `this` => HttpClient
    * @param args Any additional arguments to run
    */
-  execute(client: HttpClient, ...args: Parameters<Middleware['run']>) {
-    /**
-     * Emitted when we call `Middleware.execute`
-     * @param name The name of the middleware that was executed
-     */
-    client.emit('middleware', this.name);
-
+  execute(client: HttpClient, type: MiddlewareType, ...args: any[]) {
     this.run = this.run.bind(client);
-    return (this.run as any)(...args);
+    return (this.run as any)(type, ...args);
   }
 }

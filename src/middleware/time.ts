@@ -20,4 +20,66 @@
  * SOFTWARE.
  */
 
-export default {};
+import { GenericMiddlewareDefinition, MiddlewareType, OnRequestMiddlewareDefinition, OnResponseMiddlewareDefinition } from '../structures/Middleware';
+import type { HttpClient, Request, Response } from '..';
+import { calculateHRTime } from '@augu/utils';
+
+const createId = () => {
+  const charList = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZ0123456789._-@?!';
+  let text = '';
+
+  for (let i = 0; i < 4; i++)
+    text += charList.charAt(Math.floor(Math.random() * charList.length));
+
+  return text;
+};
+
+const time: OnRequestMiddlewareDefinition | OnResponseMiddlewareDefinition | GenericMiddlewareDefinition = ({
+  type: [MiddlewareType.OnResponse, MiddlewareType.OnRequest, MiddlewareType.None],
+  name: 'time',
+
+  run(this: HttpClient, type: MiddlewareType, reqOrRes?: Request | Response, res?: Response) {
+    if (type === MiddlewareType.None) {
+      this.middleware.set('time', { pings: [], currentId: null, lastPing: -1, startPing: -1 });
+
+      const logger = this.middleware.get('logger');
+      logger?.info('Installed the time middleware');
+      return;
+    }
+
+    if (type === MiddlewareType.OnRequest) {
+      const time = this.middleware.get('time')!;
+      const start = process.hrtime();
+      const currentId = createId();
+
+      this.middleware.set('time', {
+        pings: time.pings,
+        currentId,
+        lastPing: time.lastPing,
+        startPing: start
+      });
+
+      return;
+    }
+
+    if (type === MiddlewareType.OnResponse) {
+      const { startPing, pings } = this.middleware.get('time')!;
+      const time = calculateHRTime(startPing);
+
+      pings.push(time);
+      this.middleware.set('time', {
+        pings,
+        startPing: -1,
+        currentId: null,
+        lastPing: time
+      });
+
+      const logger = this.middleware.get('logger');
+      logger?.info(`Request -> Response took ~${time}ms to execute.`);
+
+      return;
+    }
+  }
+});
+
+export default time;
