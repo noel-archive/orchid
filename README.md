@@ -33,25 +33,64 @@ $ npm install @augu/orchid
 ```
 
 ## Middleware
-Orchid allows anyone to apply custom middleware very easily, middleware except `form`, `logging`, `compress`, and `streams` will run when the request is being requested, readyed, etc (using Middleware#cycleType).
+Orchid allows you to apply middleware to customize how Orchid works! Currently, there are 4 types of middleware youu can implement:
 
-To make custom middleware, it's easy as cake! All you need is a function to return a Middleware object, like so:
+- `on.request`: Made when a request is being processed
+- `on.response`: Made when orchid made a response!
+- `none`: Nothing, apply your custom logic!
+- `execute`: When you call `Request.execute()`, this will be ran
+
+An example would be like:
 
 ```js
-const { CycleType } = require('@augu/orchid');
+const { MiddlewareType } = require('@augu/orchid');
 
-module.exports = () => ({
-  cycleType: CycleType.Execute,
-  name: 'my:mid',
-  intertwine() {
-    // Now we do stuff here, we don't add the middleware since it does itself
+module.exports = {
+  type: [MiddlewareType.None],
+  name: 'name',
+
+  run(client, type) {
+    // this => this middleware
+    // client => The HttpClient used
+    // type => The middleware type
   }
-});
+};
 ```
 
-By putting this in your Orchid instance (in the constructor or using HttpClient#use), you can apply this middleware and Orchid will call Middleware#**intertwine** and calls it a day. But, if you use `cycleType`, then it'll run by it's type.
+## Serialization
+Orchid allows you to serialize your own data without doing it yourself every time you make a request. Currently, this is only limited
+to `Response.body()`.
 
-The type varies from it's callee, so if you wanna run it WHEN we call HttpRequest#execute, then use CycleType.EXECUTE
+An example on building a XML serializer would look like this:
+
+```js
+const { Serializer } = require('@augu/orchid');
+
+module.exports = class XMLSerializer extends Serializer {
+  constructor() {
+    super(/application\/xhtml[+]xml/gi);
+  }
+
+  serialize(data) {
+    const str = data.toString();
+    return someXMLParser(str);
+  }
+}
+```
+
+Then we inject it into our http client or adding it with `orchid#method`
+
+```js
+// HttpClient
+const client = new HttpClient({
+  serializers: [new XMLSerializer()]
+});
+
+// Method function
+orchid.get({
+  serializers: [new XMLSerializer()]
+});
+```
 
 ## Migration Guide
 ### v1.0 / v1.1 -> v1.2
@@ -93,7 +132,7 @@ interface DefaultRequestOptions {
 ```
 
 ## v1.x -> v2.x
-Orchid allows you to have Serialization and new middleware API, read [here](./migrating/v2.md) for more information.
+Read the [migration](./migrating/v2.md) notes for more information.
 
 ## License
 **@augu/orchid** is released under the MIT License, read [here](/LICENSE) for more information. :heart:
