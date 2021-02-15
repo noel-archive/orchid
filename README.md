@@ -93,7 +93,7 @@ interface DefaultRequestOptions {
 ```
 
 ## v1.x -> v2.x
-Orchid allows you to have Serialization and new middleware API, read [here](#) for more information.
+Orchid allows you to have Serialization and new middleware API, read [here](./migrating/v2.md) for more information.
 
 ## License
 **@augu/orchid** is released under the MIT License, read [here](/LICENSE) for more information. :heart:

@@ -21,7 +21,7 @@
  */
 
 import HttpClient, { HttpClientOptions, UrlLike } from './HttpClient';
-import type { RequestOptions } from './structures/Request';
+import Request, { RequestOptions } from './structures/Request';
 
 const { version: pkgVersion } = require('../package.json');
 
@@ -76,13 +76,12 @@ export { default as TimeoutError } from './errors/TimeoutError';
 export { default as Serializer } from './structures/Serializer';
 export { default as HttpError } from './errors/HttpError';
 export { default as Response } from './structures/Response';
-export { default as Request } from './structures/Request';
 
 export * as middleware from './middleware';
-export { RequestOptions, HttpClient, UrlLike };
+export { RequestOptions, HttpClient, UrlLike, Request };
 export * from './serializers';
 
-interface SingleRequestOptions extends HttpClientOptions, Omit<RequestOptions, 'method'> {}
+export interface SingleRequestOptions extends HttpClientOptions, Omit<RequestOptions, 'method'> {}
 
 for (const method of HttpMethods.filter(r => r.toLowerCase() === r)) {
   exports[method] = function onMethod(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>) {
