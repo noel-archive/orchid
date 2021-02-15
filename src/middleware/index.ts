@@ -22,4 +22,3 @@
 
 export { default as compress } from './compress';
 export { default as logging } from './logging';
-export { default as timer } from './time';

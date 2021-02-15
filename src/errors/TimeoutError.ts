@@ -20,23 +20,8 @@
  * SOFTWARE.
  */
 
-import { MiddlewareType, GenericMiddlewareDefinition } from '../structures/Middleware';
-import type { LogInterface } from './logging';
-import { HttpClient } from '..';
-
-const compress: GenericMiddlewareDefinition = {
-  name: 'compress',
-  type: MiddlewareType.None,
-
-  run(this: any, client: HttpClient) {
-    const logger = client.middleware.get('logger')?.logger as LogInterface | undefined;
-    logger?.info('Injected middleware "compress", you have access to pass in `Request.compress()`');
-
-    this.enabled = true;
+export default class TimeoutError extends Error {
+  constructor(url: string, timeout: number) {
+    super(`Request timed out for ${timeout}ms on URL "${url}" (>${timeout}ms)`);
   }
-};
-
-/**
- * Installs the compression middleware into orchid
- */
-export default compress;
+}

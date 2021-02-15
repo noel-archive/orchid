@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
+import HttpClient, { HttpClientOptions, UrlLike } from './HttpClient';
 import type { RequestOptions } from './structures/Request';
-import { URL } from 'url';
 
 const { version: pkgVersion } = require('../package.json');
 
@@ -72,17 +72,28 @@ export const HttpMethods: Readonly<HttpMethod[]> = [
 ] as const;
 
 export { MiddlewareDefinition, MiddlewareType } from './structures/Middleware';
-export { default as HttpClient, UrlLike } from './HttpClient';
+export { default as TimeoutError } from './errors/TimeoutError';
 export { default as Serializer } from './structures/Serializer';
+export { default as HttpError } from './errors/HttpError';
 export { default as Response } from './structures/Response';
 export { default as Request } from './structures/Request';
 
-export { RequestOptions };
+export * as middleware from './middleware';
+export { RequestOptions, HttpClient, UrlLike };
 export * from './serializers';
-export * from './middleware';
+
+interface SingleRequestOptions extends HttpClientOptions, Omit<RequestOptions, 'method'> {}
 
 for (const method of HttpMethods.filter(r => r.toLowerCase() === r)) {
-  exports[method] = function onMethod(url: string | URL | RequestOptions, options?: RequestOptions) {
-    // TODO: this
+  exports[method] = function onMethod(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>) {
+    const client = new HttpClient({
+      serializers: options?.serializers,
+      middleware: options?.middleware,
+      userAgent: options?.userAgent,
+      defaults: options?.defaults,
+      baseUrl: options?.baseUrl
+    });
+
+    return client[method](url, options);
   };
 }

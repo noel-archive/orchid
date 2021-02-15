@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { MiddlewareType, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
+import Middleware, { MiddlewareType, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
 import type { HttpClient, Request, Response } from '..';
 
 export interface LogInterface {
@@ -73,11 +73,11 @@ const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequ
   type: [MiddlewareType.None, MiddlewareType.OnResponse, MiddlewareType.Executed],
   name: 'logger',
 
-  run(this: HttpClient, type: MiddlewareType, reqOrRes?: Request | Response, res?: Response) {
+  run(client: HttpClient, type: MiddlewareType, reqOrRes?: Request | Response, res?: Response) {
     if (type === MiddlewareType.None) {
       const opts: LoggingOptions = Object.assign({
         useConsole: true,
-        level: LogLevel.Info
+        level: LogLevel.Verbose
       }, options);
 
       if (!opts.useConsole && opts.caller === undefined)
@@ -142,8 +142,7 @@ const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequ
         }
       };
 
-      this.middleware.set('logger', logger);
-
+      (this as any).logger = logger;
       const shouldDebug = !!(level & LogLevel.Debug);
       logger.info(`Installed the logger middleware${shouldDebug ? ', you will now get debug information.' : '!'}`);
 
@@ -151,7 +150,7 @@ const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequ
     }
 
     if (type === MiddlewareType.Executed) {
-      const logger = this.middleware.get('logger') as LogInterface | undefined;
+      const logger = client.middleware.get('logger')?.logger as LogInterface | undefined;
       const req = reqOrRes as Request;
 
       logger?.info(`Now making a request to "${req.method} ${req.url}" (User-Agent: ${req.headers['user-agent'] ?? 'unknown'})`);
@@ -160,8 +159,8 @@ const logging = (options?: LoggingOptions): GenericMiddlewareDefinition | OnRequ
     }
 
     if (type === MiddlewareType.OnResponse) {
-      const logger = this.middleware.get('logger') as LogInterface | undefined;
-      logger?.info(`Made a request to "${req.method} ${req.url}" | ${res!.statusText}`);
+      const logger = client.middleware.get('logger')?.logger as LogInterface | undefined;
+      logger?.info(`Made a request to "${(reqOrRes as Request).method} ${(reqOrRes as Request).url}" | ${res!.status}`);
 
       return;
     }

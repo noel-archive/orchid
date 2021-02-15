@@ -52,7 +52,7 @@ export default class HttpClient {
   public serializers: Collection<string, Serializer<any>>;
 
   /** Container for all middleware */
-  public middleware: Collection<string, Middleware>;
+  public middleware: Collection<string, Middleware | any>;
 
   /** The user-agent to append to if there is no `User-Agent` header */
   public userAgent: string;
@@ -81,10 +81,8 @@ export default class HttpClient {
 
         // If the middleware type is `None`, we should
         // probably run it
-        if (middleware.type.includes(MiddlewareType.None)) {
+        if (middleware.type.includes(MiddlewareType.None))
           middleware.execute(this, MiddlewareType.None);
-          continue;
-        }
 
         this.middleware.set(definition.name, middleware);
       }
@@ -168,18 +166,18 @@ export default class HttpClient {
       (options !== undefined && isRequestLike(options))
     ) throw new TypeError('`url` was a instanceof request options yet `method` or `options` has request options?');
 
-    const requestOpts: RequestOptions = {};
-    const defaults = Object.assign({
-      followRedirects: true,
-      headers: {},
-      timeout: 30000
-    }, this.defaults ?? {});
+    const requestOpts: RequestOptions = isRequestLike(url) ? url : isRequestLike(method) ? method : options !== undefined && isRequestLike(options) ? options as any : {};
+    const defaults: RequestDefaults = {
+      followRedirects: requestOpts.followRedirects ?? true,
+      timeout: requestOpts.timeout ?? 30000,
+      headers: requestOpts.headers ?? {},
+    };
 
     const definedReqOpts = isRequestLike(url)
       ? url
       : isRequestLike(method)
         ? method
-        : isRequestLike(options)
+        : options !== undefined && isRequestLike(options)
           ? options as RequestOptions
           : {};
 
@@ -192,7 +190,7 @@ export default class HttpClient {
     if (definedReqOpts.timeout === undefined)
       definedReqOpts.timeout = defaults.timeout;
 
-    if (definedReqOpts.headers !== undefined)
+    if (definedReqOpts.headers !== undefined && Object.keys(defaults.headers ?? {}).length > 0)
       definedReqOpts.headers = Object.assign(definedReqOpts.headers, defaults.headers);
 
     let reqUrl!: URL;
@@ -229,13 +227,15 @@ export default class HttpClient {
     if (!reqUrl)
       throw new SyntaxError('Unable to identify the request URL.');
 
-    const meth = isRequestLike(url)
-      ? url.method
-      : typeof method === 'string'
-        ? method
-        : options !== undefined && isRequestLike(options)
-          ? (options as RequestOptions).method
-          : undefined;
+    let meth: HttpMethod | undefined = undefined;
+    if (isRequestLike(url) && url.method !== undefined)
+      meth = url.method;
+    else if (isRequestLike(method))
+      meth = method.method;
+    else if (typeof method === 'string')
+      meth = method;
+    else if (options !== undefined && isRequestLike(options))
+      meth = (options as RequestOptions).method;
 
     if (meth === undefined || !HttpMethods.includes(meth)) {
       const message = meth === undefined

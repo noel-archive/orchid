@@ -44,7 +44,7 @@ export interface IMiddlewareDefinition {
    * Runs the middleware for this definition
    * @param args The arguments from the definition type
    */
-  run(this: HttpClient, type: MiddlewareType, ...args: any[]): void;
+  run(client: HttpClient, type: MiddlewareType, ...args: any[]): void;
 
   /**
    * The middleware type to use
@@ -63,7 +63,7 @@ export interface SerializeMiddlewareDefinition extends IMiddlewareDefinition {
    * @param response The response
    * @param serializer The serializer that it's trying to serialize
    */
-  run(this: HttpClient, type: MiddlewareType, response: Response, serializer: Serializer<any>): void;
+  run(client: HttpClient, type: MiddlewareType, response: Response, serializer: Serializer<any>): void;
 
   type: MiddlewareType.Serialization | MiddlewareType[];
 }
@@ -73,7 +73,7 @@ export interface OnResponseMiddlewareDefinition extends IMiddlewareDefinition {
    * Runs the middleware with the `on.response` middleware type
    * @param response The response
    */
-  run(this: HttpClient, type: MiddlewareType, response: Response): void;
+  run(client: HttpClient, type: MiddlewareType, response: Response): void;
 
   type: MiddlewareType.OnResponse | MiddlewareType[];
 }
@@ -83,7 +83,7 @@ export interface OnRequestMiddlewareDefinition extends IMiddlewareDefinition {
    * Runs the middleware with the `on.request` middleware type
    * @param request The response
    */
-  run(this: HttpClient, request: Request): void;
+  run(client: HttpClient, type: MiddlewareType, request: Request): void;
 
   type: MiddlewareType.OnRequest | MiddlewareType[];
 }
@@ -93,7 +93,7 @@ export interface OnRequestExecuteMiddlewareDefinition extends IMiddlewareDefinit
    * Runs the middleware with the `executed` middleware type
    * @param request The request
    */
-  run(this: HttpClient, type: MiddlewareType, request: Request): void;
+  run(client: HttpClient, type: MiddlewareType, request: Request): void;
 
   type: MiddlewareType.Executed | MiddlewareType[];
 }
@@ -102,7 +102,7 @@ export interface GenericMiddlewareDefinition extends IMiddlewareDefinition {
   /**
    * Runs the middleware with the `none` middleware type
    */
-  run(this: HttpClient, type: MiddlewareType): void;
+  run(client: HttpClient, type: MiddlewareType): void;
 
   type: MiddlewareType.None | MiddlewareType[];
 }
@@ -116,6 +116,8 @@ export type MiddlewareDefinition =
   | GenericMiddlewareDefinition;
 
 export default class Middleware {
+  [x: string]: any;
+
   public name: string;
   public type: MiddlewareType[];
   public run: MiddlewareDefinition['run'];
@@ -124,6 +126,9 @@ export default class Middleware {
     this.name = definition.name;
     this.type = typeof definition.type === 'string' ? [definition.type] : definition.type;
     this.run = definition.run;
+
+    for (const key of Object.keys(definition).filter(x => !['name', 'type', 'run'].includes(x)))
+      this[key] = definition[key];
   }
 
   /**
@@ -132,7 +137,6 @@ export default class Middleware {
    * @param args Any additional arguments to run
    */
   execute(client: HttpClient, type: MiddlewareType, ...args: any[]) {
-    this.run = this.run.bind(client);
-    return (this.run as any)(type, ...args);
+    return (this.run as any)(client, type, ...args);
   }
 }

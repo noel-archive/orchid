@@ -24,7 +24,9 @@ import { UrlLike, HttpMethod, HttpClient, Response } from '..';
 import type { LogInterface } from '../middleware/logging';
 import { createDeflate, createGunzip } from 'zlib';
 import { MiddlewareType } from './Middleware';
+import TimeoutError from '../errors/TimeoutError';
 import { isObject } from '@augu/utils';
+import HttpError from '../errors/HttpError';
 import FormData from 'form-data';
 import { URL } from 'url';
 import https from 'https';
@@ -43,6 +45,11 @@ export interface RequestOptions {
 function figureData(this: Request, packet: unknown): any {
   if (typeof packet === 'string') {
     return packet;
+  } else if (packet instanceof FormData) {
+    if (!this.headers.hasOwnProperty['content-type'] || !this.headers['content-type'].includes('multipart/form-data'))
+      this.headers['content-type'] = packet.getHeaders()['content-type'];
+
+    return packet;
   } else if (packet instanceof Array || isObject(packet)) {
     if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json')
       this.headers['content-type'] = 'application/json';
@@ -56,6 +63,8 @@ function figureData(this: Request, packet: unknown): any {
 
     return packet;
   }
+
+  return packet;
 }
 
 export default class Request {
@@ -75,7 +84,7 @@ export default class Request {
     this.headers = options?.headers ?? {};
     this.timeout = options?.timeout ?? 30000;
     this.method = method;
-    this.data = options?.data ?? null;
+    this.data = figureData.call(this, options?.data) ?? null;
     this.url = url;
 
     this.#client = client;
@@ -198,7 +207,7 @@ export default class Request {
         this.headers['user-agent'] = this.#client.userAgent;
 
       const onResponse = (res: http.IncomingMessage) => {
-        const resp = new Response(res);
+        const resp = new Response(this.#client, res);
         if (this.compressData) {
           if (res.headers['content-encoding'] === 'gzip') res.pipe(createGunzip());
           if (res.headers['content-encoding'] === 'deflate') res.pipe(createDeflate());
@@ -221,15 +230,15 @@ export default class Request {
         }
 
         res.on('error', original => {
-          const error = new HttpError('Tried to serialize request, but was unsuccessful').cause(original);
+          const error = new HttpError('Tried to serialize request, but was unsuccessful');
           const logger = this.#client.middleware.get('logger') as LogInterface | undefined;
-          logger?.error(error.string());
+          logger?.error(`${error}\nCaused by:\n${original.stack}`);
 
           return reject(error);
         })
           .on('data', chunk => resp._chunk(chunk))
           .on('end', () => {
-            if (!resp.ok) return reject(new HttpError(resp.status).response(resp));
+            if (!resp.success) return reject(Object.assign(new HttpError(resp.status), { body: resp.body() }));
 
             this.#client.runMiddleware(type => type === MiddlewareType.OnResponse, resp);
             return resolve(resp);
@@ -255,10 +264,10 @@ export default class Request {
         });
 
       req.on('error', original => {
-        const error = new HttpError(`Unable to create a request to "${this.method.toUpperCase()} ${this.url}"`).cause(original);
+        const error = new HttpError(`Unable to create a request to "${this.method.toUpperCase()} ${this.url}"`);
         const logger = this.#client.middleware.get('logger') as LogInterface | undefined;
 
-        logger?.error(error.string());
+        logger?.error(`${error}\nCaused by:\n${original.stack}`);
         return reject(error);
       });
 
@@ -267,12 +276,15 @@ export default class Request {
       if (this.data instanceof FormData) {
         this.data.pipe(req);
       } else {
-        if (isObject(this.data) || Array.isArray(this.data)) req.write(JSON.stringify(this.data));
+        if (this.data) {
+          if (isObject(this.data) || Array.isArray(this.data))
+            req.write(JSON.stringify(this.data));
+          else
+            req.write(this.data);
+        }
 
-        req.write(this.data);
+        req.end();
       }
-
-      req.end();
     });
   }
 }

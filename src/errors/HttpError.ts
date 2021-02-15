@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 
-describe('Test Spec', () => {
-  it('should be equal to 2', () =>
-    expect(1 + 1).toBe(2)
-  );
-});
+export default class HttpError extends Error {
+  constructor(status: string) {
+    super(status.slice(0));
+
+    this.name = 'HttpError';
+  }
+}
