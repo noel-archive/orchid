@@ -274,6 +274,7 @@ export default class Request {
       // Just pipe the form data class to the request
       // It'll create the request anyway :shrug:
       if (this.data instanceof FormData) {
+        this.#client.runMiddleware(type => type === MiddlewareType.OnRequest, this);
         this.data.pipe(req);
       } else {
         if (this.data) {
@@ -283,6 +284,7 @@ export default class Request {
             req.write(this.data);
         }
 
+        this.#client.runMiddleware(type => type === MiddlewareType.OnRequest, this);
         req.end();
       }
     });

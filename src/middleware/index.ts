@@ -20,5 +20,5 @@
  * SOFTWARE.
  */
 
+export { default as logging, LogLevel } from './logging';
 export { default as compress } from './compress';
-export { default as logging } from './logging';

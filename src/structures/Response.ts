@@ -88,8 +88,7 @@ export default class Response {
   }
 
   /**
-   * Converts the request body to a readable format
-   * from the `content-type` of the response
+   * Converts the request body to a readable format from the `content-type` of the response
    */
   body<T = string>(): T {
     const contentType = this.headers['content-type'];

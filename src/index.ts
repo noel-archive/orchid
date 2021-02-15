@@ -92,7 +92,8 @@ export declare function options(url: UrlLike | SingleRequestOptions, options?: O
 export declare function connect(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
 
 for (const method of HttpMethods.filter(r => r.toLowerCase() === r)) {
-  exports[method] = function onMethod(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>) {
+  const methodName = method === 'delete' ? 'del' : method;
+  exports[methodName] = function onMethod(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>) {
     const client = new HttpClient({
       serializers: options?.serializers,
       middleware: options?.middleware,

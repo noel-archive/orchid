@@ -52,7 +52,7 @@ export default class HttpClient {
   public serializers: Collection<string, Serializer<any>>;
 
   /** Container for all middleware */
-  public middleware: Collection<string, Middleware | any>;
+  public middleware: Collection<string, Middleware>;
 
   /** The user-agent to append to if there is no `User-Agent` header */
   public userAgent: string;

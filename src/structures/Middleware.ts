@@ -20,12 +20,9 @@
  * SOFTWARE.
  */
 
-import type { Serializer, Request, Response, HttpClient } from '..';
+import type { Request, Response, HttpClient } from '..';
 
 export enum MiddlewareType {
-  /** Runs when serialization happens (called from `Request.body()` or any other built-in method) */
-  Serialization = 'serialize',
-
   /** Runs when we receive a response (Called from `Request.execute()`) */
   OnResponse = 'on.response',
 
@@ -55,17 +52,6 @@ export interface IMiddlewareDefinition {
    * The name of the middleware
    */
   name: string;
-}
-
-export interface SerializeMiddlewareDefinition extends IMiddlewareDefinition {
-  /**
-   * Runs the middleware for the `serialize` middleware type
-   * @param response The response
-   * @param serializer The serializer that it's trying to serialize
-   */
-  run(client: HttpClient, type: MiddlewareType, response: Response, serializer: Serializer<any>): void;
-
-  type: MiddlewareType.Serialization | MiddlewareType[];
 }
 
 export interface OnResponseMiddlewareDefinition extends IMiddlewareDefinition {
@@ -109,7 +95,6 @@ export interface GenericMiddlewareDefinition extends IMiddlewareDefinition {
 
 export type MiddlewareDefinition =
   | IMiddlewareDefinition
-  | SerializeMiddlewareDefinition
   | OnResponseMiddlewareDefinition
   | OnRequestExecuteMiddlewareDefinition
   | OnRequestMiddlewareDefinition

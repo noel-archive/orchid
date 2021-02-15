@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import Middleware, { MiddlewareType, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
+import { MiddlewareType, OnResponseMiddlewareDefinition, GenericMiddlewareDefinition, OnRequestExecuteMiddlewareDefinition } from '../structures/Middleware';
 import type { HttpClient, Request, Response } from '..';
 
 export interface LogInterface {
