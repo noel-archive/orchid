@@ -1,12 +1,12 @@
 {
   "extends": "@augu/tsconfig",
   "compilerOptions": {
-    "declaration": true,
+    "moduleResolution": "node",
     "rootDir": "./src",
     "outDir": "./build",
     "types": ["node"],
     "lib": ["ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ESNext"]
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+  "include": ["src/**/*.ts"]
 }
