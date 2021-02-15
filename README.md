@@ -4,25 +4,21 @@
 ## Features
 - Middleware: Orchid has a Express-like interface for creating middleware to extend classes like Request, Response, and HttpClient.
 - Serialization: Orchid provides a serialization system to serialize the response body from the Content Type from the server, so far JSON and Text are supported.
-- Simple: Orchid has a simple API so there is no steep learning curve.
+- Simple: Orchid has a simple API so there is no steep learning curve when moving!
 
 ## Usage
-```ts
-import { HttpClient, HttpMethod, middleware } from '@augu/orchid';
+```js
+const { HttpClient, middleware } = require('@augu/orchid');
 
 const orchid = new HttpClient();
 orchid
   .use(middleware.logging())
-  .use(middleware.compress())
-  .use(middleware.streams());
+  .use(middleware.compress);
 
 orchid
-  .request({
-    method: 'get', // 'GET' also works!
-    url: 'https://augu.dev'
-  }).execute().then((res) => {
-    console.log(res.text());
-  }).catch(console.error);
+  .get('https://floofy.dev')
+  .then((res) => console.log(res.body()))
+  .catch(error => console.error(error));
 ```
 
 ## Install
