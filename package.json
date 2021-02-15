@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run lint && rm -fr build && tsc && cp src/methods.d.ts build/methods.d.ts",
+    "build": "npm run lint && rm -fr build && tsc",
     "lint": "eslint src --ext .ts --fix",
     "test": "jest --config jest.config.js"
   },
