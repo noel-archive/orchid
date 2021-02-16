@@ -22,7 +22,6 @@
 
 import type { RequestOptions } from './structures/Request';
 import type { UrlLike } from './HttpClient';
-import { HttpMethods } from '.';
 import { URL } from 'url';
 
 /**
@@ -42,8 +41,5 @@ export function isUrlLike(like: unknown): like is UrlLike {
  * @param value The value
  */
 export function isRequestLike(value: unknown): value is RequestOptions {
-  return typeof value === 'object' && (
-    ((value as RequestOptions).method !== undefined && HttpMethods.includes((value as RequestOptions).method!)) ||
-    isUrlLike((value as RequestOptions).url)
-  );
+  return typeof value === 'object' && isUrlLike((value as RequestOptions).url);
 }
