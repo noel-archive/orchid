@@ -83,14 +83,6 @@ export * from './serializers';
 
 export interface SingleRequestOptions extends HttpClientOptions, Omit<RequestOptions, 'method'> {}
 
-export declare function get(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function put(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function post(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function patch(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function trace(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function options(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-export declare function connect(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>): Request;
-
 for (const method of HttpMethods.filter(r => r.toLowerCase() === r)) {
   const methodName = method === 'delete' ? 'del' : method;
   exports[methodName] = function onMethod(url: UrlLike | SingleRequestOptions, options?: Omit<SingleRequestOptions, 'url'>) {

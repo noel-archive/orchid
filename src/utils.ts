@@ -22,6 +22,7 @@
 
 import type { RequestOptions } from './structures/Request';
 import type { UrlLike } from './HttpClient';
+import { isObject } from '@augu/utils';
 import { URL } from 'url';
 
 /**
@@ -41,5 +42,8 @@ export function isUrlLike(like: unknown): like is UrlLike {
  * @param value The value
  */
 export function isRequestLike(value: unknown): value is RequestOptions {
-  return typeof value === 'object' && isUrlLike((value as RequestOptions).url);
+  return (
+    isObject(value) &&
+    isUrlLike((value as RequestOptions).url)
+  );
 }

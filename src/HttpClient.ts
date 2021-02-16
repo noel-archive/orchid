@@ -225,7 +225,7 @@ export default class HttpClient {
     }
 
     if (!reqUrl)
-      throw new SyntaxError('Unable to identify the request URL.');
+      throw new SyntaxError('Unable to identify request URL.');
 
     let meth: HttpMethod | undefined = undefined;
     if (isRequestLike(url) && url.method !== undefined)

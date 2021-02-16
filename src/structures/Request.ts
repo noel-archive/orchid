@@ -199,7 +199,7 @@ export default class Request {
   }
 
   private execute() {
-    this.#client.runMiddleware((type) => type === MiddlewareType.OnRequest, this);
+    this.#client.runMiddleware((type) => type === MiddlewareType.Executed, this);
 
     return new Promise<Response>((resolve, reject) => {
       // Apply the User-Agent header
