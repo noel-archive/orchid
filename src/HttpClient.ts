@@ -58,7 +58,7 @@ export default class HttpClient {
   public userAgent: string;
 
   /** The request defaults to append if it's not provided */
-  public defaults?: RequestDefaults;
+  public defaults: RequestDefaults;
 
   /** The base URL, so you can index values like `/owo/:uwu` -> `<baseUrl>/owo/<whatever>` */
   public baseUrl?: string;
@@ -67,14 +67,19 @@ export default class HttpClient {
    * Creates a new [HttpClient] instance
    * @param options The options to use
    */
-  constructor(options: HttpClientOptions = {}) {
+  constructor(options?: HttpClientOptions) {
     this.serializers = new Collection();
     this.middleware = new Collection();
-    this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
-    this.defaults = options.defaults;
-    this.baseUrl = options.baseUrl;
+    this.userAgent = options?.userAgent ?? DEFAULT_USER_AGENT;
+    this.defaults = options?.defaults ?? {
+      followRedirects: true,
+      timeout: 30000,
+      headers: {}
+    };
 
-    if (options.middleware !== undefined) {
+    this.baseUrl = options?.baseUrl;
+
+    if (options?.middleware !== undefined) {
       for (let i = 0; i < options.middleware.length; i++) {
         const definition = options.middleware[i];
         const middleware = new Middleware(definition);
@@ -166,48 +171,31 @@ export default class HttpClient {
       (options !== undefined && isRequestLike(options))
     ) throw new TypeError('`url` was a instanceof request options yet `method` or `options` has request options?');
 
-    const requestOpts: RequestOptions = isRequestLike(url) ? url : isRequestLike(method) ? method : options !== undefined && isRequestLike(options) ? options as any : {};
-    const defaults: RequestDefaults = {
-      followRedirects: requestOpts.followRedirects ?? true,
-      timeout: requestOpts.timeout ?? 30000,
-      headers: requestOpts.headers ?? {},
-    };
-
-    const definedReqOpts = isRequestLike(url)
+    const requestOpts: RequestOptions = isRequestLike(url)
       ? url
       : isRequestLike(method)
         ? method
         : options !== undefined && isRequestLike(options)
-          ? options as RequestOptions
-          : {};
+          ? options as any
+          : this.defaults;
 
-    if (definedReqOpts.followRedirects === undefined)
-      definedReqOpts.followRedirects = defaults.followRedirects;
-
-    if (definedReqOpts.headers === undefined)
-      definedReqOpts.headers = defaults.headers;
-
-    if (definedReqOpts.timeout === undefined)
-      definedReqOpts.timeout = defaults.timeout;
-
-    if (definedReqOpts.headers !== undefined && Object.keys(defaults.headers ?? {}).length > 0)
-      definedReqOpts.headers = Object.assign(definedReqOpts.headers, defaults.headers);
+    const definedReqOpts = { ...requestOpts, ...this.defaults };
 
     let reqUrl!: URL;
     if (this.baseUrl !== undefined) {
       if (isUrlLike(url)) {
         if (url instanceof URL) reqUrl = new URL(url.pathname, this.baseUrl);
-        else if (typeof url === 'string') reqUrl = new URL(`${this.baseUrl}${url.startsWith('/') ? '/' : `/${url}`}`);
+        else if (typeof url === 'string') reqUrl = new URL(`${this.baseUrl}${url === '/' ? '' : url}`);
         else throw new TypeError(`Expected \`string\` or \`URL\`, received ${typeof url}.`);
       } else if (isUrlLike(url.url)) {
         if (url.url instanceof URL) reqUrl = new URL(url.url.pathname, this.baseUrl);
-        else if (typeof url.url === 'string') reqUrl = new URL(`${this.baseUrl}${url.url.startsWith('/') ? '/' : `/${url.url}`}`);
+        else if (typeof url.url === 'string') reqUrl = new URL(`${this.baseUrl}${url.url === '/' ? '' : url.url}`);
         else throw new TypeError(`Expected \`string\` or \`URL\`, received ${typeof url.url}.`);
       } else if (isRequestLike(method) && isUrlLike(method.url)) {
         const u = method.url as UrlLike;
 
         if (u instanceof URL) reqUrl = new URL(u.pathname, this.baseUrl);
-        else if (typeof u === 'string') reqUrl = new URL(`${this.baseUrl}${u.startsWith('/') ? '/' : `/${u}`}`);
+        else if (typeof u === 'string') reqUrl = new URL(`${this.baseUrl}${u === '/' ? '' : u}`);
         else throw new TypeError(`Expected \`string\` or \`URL\`, received ${typeof u}.`);
       } else if (
         options !== undefined &&
@@ -217,7 +205,7 @@ export default class HttpClient {
         const u = (options as RequestOptions).url as UrlLike;
 
         if (u instanceof URL) reqUrl = new URL(u.pathname, this.baseUrl);
-        else if (typeof u === 'string') reqUrl = new URL(`${this.baseUrl}${u.startsWith('/') ? '/' : `/${u}`}`);
+        else if (typeof u === 'string') reqUrl = new URL(`${this.baseUrl}${u === '/' ? '' : u}`);
         else throw new TypeError(`Expected \`string\` or \`URL\`, received ${typeof u}.`);
       }
     } else {
@@ -245,7 +233,7 @@ export default class HttpClient {
       throw new TypeError(message);
     }
 
-    return new Request(this, reqUrl, meth, requestOpts);
+    return new Request(this, reqUrl, meth, definedReqOpts);
   }
 
   /**
