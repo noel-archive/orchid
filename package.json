@@ -1,7 +1,7 @@
 {
   "name": "@augu/orchid",
   "description": "🛬 Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",
@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run lint && rm -fr build && tsup src/index.ts --format esm,cjs --sourcemap --minify --outDir ./build",
+    "build": "npm run lint && rm -fr build && tsc",
     "lint": "eslint src --ext .ts --fix",
     "test": "jest --config jest.config.js"
   },
@@ -51,7 +51,6 @@
     "@typescript-eslint/eslint-plugin": "4.15.1",
     "@typescript-eslint/parser": "4.15.1",
     "eslint": "7.20.0",
-    "tsup": "3.12.1",
     "typescript": "4.1.5"
   }
 }
