@@ -40,7 +40,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@augu/collections": "1.0.3",
+    "@augu/collections": "1.0.4",
     "@augu/utils": "1.0.3",
     "form-data": "4.0.0"
   },
