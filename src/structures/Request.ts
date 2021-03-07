@@ -42,29 +42,14 @@ export interface RequestOptions {
   url?: UrlLike;
 }
 
-function figureData(this: Request, packet: unknown): any {
-  if (typeof packet === 'string') {
-    return packet;
-  } else if (packet instanceof FormData) {
-    if (!this.headers.hasOwnProperty['content-type'] || !this.headers['content-type'].includes('multipart/form-data'))
-      this.headers['content-type'] = packet.getHeaders()['content-type'];
-
-    return packet;
-  } else if (packet instanceof Array || isObject(packet)) {
-    if (!this.headers.hasOwnProperty('content-type') || this.headers['content-type'] !== 'application/json')
-      this.headers['content-type'] = 'application/json';
-
-    return packet;
-  } else if (Buffer.isBuffer(packet)) {
-    return packet;
-  } else if (packet instanceof FormData) {
-    if (!this.headers.hasOwnProperty['content-type'] || !this.headers['content-type'].includes('multipart/form-data'))
-      this.headers['content-type'] = packet.getHeaders()['content-type'];
-
-    return packet;
+function applyExternalHeaders(this: Request, packet: unknown) {
+  if (packet instanceof FormData) {
+    const headers = packet.getHeaders();
+    this.header('content-type', headers['content-type']);
   }
 
-  return packet;
+  if (isObject(packet) || Array.isArray(packet))
+    this.header('content-type', 'application/json');
 }
 
 export default class Request {
@@ -84,10 +69,14 @@ export default class Request {
     this.headers = options?.headers ?? {};
     this.timeout = options?.timeout ?? 30000;
     this.method = method;
-    this.data = figureData.call(this, options?.data) ?? null;
+    this.data = options?.data ?? null;
     this.url = url;
 
     this.#client = client;
+
+    // apply the headers
+    if (Object.keys(options?.headers ?? {}).length > 0)
+      this.header(options!.headers!);
   }
 
   compress() {
@@ -122,10 +111,20 @@ export default class Request {
   * @returns This instance to chain methods
   */
   query(name: string | { [x: string]: string }, value?: string) {
-    if (name instanceof Object) {
-      for (const [key, val] of Object.entries(name)) this.url.searchParams[key] = val;
+    if (typeof name === 'string') {
+      if (this.url.searchParams.has(name))
+        return this;
+
+      this.url.searchParams.append(name, value!);
+    } else if (isObject(name)) {
+      for (const [key, val] of Object.entries(name)) {
+        if (this.url.searchParams.has(key))
+          continue;
+
+        this.url.searchParams.append(key, val);
+      }
     } else {
-      this.url.searchParams[name as string] = value!;
+      throw new TypeError(`expected Request.query(name, value) or Request.query({ ... }) but received ${typeof name === 'object' ? 'array/null' : typeof name}`);
     }
 
     return this;
@@ -151,10 +150,22 @@ export default class Request {
    * @returns This instance to chain methods
    */
   header(name: string | { [x: string]: any }, value?: any) {
-    if (name instanceof Object) {
-      for (const [key, val] of Object.entries(name)) this.headers[key] = val;
+    if (typeof name === 'string') {
+      // skip if we already have it
+      if (this.headers.hasOwnProperty(name.toLowerCase()))
+        return this;
+
+      this.headers[name.toLowerCase()] = value!;
+    } else if (isObject(name)) {
+      for (const [key, val] of Object.entries(name)) {
+        // skip when we already have it
+        if (this.headers.hasOwnProperty(key.toLowerCase()))
+          continue;
+
+        this.headers[key.toLowerCase()] = val;
+      }
     } else {
-      this.header[name as string] = value!;
+      throw new TypeError(`expected Request.header(name, value) or Request.header({ ... }) but received ${typeof name === 'object' ? 'array/null' : typeof name}`);
     }
 
     return this;
@@ -165,7 +176,8 @@ export default class Request {
    * @param data The data to send
    */
   body(data: any) {
-    this.data = figureData.call(this, data);
+    applyExternalHeaders.call(this, data);
+    this.data = data;
     return this;
   }
 

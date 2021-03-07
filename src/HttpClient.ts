@@ -179,7 +179,30 @@ export default class HttpClient {
           ? options as any
           : this.defaults;
 
-    const definedReqOpts = { ...requestOpts, ...this.defaults };
+    let headers = {};
+    if (requestOpts.headers !== undefined && this.defaults.headers !== undefined)
+      headers = Object.assign(requestOpts.headers, this.defaults.headers);
+    else if (requestOpts.headers === undefined && this.defaults.headers !== undefined)
+      headers = this.defaults.headers;
+    else if (requestOpts.headers !== undefined && this.defaults.headers === undefined)
+      headers = requestOpts.headers;
+
+    // mutate it to return the lower cased header names
+    for (const [key, val] of Object.entries(headers)) {
+      delete headers[key];
+
+      headers[key.toLowerCase()] = val;
+    }
+
+    const definedReqOpts: RequestOptions & Required<Pick<RequestOptions, 'url' | 'method'>> = {
+      followRedirects: requestOpts.followRedirects ?? this.defaults.followRedirects ?? true,
+      compress: requestOpts.compress !== undefined && requestOpts.compress === true,
+      headers,
+      timeout: requestOpts.timeout ?? this.defaults.timeout ?? 30000,
+      method: requestOpts.method!,
+      data: requestOpts.data,
+      url: requestOpts.url!
+    };
 
     let reqUrl!: URL;
     if (this.baseUrl !== undefined) {
