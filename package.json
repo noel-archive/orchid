@@ -47,7 +47,7 @@
   "devDependencies": {
     "@augu/eslint-config": "1.10.0",
     "@augu/tsconfig": "1.0.1",
-    "@types/node": "14.14.33",
+    "@types/node": "14.14.34",
     "@typescript-eslint/eslint-plugin": "4.17.0",
     "@typescript-eslint/parser": "4.17.0",
     "eslint": "7.21.0",
