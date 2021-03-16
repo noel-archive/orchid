@@ -696,10 +696,28 @@ declare namespace orchid {
     public stream<T extends IncomingMessage | Gunzip | Deflate = IncomingMessage>(): T;
   }
 
-  export abstract class Serializer<T = any> {}
+  export abstract class Serializer<T = any> {
+      /**
+      * Constructs a new instance of [Serializer]
+      * @param contentType The content-type to use to serialize
+      */
+      constructor(contentType: string | RegExp);
 
-  export class JsonSerializer<T extends object = {}> extends Serializer<T> {}
-  export class TextSerializer extends Serializer<string> {}
+      /**
+      * Serializes data and returns the output
+      * @param data The data (that is a Buffer) to serialize
+      * @returns The data represented as [T].
+      * @throws {SyntaxError} When the user hasn't overloaded this function
+      */  
+      abstract serialize(data: Buffer): T;
+  }
+
+  export class JsonSerializer<T extends object = {}> extends Serializer<T> {
+      serialize(data: Buffer): T;
+  }
+  export class TextSerializer extends Serializer<string> {
+      serialize(data: Buffer);
+  }
 
   // ~ Namespaces ~
   export namespace middleware {
