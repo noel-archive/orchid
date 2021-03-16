@@ -669,7 +669,7 @@ declare namespace orchid {
     /**
      * Converts the body to a JSON object or array
      */
-    public json<T extends object | any[] = { [key: string]: string; }>(): T;
+    public json<T extends object | any[] = { [key: string]: any; }>(): T;
 
     /**
      * Returns the body as a Buffer
@@ -697,26 +697,27 @@ declare namespace orchid {
   }
 
   export abstract class Serializer<T = any> {
-      /**
-      * Constructs a new instance of [Serializer]
-      * @param contentType The content-type to use to serialize
-      */
-      constructor(contentType: string | RegExp);
+    /**
+     * Constructs a new instance of [Serializer]
+     * @param contentType The content-type to use to serialize
+     */
+    constructor(contentType: string | RegExp);
 
-      /**
-      * Serializes data and returns the output
-      * @param data The data (that is a Buffer) to serialize
-      * @returns The data represented as [T].
-      * @throws {SyntaxError} When the user hasn't overloaded this function
-      */  
-      abstract serialize(data: Buffer): T;
+    /**
+     * Serializes data and returns the output
+     * @param data The data (that is a Buffer) to serialize
+     * @returns The data represented as [T].
+     * @throws {SyntaxError} When the user hasn't overloaded this function
+     */
+    abstract serialize(data: Buffer): T;
   }
 
   export class JsonSerializer<T extends object = {}> extends Serializer<T> {
-      serialize(data: Buffer): T;
+    serialize(data: Buffer): T;
   }
+
   export class TextSerializer extends Serializer<string> {
-      serialize(data: Buffer);
+    serialize(data: Buffer): string;
   }
 
   // ~ Namespaces ~
