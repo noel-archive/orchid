@@ -45,7 +45,7 @@
     "form-data": "4.0.0"
   },
   "devDependencies": {
-    "@augu/eslint-config": "1.10.0",
+    "@augu/eslint-config": "2.0.2",
     "@augu/tsconfig": "1.1.0",
     "@types/node": "14.14.37",
     "@typescript-eslint/eslint-plugin": "4.21.0",
