@@ -20,32 +20,38 @@
  * SOFTWARE.
  */
 
+import { isObject } from '@augu/utils';
+
 /**
- * Represents a [Serializer] class, which serializes objects from a specific content-type
- *
- * __**Built-in Serializers**__
- * - `application/json`: JsonSerializer
- * - `*` or `text/html`: TextSerializer
+ * Extra utilities used through-out orchid
  */
-export class Serializer<T = unknown> {
-  /** The content-type to use */
-  public contentType: (RegExp | string)[];
+export class Util {
+  // regex for matching `/:...` where `:...` is found
+  private static PATH_PREFIX_REGEX = /[:]\w+/gi;
 
   /**
-   * Constructs a new instance of [Serializer]
-   * @param contentType The content-type to use to serialize
+   * Finds all the matches for `:...` in a URL and converts it
+   * @param url The URL to use
+   * @param params The parameters the request has specified
    */
-  constructor(contentType: string | RegExp | (string | RegExp)[]) {
-    this.contentType = !Array.isArray(contentType) ? [contentType] : contentType;
-  }
+  static matchPathParams(url: string, params: Record<string, any> = {}) {
+    const matches = url.match(this.PATH_PREFIX_REGEX);
+    if (matches === null)
+      return url;
 
-  /**
-   * Serializes data and returns the output
-   * @param data The data (that is a Buffer) to serialize
-   * @returns The data represented as [T].
-   * @throws {SyntaxError} When the user hasn't overloaded this function
-   */
-  serialize(data: Buffer): T {
-    throw new SyntaxError(`Serializer.serialize was not over-ridden (content type: ${this.contentType})`);
+    for (let i = 0; i < matches.length; i++) {
+      const name = matches[i].split(':').pop()!;
+      const param = params[name];
+
+      if (!param)
+        throw new SyntaxError(`Missing parameter for "${name}" (matched: ${matches[i]})`);
+
+      if (isObject(param) || Array.isArray(param) || param === undefined || param === null)
+        throw new TypeError(`non-primitives aren't allowed for param params (name: ${name}; matched: ${matches[i]})`);
+
+      url = url.replace(matches[i], encodeURIComponent(String(param)));
+    }
+
+    return url;
   }
 }
