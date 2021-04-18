@@ -1,7 +1,7 @@
 {
   "name": "@augu/orchid",
   "description": "🛬 Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.",
-  "version": "2.2.3",
+  "version": "3.0.0",
   "main": "build/index.js",
   "license": "MIT",
   "types": "index.d.ts",
@@ -42,7 +42,8 @@
   "dependencies": {
     "@augu/collections": "1.0.8",
     "@augu/utils": "1.4.2",
-    "form-data": "4.0.0"
+    "form-data": "4.0.0",
+    "undici": "4.0.0-alpha.4"
   },
   "devDependencies": {
     "@augu/eslint-config": "2.0.3",

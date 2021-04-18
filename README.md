@@ -130,5 +130,8 @@ interface DefaultRequestOptions {
 ## v1.x -> v2.x
 Read the [migration](./migrating/v2.md) notes for more information.
 
+## v2.x -> v3.x
+Read the [migration](./migrating/v3.md) notes for more information.
+
 ## License
 **@augu/orchid** is released under the MIT License, read [here](/LICENSE) for more information. :heart:
