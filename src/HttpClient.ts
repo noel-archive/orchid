@@ -249,6 +249,11 @@ export class HttpClient {
     if (this.defaults.compress !== undefined && this.defaults.compress === true)
       requestOptions.compress = true;
 
+    if (this.kClient !== undefined && (!requestOptions.hasOwnProperty('keepClient') || requestOptions.keepClient === false)) {
+      requestOptions.keepClient = true;
+      requestOptions.client = this.kClient;
+    }
+
     let requestUrl!: URL;
     const formedUrl = Util.matchPathParams(requestOptions.url, requestOptions.query);
 
