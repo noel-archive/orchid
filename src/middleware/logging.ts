@@ -57,14 +57,12 @@ const logging = (options?: LoggingOptions): MultiMiddleware<MiddlewareType.Reque
     this.log!('Successfully initialized logging middleware!');
   },
 
-  onRequest(req, next) {
+  onRequest(req) {
     this.log!(`Hitting request: "${req.method.toUpperCase()} ${req.url.pathname}${req.url.search}" (User-Agent: ${req.headers['user-agent'] ?? '(unknown)'})`);
-    next();
   },
 
-  onResponse(_, req, res, next) {
+  onResponse(_, req, res) {
     this.log!(`${req.method.toUpperCase()} ${req.url.toString()} | ${res.statusCode} (User-Agent: ${req.headers['user-agent'] ?? '(unknown)'})`);
-    next();
   }
 });
 

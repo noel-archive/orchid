@@ -47,7 +47,7 @@ export interface HttpClientOptions {
   /**
    * List of middleware to attach
    */
-  middleware?: Middleware<MiddlewareType> | MultiMiddleware<MiddlewareType>;
+  middleware?: (Middleware<MiddlewareType> | MultiMiddleware<MiddlewareType>)[];
 
   /**
    * The user-agent for this [[HttpClient]], the `user-agent` header is automatically
@@ -123,7 +123,7 @@ export class HttpClient {
   /**
    * List of serializers available to this [[HttpClient]]
    */
-  public serializers: Collection<string, Serializer<any>> = new Collection();
+  public serializers: Collection<string | RegExp, Serializer<any>> = new Collection();
 
   /**
    * List of middleware available to this [[HttpClient]]
@@ -174,6 +174,20 @@ export class HttpClient {
 
     this.serializers.set('application/json', new JsonSerializer());
     this.serializers.set('*', new TextSerializer());
+
+    if (options.serializers !== undefined) {
+      for (let i = 0; i < options.serializers.length; i++)
+        this.serializers.set(options.serializers[i].contentType, options.serializers[i]);
+    }
+
+    if (options.middleware !== undefined) {
+      for (let i = 0; i < options.middleware.length; i++) {
+        const middleware = options.middleware[i];
+        middleware.init?.();
+
+        this.middleware.set(middleware.name, middleware);
+      }
+    }
 
     const methods = HttpMethods.slice(0, 9);
     for (let i = 0; i < methods.length; i++) {
@@ -239,7 +253,7 @@ export class HttpClient {
     const formedUrl = Util.matchPathParams(requestOptions.url, requestOptions.query);
 
     if (this.baseUrl !== undefined && (isUrlLike(formedUrl) || !(formedUrl instanceof URL))) {
-      requestUrl = new URL(formedUrl === '/' ? '' : `/${formedUrl}`, this.baseUrl);
+      requestUrl = new URL(`${this.baseUrl}${formedUrl === '/' ? '' : formedUrl}`);
     } else if (formedUrl instanceof URL) {
       requestUrl = formedUrl;
     } else {
@@ -292,43 +306,36 @@ export class HttpClient {
         : (midi as Middleware<MiddlewareType>).type === type
     );
 
-    const next = (error?: Error) => {
-      if (error !== undefined)
-        throw error;
+    for (let i = 0; i < middleware.length; i++) {
+      const midi = middleware[i];
+      if ((midi as MultiMiddleware<MiddlewareType>).types !== undefined) {
+        const m = (midi as MultiMiddleware<MiddlewareType>);
+        switch (type) {
+          case MiddlewareType.Request:
+            (m as any).onRequest.call(midi, args[0]);
+            break;
 
-      if (middleware.length > 0) {
-        const midi = middleware.shift()!;
-        if ((midi as MultiMiddleware<MiddlewareType>).types !== undefined) {
-          const m = (midi as MultiMiddleware<MiddlewareType>);
-          switch (type) {
-            case MiddlewareType.Request:
-              (m as any).onRequest.call(midi, args[0], next);
-              break;
+          case MiddlewareType.Response:
+            (m as any).onResponse.call(midi, this, args[0], args[1]);
+            break;
 
-            case MiddlewareType.Response:
-              (m as any).onResponse.call(midi, this, args[0], args[1], next);
-              break;
+          default:
+            throw new Error(`Type "${type}" doesn't exist`);
+        }
+      } else {
+        switch (type) {
+          case MiddlewareType.Request:
+            ((midi as Middleware<MiddlewareType>).run as any).call(midi, args[0]);
+            break;
 
-            default:
-              return next(new Error(`Type "${type}" doesn't exist`));
-          }
-        } else {
-          switch (type) {
-            case MiddlewareType.Request:
-              ((midi as Middleware<MiddlewareType>).run as any).call(midi, args[0], next);
-              break;
+          case MiddlewareType.Response:
+            ((midi as Middleware<MiddlewareType>).run as any).call(midi, this, args[0], args[1]);
+            break;
 
-            case MiddlewareType.Response:
-              ((midi as Middleware<MiddlewareType>).run as any).call(midi, this, args[0], args[1], next);
-              break;
-
-            default:
-              return next(new Error(`Type "${type}" doesn't exist`));
-          }
+          default:
+            throw new Error(`Type "${type}" doesn't exist`);
         }
       }
-    };
-
-    next();
+    }
   }
 }

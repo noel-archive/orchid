@@ -53,7 +53,8 @@ export class Response {
   // credit: https://github.com/helperdiscord/petitio/blob/master/src/lib/PetitioResponse.ts#L43
   parseHeaders(headers: string[]) {
     for (let i = 0; i < headers.length; i += 2) {
-      const key = headers[i - 1].toLowerCase();
+      const key = headers[i].toLowerCase();
+      const value = headers[i + 1];
       let val = this.headers[key];
 
       if (val !== undefined) {
@@ -62,9 +63,9 @@ export class Response {
           this.headers[key] = val;
         }
 
-        (val as any[]).push(headers[i]);
+        (val as any[]).push(value);
       } else {
-        this.headers[key] = headers[i];
+        this.headers[key] = value;
       }
     }
   }

@@ -20,43 +20,5 @@
  * SOFTWARE.
  */
 
-import { MultiMiddleware, MiddlewareType } from '../core/Middleware';
-import { performance } from 'perf_hooks';
-
-interface PingsProps {
-  reqPing: number;
-  pings: number[];
-}
-
-const symbolOf = (type: number) => {
-  if (type > 1000) return `${type.toFixed(1)}s`;
-  if (type > 1) return `${type.toFixed(1)}ms`;
-  return `${type.toFixed(1)}µs`;
-};
-
-const mod: MultiMiddleware<MiddlewareType.Request | MiddlewareType.Response, PingsProps> = {
-  name: 'pings',
-  types: [MiddlewareType.Request, MiddlewareType.Response],
-
-  init() {
-    this.pings = [];
-  },
-
-  onRequest() {
-    const ping = performance.now();
-    this.reqPing = ping;
-  },
-
-  onResponse(client) {
-    const lastPing = performance.now();
-    const ping = lastPing - this.reqPing!;
-
-    this.pings!.push(ping);
-
-    const avg = this.pings!.reduce((acc, curr) => acc + curr, 0) / this.pings!.length;
-    const logger = client.middleware.get('logging');
-    logger?.log(`Request took ~${symbolOf(ping)} (avg. ~${symbolOf(avg)})`);
-  }
-};
-
-export { mod as pings };
+export * from './logging';
+export * from './timer';

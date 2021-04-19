@@ -28,14 +28,12 @@ import { HttpClient, HttpClientOptions, HttpMethods, HttpRequestOptions, isReque
 export const version: string = (require('../package.json')).version;
 
 // Export objects
+export * as middleware from './middleware';
 export * from './core/AbortController';
 export * from './core/Serializer';
 export * from './core/Middleware';
 export * from './core/Response';
 export * from './core/Request';
-
-export * from './middleware/logging';
-export * from './middleware/timer';
 
 export { HttpClient, HttpRequestOptions, HttpMethods, isRequestOptions, isUrlLike };
 

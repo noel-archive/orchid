@@ -43,17 +43,10 @@ export enum MiddlewareType {
  */
 // todo: make this better? idk it looks ugly but it'll have to do 💅
 export type RunFunction<Type extends MiddlewareType> = Type extends MiddlewareType.Request
-      ? (req: Request, next: NextFunction) => void
+      ? (req: Request) => void
       : Type extends MiddlewareType.Response
-        ? (res: Response, next: NextFunction) => void
+        ? (res: Response) => void
         : never;
-
-/**
- * Represents a "next" function, to call the next middleware
- * if anything occurs. If a `error` is passed down, it'll
- * stop the middleware process and throws a Promise rejection.
- */
-export type NextFunction = (error?: Error) => void;
 
 /**
  * Represents a middleware object, this is used for [[HttpClient.use]]. When [[HttpClient.use]] is called,
@@ -131,7 +124,7 @@ export type MultiMiddlewareDefinition<Type extends MiddlewareType> = Omit<Middle
        * @param res The response object
        * @param next Next function to call the next middleware
        */
-      onResponse(client: any, req: Request, res: Response, next: NextFunction): void;
+      onResponse(client: any, req: Request, res: Response): void;
     }
     : Type extends MiddlewareType.Request
       ? {
@@ -141,7 +134,7 @@ export type MultiMiddlewareDefinition<Type extends MiddlewareType> = Omit<Middle
          * @param req The request object
          * @param next The next function
          */
-        onRequest(req: Request, next: NextFunction): void
+        onRequest(req: Request): void
       }
       : never
     : never)>;
