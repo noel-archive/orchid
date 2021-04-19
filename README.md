@@ -1,11 +1,12 @@
 # @augu/orchid
-> :flight_arrival: **Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.**
+> 🛫 **Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.**
 >
-> [1.x branch](https://github.com/auguwu/orchid/tree/1.x) | [2.x branch](https://github.com/auguwu/orchid/tree/2.x)
+> 👉 View other branches: [1.x branch](https://github.com/auguwu/orchid/tree/1.x) | [2.x branch](https://github.com/auguwu/orchid/tree/2.x)
 
 ## Features
 - Middleware: Orchid has a Express-like interface for creating middleware to extend classes like Request, Response, and HttpClient.
 - Serialization: Orchid provides a serialization system to serialize the response body from the Content Type from the server, so far JSON and Text are supported.
+- Path Parameters: Apply path parameters similar to Express routes!
 - Simple: Orchid has a simple API so there is no steep learning curve when moving!
 
 ## Usage
@@ -15,7 +16,6 @@ const { HttpClient, middleware } = require('@augu/orchid');
 const orchid = new HttpClient();
 orchid
   .use(middleware.logging())
-  .use(middleware.compress);
 
 orchid
   .get('https://floofy.dev')
@@ -31,26 +31,28 @@ $ npm install @augu/orchid
 ```
 
 ## Middleware
-Orchid allows you to apply middleware to customize how Orchid works! Currently, there are 4 types of middleware youu can implement:
-
-- `on.request`: Made when a request is being processed
-- `on.response`: Made when orchid made a response!
-- `none`: Nothing, apply your custom logic!
-- `execute`: When you call `Request.execute()`, this will be ran
-
-An example would be like:
+Orchid allows to have custom middleware to do whatever you want from a request or response. An example would be:
 
 ```js
 const { MiddlewareType } = require('@augu/orchid');
 
 module.exports = {
-  type: [MiddlewareType.None],
-  name: 'name',
+  name: 'my.middleware',
 
-  run(client, type) {
-    // this => this middleware
-    // client => The HttpClient used
-    // type => The middleware type
+  // this is a "MultiMiddleware" type
+  types: [MiddlewareType.Request, MiddlewareType.Response],
+
+  init() {
+    // called when the middleware is added
+  },
+
+  onRequest(req) {
+    // called when a request has been made
+  },
+
+  onResponse(client, req, res) {
+    // called when a response is made
+    // `client` and `req` are added to do whatever
   }
 };
 ```
