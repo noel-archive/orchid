@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+import type { Response } from './Response';
+import type { Request } from './Request';
+
 /**
  * List of middleware types available
  */
@@ -50,13 +53,13 @@ export enum MiddlewareType {
  */
 // todo: make this better? idk it looks ugly but it'll have to do 💅
 export type RunFunction<Type extends MiddlewareType> = Type extends MiddlewareType.Execution
-  ? (req: any, next: NextFunction) => void
+  ? (req: Request, next: NextFunction) => void
   : Type extends MiddlewareType.Initialization
     ? () => void
     : Type extends MiddlewareType.Request
-      ? (req: any, next: NextFunction) => void
+      ? (req: Request, next: NextFunction) => void
       : Type extends MiddlewareType.Response
-        ? (res: any, next: NextFunction) => void
+        ? (res: Response, next: NextFunction) => void
         : never;
 
 /**
@@ -90,7 +93,15 @@ export type NextFunction = (error?: Error) => void;
  */
 export type Middleware<Type extends MiddlewareType, Props extends Record<string, unknown> = {}> = MiddlewareDefinition<Type> & {
   [P in keyof Props]?: Props[P];
-}
+};
+
+/**
+ * Represents middleware definition to multiple types, refer to the [[Middleware]] type alias
+ * for more information.
+ */
+export type MultiMiddleware<Type extends MiddlewareType, Props extends Record<string, unknown> = {}> = MultiMiddlewareDefinition<Type> & {
+  [P in keyof Props]?: Props[P];
+};
 
 /**
  * Definition object for middleware, read the [[Middleware]] type
@@ -113,3 +124,39 @@ export interface MiddlewareDefinition<Type extends MiddlewareType> {
    */
   run: RunFunction<Type>;
 }
+
+/**
+ * Definition object for multi-middleware; read the [[Middleware]] type
+ * for more of an in-depth explaination
+ */
+// yes this looks like shit but it'll have to do i guess
+export type MultiMiddlewareDefinition<Type extends MiddlewareType> = Pick<MiddlewareDefinition<Type>, 'name' | 'init'> & Required<(Type extends MiddlewareType
+  ? Type extends MiddlewareType.Execution
+    ? {
+      /**
+       * Ran when the FIRST call to [[Request.execute]] is made
+       * @param req The request object
+       * @param next Next function to call the next middleware
+       */
+      onExecuted(req: Request, next: NextFunction): void;
+    }
+    : Type extends MiddlewareType.Response
+      ? {
+        /**
+         * Ran when Orchid has serialized a response when requesting
+         * @param res The response object
+         * @param next Next function to call the next middleware
+         */
+        onResponse(res: Response, next: NextFunction): void;
+      }
+      : Type extends MiddlewareType.Request
+        ? {
+          /**
+           * Ran when the FIRST hit of a request has been made
+           * @param req The request object
+           * @param next The next function
+           */
+          onRequest(req: Request, next: NextFunction): void
+        }
+        : never
+      : never)>;

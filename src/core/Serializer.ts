@@ -29,14 +29,14 @@
  */
 export class Serializer<T = unknown> {
   /** The content-type to use */
-  public contentType: (RegExp | string)[];
+  public contentType: RegExp | string;
 
   /**
    * Constructs a new instance of [Serializer]
    * @param contentType The content-type to use to serialize
    */
-  constructor(contentType: string | RegExp | (string | RegExp)[]) {
-    this.contentType = !Array.isArray(contentType) ? [contentType] : contentType;
+  constructor(contentType: string | RegExp) {
+    this.contentType = contentType;
   }
 
   /**

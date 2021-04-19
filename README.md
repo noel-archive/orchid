@@ -1,5 +1,7 @@
 # @augu/orchid
 > :flight_arrival: **Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.**
+>
+> [1.x branch](https://github.com/auguwu/orchid/tree/1.x) | [2.x branch](https://github.com/auguwu/orchid/tree/2.x)
 
 ## Features
 - Middleware: Orchid has a Express-like interface for creating middleware to extend classes like Request, Response, and HttpClient.
