@@ -28,35 +28,21 @@ import type { Request } from './Request';
  */
 export enum MiddlewareType {
   /**
-   * Called when [[HttpClient.use]] is used.
-   */
-  Initialization = 'on:init',
-
-  /**
-   * Called when [[Request.execute]] is called.
-   */
-  Execution      = 'on:execute',
-
-  /**
    * Called when a [[Response]] object is serialized
    */
-  Response       = 'on:response',
+  Response = 'on:response',
 
   /**
    * Called when a [[Request]] was *just* made
    */
-  Request        = 'on:request'
+  Request = 'on:request'
 }
 
 /**
  * The runner function to use based on it's [[Type]].
  */
 // todo: make this better? idk it looks ugly but it'll have to do 💅
-export type RunFunction<Type extends MiddlewareType> = Type extends MiddlewareType.Execution
-  ? (req: Request, next: NextFunction) => void
-  : Type extends MiddlewareType.Initialization
-    ? () => void
-    : Type extends MiddlewareType.Request
+export type RunFunction<Type extends MiddlewareType> = Type extends MiddlewareType.Request
       ? (req: Request, next: NextFunction) => void
       : Type extends MiddlewareType.Response
         ? (res: Response, next: NextFunction) => void
@@ -91,7 +77,7 @@ export type NextFunction = (error?: Error) => void;
  * };
  * ```
  */
-export type Middleware<Type extends MiddlewareType, Props extends Record<string, unknown> = {}> = MiddlewareDefinition<Type> & {
+export type Middleware<Type extends MiddlewareType, Props = {}> = MiddlewareDefinition<Type> & {
   [P in keyof Props]?: Props[P];
 };
 
@@ -99,7 +85,7 @@ export type Middleware<Type extends MiddlewareType, Props extends Record<string,
  * Represents middleware definition to multiple types, refer to the [[Middleware]] type alias
  * for more information.
  */
-export type MultiMiddleware<Type extends MiddlewareType, Props extends Record<string, unknown> = {}> = MultiMiddlewareDefinition<Type> & {
+export type MultiMiddleware<Type extends MiddlewareType, Props = {}> = MultiMiddlewareDefinition<Type> & {
   [P in keyof Props]?: Props[P];
 };
 
@@ -113,6 +99,11 @@ export interface MiddlewareDefinition<Type extends MiddlewareType> {
    * with any additional properties it desires.
    */
   init?(): void;
+
+  /**
+   * The middleware type
+   */
+  type: Type;
 
   /**
    * The name of the middleware
@@ -130,33 +121,27 @@ export interface MiddlewareDefinition<Type extends MiddlewareType> {
  * for more of an in-depth explaination
  */
 // yes this looks like shit but it'll have to do i guess
-export type MultiMiddlewareDefinition<Type extends MiddlewareType> = Pick<MiddlewareDefinition<Type>, 'name' | 'init'> & Required<(Type extends MiddlewareType
-  ? Type extends MiddlewareType.Execution
+export type MultiMiddlewareDefinition<Type extends MiddlewareType> = Omit<MiddlewareDefinition<Type>, 'type' | 'run'> & {
+  types: MiddlewareType[];
+} & Required<(Type extends MiddlewareType
+  ? Type extends MiddlewareType.Response
     ? {
       /**
-       * Ran when the FIRST call to [[Request.execute]] is made
-       * @param req The request object
+       * Ran when Orchid has serialized a response when requesting
+       * @param res The response object
        * @param next Next function to call the next middleware
        */
-      onExecuted(req: Request, next: NextFunction): void;
+      onResponse(client: any, req: Request, res: Response, next: NextFunction): void;
     }
-    : Type extends MiddlewareType.Response
+    : Type extends MiddlewareType.Request
       ? {
         /**
-         * Ran when Orchid has serialized a response when requesting
-         * @param res The response object
-         * @param next Next function to call the next middleware
+         * Ran when the FIRST hit of a request has been made
+         * @param client The orchid client to use
+         * @param req The request object
+         * @param next The next function
          */
-        onResponse(res: Response, next: NextFunction): void;
+        onRequest(req: Request, next: NextFunction): void
       }
-      : Type extends MiddlewareType.Request
-        ? {
-          /**
-           * Ran when the FIRST hit of a request has been made
-           * @param req The request object
-           * @param next The next function
-           */
-          onRequest(req: Request, next: NextFunction): void
-        }
-        : never
-      : never)>;
+      : never
+    : never)>;

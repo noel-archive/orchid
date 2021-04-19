@@ -21,6 +21,7 @@
  */
 
 import { isObject } from '@augu/utils';
+import { URL } from 'url';
 
 /**
  * Extra utilities used through-out orchid
@@ -34,7 +35,10 @@ export class Util {
    * @param url The URL to use
    * @param params The parameters the request has specified
    */
-  static matchPathParams(url: string, params: Record<string, any> = {}) {
+  static matchPathParams(url: string | URL, params: Record<string, any> = {}) {
+    if (url instanceof URL)
+      return url;
+
     const matches = url.match(this.PATH_PREFIX_REGEX);
     if (matches === null)
       return url;

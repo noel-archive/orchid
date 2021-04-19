@@ -21,6 +21,7 @@
  */
 
 import { AbortController } from './AbortController';
+import type { HttpClient } from '../HttpClient';
 import { MiddlewareType } from './Middleware';
 import { Client, Agent } from 'undici';
 import { isObject } from '@augu/utils';
@@ -88,13 +89,6 @@ export interface RequestOptions {
   headers?: Record<string, any>;
 
   /**
-   * The amount of time to create such request and rejects
-   * with a [[RequestAbortedError]] error if it takes over
-   * the threshold specified.
-   */
-  timeout?: number;
-
-  /**
    * The undici client to use, or it'll create a new undici client
    * to use.
    */
@@ -156,13 +150,6 @@ export class Request {
   public headers: Record<string, any>;
 
   /**
-   * The amount of time to create such request and rejects
-   * with a [[RequestAbortedError]] error if it takes over
-   * the threshold specified.
-   */
-  public timeout: number;
-
-  /**
    * The undici client to use, or it'll create a new undici client
    * to use. If [[HttpClientOptions.baseURL]] is set, it'll
    * create a public undici client under the [[HttpClient]] to
@@ -191,7 +178,7 @@ export class Request {
   public url: URL;
 
   // orchid http client
-  #client: any;
+  #client: HttpClient;
 
   /**
    * @param client The [[HttpClient]] attached to this [[Request]]
@@ -199,13 +186,12 @@ export class Request {
    * @param method The HTTP method verb to use
    * @param options Any additional options to construct this Request
    */
-  constructor(client: any, url: string | URL, method: HttpMethod, options: Omit<RequestOptions, 'url' | 'method'> = {}) {
-    this.followRedirects = options?.followRedirects ?? client.defaults.followRedirects;
+  constructor(client: HttpClient, url: string | URL, method: HttpMethod, options: Omit<RequestOptions, 'url' | 'method'> = {}) {
+    this.followRedirects = options?.followRedirects ?? client.defaults.followRedirects ?? true;
     this.compressData = options?.compress ?? false;
     this.controller = options?.controller ?? new AbortController();
     this.keepClient = options?.keepClient ?? client.kClient !== undefined;
-    this.headers = options?.headers ?? client.defaults.headers;
-    this.timeout = options?.timeout ?? client.defaults.timeout;
+    this.headers = options?.headers ?? client.defaults.headers ?? {};
     this.client = options?.client ?? client.kClient ?? new Client(typeof url === 'string' ? new URL(url).origin : url.origin);
     this.method = method;
     this.agent = options?.agent ?? DefaultAgent;
@@ -388,7 +374,7 @@ export class Request {
           if (!this.keepClient)
             this.client.close();
 
-          this.#client.runMiddleware(MiddlewareType.Response);
+          this.#client.runMiddleware(MiddlewareType.Response, this, res);
           res.pushBody(data);
           return resolve(res);
         },
