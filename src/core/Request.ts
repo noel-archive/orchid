@@ -363,7 +363,7 @@ export class Request {
             : this.data
       };
 
-      const res = new Response();
+      const res = new Response(this.#client);
       const data: Uint8Array[] | Buffer[] = [];
 
       this.client.dispatch(options, {
