@@ -648,10 +648,10 @@ declare namespace orchid {
      * @param options Any additional options to use
      */
     request(url: string): Request;
-    request(url: HttpClientOptions): Request;
+    request(url: HttpRequestOptions): Request;
     request(url: string, method: HttpMethod): Request;
-    request(url: string, method: Omit<HttpClientOptions, 'method' | 'url'>): Request;
-    request(url: string, method: HttpMethod, options: Omit<HttpClientOptions, 'method' | 'url'>): Request;
+    request(url: string, method: Omit<HttpRequestOptions, 'method' | 'url'>): Request;
+    request(url: string, method: HttpMethod, options: Omit<HttpRequestOptions, 'method' | 'url'>): Request;
 
     // yes
     public get(url: string): Request;
