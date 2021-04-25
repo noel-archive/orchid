@@ -12,13 +12,14 @@
   },
   "files": [
     "build/",
+    "esm.mjs",
     "index.d.ts"
   ],
   "exports": {
     ".": [
       {
         "require": "./build/index.js",
-        "import": "./build/index.mjs"
+        "import": "./esm.mjs"
       },
       "./build/index.js"
     ],
