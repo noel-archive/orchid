@@ -64,7 +64,7 @@ export interface HttpClientOptions {
    * The base URL to use, if this is set then [[HttpClient.kClient]] is automatically set
    * and [[RequestOptions.keepClient]] is set to `true`
    */
-  baseUrl?: string;
+  baseUrl?: string | URL;
 }
 
 export const HttpMethods: Readonly<HttpMethod[]> = [
@@ -138,12 +138,12 @@ export class HttpClient {
   /**
    * The request defaults
    */
-  public defaults: RequestDefaults;
+  public defaults: Required<RequestDefaults>;
 
   /**
    * The base URl to use
    */
-  public baseUrl?: string;
+  public baseUrl?: string | URL;
 
   /**
    * The undici client attached to this [[HttpClient]], this is set
@@ -158,13 +158,14 @@ export class HttpClient {
   constructor(options: HttpClientOptions = {}) {
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.baseUrl = options.baseUrl;
-    this.defaults = Object.assign(options.defaults ?? {}, {
-      compress: false,
-      followRedirects: true,
+    this.defaults = {
+      compress: options.defaults?.compress ?? true,
+      followRedirects: options.defaults?.followRedirects ?? true,
       headers: {
-        'user-agent': options.userAgent ?? DEFAULT_USER_AGENT
+        'user-agent': options.userAgent ?? DEFAULT_USER_AGENT,
+        ...(options.defaults?.headers ?? {})
       }
-    });
+    };
 
     if (options.baseUrl !== undefined)
       this.kClient = new Client(options.baseUrl);
@@ -192,7 +193,7 @@ export class HttpClient {
     const methods = HttpMethods.slice(0, 9);
     for (let i = 0; i < methods.length; i++) {
       this[methods[i]] = (
-        url: string | Omit<HttpRequestOptions, 'method'>,
+        url: string | HttpClientOptions,
         options?: Omit<HttpRequestOptions, 'url' | 'method'>
       ) => this.request(url, methods[i].toUpperCase() as HttpMethod, options);
     }
@@ -205,7 +206,7 @@ export class HttpClient {
    * @param options Any additional options to use
    */
   request(
-    url: string | Omit<HttpRequestOptions, 'method'>,
+    url: string | HttpClientOptions,
     method?: HttpMethod | Omit<HttpRequestOptions, 'method' | 'url'>,
     options?: Omit<HttpRequestOptions, 'url' | 'method'>
   ) {
@@ -261,6 +262,8 @@ export class HttpClient {
       requestUrl = new URL(`${this.baseUrl}${formedUrl === '/' ? '' : formedUrl}`);
     } else if (formedUrl instanceof URL) {
       requestUrl = formedUrl;
+    } else if (typeof formedUrl === 'string') {
+      requestUrl = new URL(formedUrl);
     } else {
       throw new TypeError('Missing full URL or the URL specified was not a string or `URL`');
     }

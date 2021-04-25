@@ -338,7 +338,7 @@ declare namespace orchid {
      * The base URL to use, if this is set then [[HttpClient.kClient]] is automatically set
      * and [[RequestOptions.keepClient]] is set to `true`
      */
-    baseUrl?: string;
+    baseUrl?: string | URL;
   }
 
   /**
@@ -647,11 +647,11 @@ declare namespace orchid {
      * @param method The http method verb or request options to use
      * @param options Any additional options to use
      */
-    request(
-      url: string | Omit<HttpRequestOptions, 'method'>,
-      method?: HttpMethod | Omit<HttpRequestOptions, 'method' | 'url'>,
-      options?: Omit<HttpRequestOptions, 'url' | 'method'>
-    ): Request;
+    request(url: string): Request;
+    request(url: HttpClientOptions): Request;
+    request(url: string, method: HttpMethod): Request;
+    request(url: string, method: Omit<HttpClientOptions, 'method' | 'url'>): Request;
+    request(url: string, method: HttpMethod, options: Omit<HttpClientOptions, 'method' | 'url'>): Request;
 
     // yes
     public get(url: string): Request;
