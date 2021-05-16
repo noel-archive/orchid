@@ -569,7 +569,7 @@ declare namespace orchid {
     /**
      * Converts the response body to a JSON object or array
      */
-    public json<T extends Record<string, unknown> | any[] = Record<string, unknown>>(): T;
+    public json<T extends object | any[] = Record<string, unknown>>(): T;
 
     /**
      * Converts the response body to a string

@@ -31,7 +31,6 @@ import { isObject } from '@augu/utils';
 import { Client } from 'undici';
 import { Util } from './utils';
 import { URL } from 'url';
-import { url } from 'node:inspector';
 
 const { version } = require('../package.json');
 const DEFAULT_USER_AGENT = `@augu/orchid (v${version}, https://github.com/auguwu/orchid)`;
