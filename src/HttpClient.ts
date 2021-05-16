@@ -31,6 +31,7 @@ import { isObject } from '@augu/utils';
 import { Client } from 'undici';
 import { Util } from './utils';
 import { URL } from 'url';
+import { url } from 'node:inspector';
 
 const { version } = require('../package.json');
 const DEFAULT_USER_AGENT = `@augu/orchid (v${version}, https://github.com/auguwu/orchid)`;
@@ -59,6 +60,24 @@ export interface HttpClientOptions {
    * Any default behaviour if a property isn't set in a request
    */
   defaults?: RequestDefaults;
+
+  /**
+   * The undici client to override if you want to customize the behaviour
+   * of it.
+   */
+  client?: Client;
+
+  // Why is this an option?
+  // Undici doesn't like base urls with leading slashes, so you get this:
+  // E:\Projects\Libraries\orchid\node_modules\undici\lib\core\util.js:55
+  //    throw new InvalidArgumentError('invalid url')
+  //    ^
+  // InvalidArgumentError: invalid url
+
+  /**
+   * The base path to use when using [[HttpClientOptions.baseUrl]]
+   */
+  basePath?: string;
 
   /**
    * The base URL to use, if this is set then [[HttpClient.kClient]] is automatically set
@@ -141,6 +160,11 @@ export class HttpClient {
   public defaults: Required<RequestDefaults>;
 
   /**
+   * The raw options when passed
+   */
+  public clientOptions: HttpClientOptions;
+
+  /**
    * The base URl to use
    */
   public baseUrl?: string | URL;
@@ -156,8 +180,15 @@ export class HttpClient {
    * @param options The http client options to use
    */
   constructor(options: HttpClientOptions = {}) {
+    options = Object.assign<{}, HttpClientOptions, HttpClientOptions>({}, {
+      serializers: [],
+      middleware: [],
+      userAgent: DEFAULT_USER_AGENT
+    }, options);
+
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.baseUrl = options.baseUrl;
+    this.clientOptions = options;
     this.defaults = {
       compress: options.defaults?.compress ?? true,
       followRedirects: options.defaults?.followRedirects ?? true,
@@ -168,7 +199,10 @@ export class HttpClient {
     };
 
     if (options.baseUrl !== undefined)
-      this.kClient = new Client(options.baseUrl);
+      this.kClient = new Client(typeof options.baseUrl === 'string' ? new URL(options.baseUrl) : options.baseUrl);
+
+    if (options.client !== undefined)
+      this.kClient = options.client;
 
     if (!this.defaults.headers?.hasOwnProperty('user-agent'))
       this.defaults.headers!['user-agent'] = this.userAgent;
@@ -258,14 +292,28 @@ export class HttpClient {
     let requestUrl!: URL;
     const formedUrl = Util.matchPathParams(requestOptions.url, requestOptions.query);
 
-    if (this.baseUrl !== undefined && (isUrlLike(formedUrl) || !(formedUrl instanceof URL))) {
-      requestUrl = new URL(`${this.baseUrl}${formedUrl === '/' ? '' : formedUrl}`);
-    } else if (formedUrl instanceof URL) {
-      requestUrl = formedUrl;
-    } else if (typeof formedUrl === 'string') {
-      requestUrl = new URL(formedUrl);
+    if (this.baseUrl !== undefined) {
+      if (isUrlLike(formedUrl) && !(formedUrl instanceof URL)) {
+        const fullBasePath = this.clientOptions.basePath !== undefined
+          ? typeof this.baseUrl === 'string'
+            ? `${this.baseUrl}${this.clientOptions.basePath}`
+            : `${this.baseUrl.protocol}://${this.baseUrl.hostname}${this.baseUrl.pathname}${this.clientOptions.basePath}`
+          : this.baseUrl;
+
+        requestUrl = new URL(`${fullBasePath}${formedUrl === '/' ? '' : formedUrl}`);
+      } else if (formedUrl instanceof URL) {
+        requestUrl = formedUrl;
+      } else if (typeof formedUrl === 'string') {
+        const fullBaseURL = this.clientOptions.basePath !== undefined
+          ? typeof this.baseUrl === 'string'
+            ? `${this.baseUrl}${this.clientOptions.basePath}`
+            : `${this.baseUrl.protocol}://${this.baseUrl.hostname}${this.baseUrl.pathname}${this.clientOptions.basePath}`
+          : this.baseUrl;
+
+        requestUrl = new URL(formedUrl, fullBaseURL);
+      }
     } else {
-      throw new TypeError('Missing full URL or the URL specified was not a string or `URL`');
+      throw new TypeError('Missing full URL in `options.url`');
     }
 
     return new Request(this, requestUrl, requestOptions.method, requestOptions);

@@ -335,8 +335,26 @@ declare namespace orchid {
     defaults?: RequestDefaults;
 
     /**
-     * The base URL to use, if this is set then [[HttpClient.kClient]] is automatically set
-     * and [[RequestOptions.keepClient]] is set to `true`
+     * The undici client to override if you want to customize the behaviour
+     * of it.
+     */
+    client?: Client;
+
+    // Why is this an option?
+    // Undici doesn't like base urls with leading slashes, so you get this:
+    // E:\Projects\Libraries\orchid\node_modules\undici\lib\core\util.js:55
+    //    throw new InvalidArgumentError('invalid url')
+    //    ^
+    // InvalidArgumentError: invalid url
+
+    /**
+      * The base path to use when using [HttpClientOptions.baseUrl]
+      */
+    basePath?: string;
+
+    /**
+     * The base URL to use, if this is set then [HttpClient.kClient] is automatically set
+     * and [RequestOptions.keepClient] is set to `true`
      */
     baseUrl?: string | URL;
   }
@@ -363,7 +381,7 @@ declare namespace orchid {
 
   // ~ Classes ~
   /**
-   * Polyfill for [[AbortSignal]] without adding any over-head dependencies
+   * Polyfill for [AbortSignal] without adding any over-head dependencies
    */
   export class AbortSignal {
     /**
@@ -605,6 +623,11 @@ declare namespace orchid {
      * List of serializers available to this [[HttpClient]]
      */
     public serializers: Collection<string | RegExp, Serializer<any>>;
+
+    /**
+     * The raw options when passed
+     */
+    public clientOptions: HttpClientOptions;
 
     /**
      * List of middleware available to this [[HttpClient]]
