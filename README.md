@@ -15,7 +15,7 @@ const { HttpClient, middleware } = require('@augu/orchid');
 
 const orchid = new HttpClient();
 orchid
-  .use(middleware.logging())
+  .use(middleware.logging());
 
 orchid
   .get('https://floofy.dev')

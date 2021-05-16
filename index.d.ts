@@ -470,14 +470,6 @@ declare namespace orchid {
     public url: URL;
 
     /**
-     * @param client The [[HttpClient]] attached to this [[Request]]
-     * @param url The URL to use
-     * @param method The HTTP method verb to use
-     * @param options Any additional options to construct this Request
-     */
-    constructor(client: HttpClient, url: string | URL, method: HttpMethod, options?: Omit<RequestOptions, 'url' | 'method'>);
-
-    /**
      * Adds or removes any compression header details to this request
      * @returns This request object to chain methods
      */
@@ -536,10 +528,15 @@ declare namespace orchid {
    * Represents a http response from the initial request
    */
   export class Response {
+    /**
+     * The status code that the response has parsed
+     */
     public statusCode: number;
-    public headers: Record<string, string | string[]>;
 
-    constructor(client: HttpClient);
+    /**
+     * A object of the response headers
+     */
+    public headers: Record<string, string | string[]>;
 
     /**
      * If the request was successful or not
