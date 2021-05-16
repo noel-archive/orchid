@@ -312,7 +312,7 @@ export class HttpClient {
         requestUrl = new URL(formedUrl, fullBaseURL);
       }
     } else {
-      throw new TypeError('Missing full URL in `options.url`');
+      requestUrl = typeof requestOptions.url === 'string' ? new URL(requestOptions.url) : requestOptions.url;
     }
 
     return new Request(this, requestUrl, requestOptions.method, requestOptions);
