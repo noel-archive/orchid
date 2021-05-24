@@ -43,7 +43,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@augu/collections": "1.0.8",
+    "@augu/collections": "1.0.9",
     "@augu/utils": "1.5.3",
     "form-data": "4.0.0",
     "undici": "3.3.6"
