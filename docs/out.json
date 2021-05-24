@@ -1,0 +1,6244 @@
+{
+	"id": 0,
+	"name": "@augu/orchid",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 191,
+			"name": "HttpClient",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 212,
+					"name": "HttpClient",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"children": [
+						{
+							"id": 213,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 214,
+									"name": "new HttpClient",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Constructs a new [[HttpClient]] instance"
+									},
+									"parameters": [
+										{
+											"id": 215,
+											"name": "options",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The http client options to use\n"
+											},
+											"type": {
+												"type": "reference",
+												"id": 198,
+												"name": "HttpClientOptions"
+											},
+											"defaultValue": "{}"
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 212,
+										"name": "HttpClient"
+									}
+								}
+							]
+						},
+						{
+							"id": 223,
+							"name": "baseUrl",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true,
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The base URl to use"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 169,
+									"character": 16
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "URL"
+									}
+								]
+							}
+						},
+						{
+							"id": 222,
+							"name": "clientOptions",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The raw options when passed"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 164,
+									"character": 22
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 198,
+								"name": "HttpClientOptions"
+							}
+						},
+						{
+							"id": 221,
+							"name": "defaults",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The request defaults"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 159,
+									"character": 17
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "reference",
+										"typeArguments": [
+											{
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "reference",
+														"id": 79,
+														"name": "RequestOptions"
+													},
+													{
+														"type": "union",
+														"types": [
+															{
+																"type": "literal",
+																"value": "followRedirects"
+															},
+															{
+																"type": "literal",
+																"value": "compress"
+															},
+															{
+																"type": "literal",
+																"value": "headers"
+															}
+														]
+													}
+												],
+												"name": "Pick"
+											}
+										],
+										"name": "Partial"
+									}
+								],
+								"name": "Required"
+							}
+						},
+						{
+							"id": 224,
+							"name": "kClient",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true,
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The undici client attached to this [[HttpClient]], this is set\nwhen `baseURL` is set in [[HttpClientOptions]]."
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 175,
+									"character": 16
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Client"
+							}
+						},
+						{
+							"id": 217,
+							"name": "middleware",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "List of middleware available to this [[HttpClient]]"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 149,
+									"character": 19
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "union",
+										"types": [
+											{
+												"type": "reference",
+												"id": 47,
+												"typeArguments": [
+													{
+														"type": "reference",
+														"id": 36,
+														"name": "MiddlewareType"
+													},
+													{
+														"type": "reflection",
+														"declaration": {
+															"id": 218,
+															"name": "__type",
+															"kind": 65536,
+															"kindString": "Type literal",
+															"flags": {}
+														}
+													}
+												],
+												"name": "Middleware"
+											},
+											{
+												"type": "reference",
+												"id": 51,
+												"typeArguments": [
+													{
+														"type": "reference",
+														"id": 36,
+														"name": "MiddlewareType"
+													},
+													{
+														"type": "reflection",
+														"declaration": {
+															"id": 219,
+															"name": "__type",
+															"kind": 65536,
+															"kindString": "Type literal",
+															"flags": {}
+														}
+													}
+												],
+												"name": "MultiMiddleware"
+											}
+										]
+									}
+								],
+								"name": "Collection"
+							},
+							"defaultValue": "..."
+						},
+						{
+							"id": 216,
+							"name": "serializers",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "List of serializers available to this [[HttpClient]]"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 144,
+									"character": 20
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "reference",
+												"name": "RegExp"
+											}
+										]
+									},
+									{
+										"type": "reference",
+										"id": 181,
+										"typeArguments": [
+											{
+												"type": "intrinsic",
+												"name": "any"
+											}
+										],
+										"name": "Serializer"
+									}
+								],
+								"name": "Collection"
+							},
+							"defaultValue": "..."
+						},
+						{
+							"id": 220,
+							"name": "userAgent",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The user agent to this [[HttpClient]]"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 154,
+									"character": 18
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						},
+						{
+							"id": 225,
+							"name": "request",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 241,
+									"character": 9
+								}
+							],
+							"signatures": [
+								{
+									"id": 226,
+									"name": "request",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Attempts to create a request and returns a response object"
+									},
+									"parameters": [
+										{
+											"id": 227,
+											"name": "url",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The URL or request options to use"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "reference",
+														"id": 198,
+														"name": "HttpClientOptions"
+													}
+												]
+											}
+										},
+										{
+											"id": 228,
+											"name": "method",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {
+												"isOptional": true
+											},
+											"comment": {
+												"text": "The http method verb or request options to use"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "reference",
+														"id": 78,
+														"name": "HttpMethod"
+													},
+													{
+														"type": "reference",
+														"typeArguments": [
+															{
+																"type": "reference",
+																"id": 209,
+																"name": "HttpRequestOptions"
+															},
+															{
+																"type": "union",
+																"types": [
+																	{
+																		"type": "literal",
+																		"value": "url"
+																	},
+																	{
+																		"type": "literal",
+																		"value": "method"
+																	}
+																]
+															}
+														],
+														"name": "Omit"
+													}
+												]
+											}
+										},
+										{
+											"id": 229,
+											"name": "options",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {
+												"isOptional": true
+											},
+											"comment": {
+												"text": "Any additional options to use\n"
+											},
+											"type": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "reference",
+														"id": 209,
+														"name": "HttpRequestOptions"
+													},
+													{
+														"type": "union",
+														"types": [
+															{
+																"type": "literal",
+																"value": "url"
+															},
+															{
+																"type": "literal",
+																"value": "method"
+															}
+														]
+													}
+												],
+												"name": "Omit"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 239,
+							"name": "runMiddleware",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 355,
+									"character": 15
+								}
+							],
+							"signatures": [
+								{
+									"id": 240,
+									"name": "runMiddleware",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Runs the middleware based on the [type]."
+									},
+									"parameters": [
+										{
+											"id": 241,
+											"name": "type",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The type to use\n"
+											},
+											"type": {
+												"type": "reference",
+												"id": 37,
+												"name": "Response"
+											}
+										},
+										{
+											"id": 242,
+											"name": "req",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"id": 90,
+												"name": "Request"
+											}
+										},
+										{
+											"id": 243,
+											"name": "res",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"id": 151,
+												"name": "Response"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								},
+								{
+									"id": 244,
+									"name": "runMiddleware",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 245,
+											"name": "type",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"id": 38,
+												"name": "Request"
+											}
+										},
+										{
+											"id": 246,
+											"name": "req",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"id": 90,
+												"name": "Request"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 230,
+							"name": "serializer",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 332,
+									"character": 12
+								}
+							],
+							"signatures": [
+								{
+									"id": 231,
+									"name": "serializer",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Injects a serializer to this [HttpClient] instance.\nThis will attempt any packets of data if the [contentType]\nis the same and *attempts* to serialize or a [SerializationError]\nwill occur. Best recommended to inject it in the `serializers`\narray when creating a new Orchid instance.",
+										"returns": "This instance to chain methods.\n"
+									},
+									"parameters": [
+										{
+											"id": 232,
+											"name": "contentType",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The content type to serialize to"
+											},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										},
+										{
+											"id": 233,
+											"name": "definition",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The serializer definition"
+											},
+											"type": {
+												"type": "reference",
+												"id": 181,
+												"typeArguments": [
+													{
+														"type": "intrinsic",
+														"name": "any"
+													}
+												],
+												"name": "Serializer"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 212,
+										"name": "HttpClient"
+									}
+								}
+							]
+						},
+						{
+							"id": 234,
+							"name": "use",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 345,
+									"character": 5
+								}
+							],
+							"signatures": [
+								{
+									"id": 235,
+									"name": "use",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Applies a middleware definition to this [HttpClient],\nif you are creating a new instance, it's best recommended\nto use the `middleware` option",
+										"returns": "This instance to chain methods\n"
+									},
+									"parameters": [
+										{
+											"id": 236,
+											"name": "middleware",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "reference",
+														"id": 47,
+														"typeArguments": [
+															{
+																"type": "reference",
+																"id": 36,
+																"name": "MiddlewareType"
+															},
+															{
+																"type": "reflection",
+																"declaration": {
+																	"id": 237,
+																	"name": "__type",
+																	"kind": 65536,
+																	"kindString": "Type literal",
+																	"flags": {}
+																}
+															}
+														],
+														"name": "Middleware"
+													},
+													{
+														"type": "reference",
+														"id": 51,
+														"typeArguments": [
+															{
+																"type": "reference",
+																"id": 36,
+																"name": "MiddlewareType"
+															},
+															{
+																"type": "reflection",
+																"declaration": {
+																	"id": 238,
+																	"name": "__type",
+																	"kind": 65536,
+																	"kindString": "Type literal",
+																	"flags": {}
+																}
+															}
+														],
+														"name": "MultiMiddleware"
+													}
+												]
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 212,
+										"name": "HttpClient"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								213
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								223,
+								222,
+								221,
+								224,
+								217,
+								216,
+								220
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								225,
+								239,
+								230,
+								234
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 140,
+							"character": 23
+						}
+					]
+				},
+				{
+					"id": 198,
+					"name": "HttpClientOptions",
+					"kind": 256,
+					"kindString": "Interface",
+					"flags": {},
+					"comment": {
+						"shortText": "List of client options to use"
+					},
+					"children": [
+						{
+							"id": 206,
+							"name": "basePath",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The base path to use when using [[HttpClientOptions.baseUrl]]"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 79,
+									"character": 10
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						},
+						{
+							"id": 207,
+							"name": "baseUrl",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The base URL to use, if this is set then [[HttpClient.kClient]] is automatically set\nand [[RequestOptions.keepClient]] is set to `true`"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 85,
+									"character": 9
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "URL"
+									}
+								]
+							}
+						},
+						{
+							"id": 205,
+							"name": "client",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The undici client to override if you want to customize the behaviour\nof it."
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 67,
+									"character": 8
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Client"
+							}
+						},
+						{
+							"id": 204,
+							"name": "defaults",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "Any default behaviour if a property isn't set in a request"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 61,
+									"character": 10
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "reference",
+										"typeArguments": [
+											{
+												"type": "reference",
+												"id": 79,
+												"name": "RequestOptions"
+											},
+											{
+												"type": "union",
+												"types": [
+													{
+														"type": "literal",
+														"value": "followRedirects"
+													},
+													{
+														"type": "literal",
+														"value": "compress"
+													},
+													{
+														"type": "literal",
+														"value": "headers"
+													}
+												]
+											}
+										],
+										"name": "Pick"
+									}
+								],
+								"name": "Partial"
+							}
+						},
+						{
+							"id": 200,
+							"name": "middleware",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "List of middleware to attach"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 50,
+									"character": 12
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "union",
+									"types": [
+										{
+											"type": "reference",
+											"id": 47,
+											"typeArguments": [
+												{
+													"type": "reference",
+													"id": 36,
+													"name": "MiddlewareType"
+												},
+												{
+													"type": "reflection",
+													"declaration": {
+														"id": 201,
+														"name": "__type",
+														"kind": 65536,
+														"kindString": "Type literal",
+														"flags": {}
+													}
+												}
+											],
+											"name": "Middleware"
+										},
+										{
+											"type": "reference",
+											"id": 51,
+											"typeArguments": [
+												{
+													"type": "reference",
+													"id": 36,
+													"name": "MiddlewareType"
+												},
+												{
+													"type": "reflection",
+													"declaration": {
+														"id": 202,
+														"name": "__type",
+														"kind": 65536,
+														"kindString": "Type literal",
+														"flags": {}
+													}
+												}
+											],
+											"name": "MultiMiddleware"
+										}
+									]
+								}
+							}
+						},
+						{
+							"id": 199,
+							"name": "serializers",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "List of serializers to attach"
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 45,
+									"character": 13
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "reference",
+									"id": 181,
+									"typeArguments": [
+										{
+											"type": "intrinsic",
+											"name": "any"
+										}
+									],
+									"name": "Serializer"
+								}
+							}
+						},
+						{
+							"id": 203,
+							"name": "userAgent",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The user-agent for this [[HttpClient]], the `user-agent` header is automatically\npopulated in the request headers."
+							},
+							"sources": [
+								{
+									"fileName": "HttpClient.ts",
+									"line": 56,
+									"character": 11
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"groups": [
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								206,
+								207,
+								205,
+								204,
+								200,
+								199,
+								203
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 41,
+							"character": 34
+						}
+					]
+				},
+				{
+					"id": 209,
+					"name": "HttpRequestOptions",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "The request option with `query` for `url` having `:...`"
+					},
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 114,
+							"character": 30
+						}
+					],
+					"type": {
+						"type": "intersection",
+						"types": [
+							{
+								"type": "reference",
+								"id": 79,
+								"name": "RequestOptions"
+							},
+							{
+								"type": "reflection",
+								"declaration": {
+									"id": 210,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"children": [
+										{
+											"id": 211,
+											"name": "query",
+											"kind": 1024,
+											"kindString": "Property",
+											"flags": {
+												"isOptional": true
+											},
+											"comment": {
+												"shortText": "The path parameters to add"
+											},
+											"sources": [
+												{
+													"fileName": "HttpClient.ts",
+													"line": 118,
+													"character": 7
+												}
+											],
+											"type": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "intrinsic",
+														"name": "string"
+													}
+												],
+												"name": "Record"
+											}
+										}
+									],
+									"groups": [
+										{
+											"title": "Properties",
+											"kind": 1024,
+											"children": [
+												211
+											]
+										}
+									],
+									"sources": [
+										{
+											"fileName": "HttpClient.ts",
+											"line": 114,
+											"character": 49
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"id": 208,
+					"name": "HttpMethods",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {
+						"isConst": true
+					},
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 88,
+							"character": 24
+						}
+					],
+					"type": {
+						"type": "reference",
+						"typeArguments": [
+							{
+								"type": "array",
+								"elementType": {
+									"type": "reference",
+									"id": 78,
+									"name": "HttpMethod"
+								}
+							}
+						],
+						"name": "Readonly"
+					},
+					"defaultValue": "..."
+				},
+				{
+					"id": 192,
+					"name": "isRequestOptions",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 125,
+							"character": 32
+						}
+					],
+					"signatures": [
+						{
+							"id": 193,
+							"name": "isRequestOptions",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Checks if [value] is a instanceof `RequestOptions`"
+							},
+							"parameters": [
+								{
+									"id": 194,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The value to check\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "unknown"
+									}
+								}
+							],
+							"type": {
+								"type": "predicate",
+								"name": "value",
+								"asserts": false,
+								"targetType": {
+									"type": "reference",
+									"id": 79,
+									"name": "RequestOptions"
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": 195,
+					"name": "isUrlLike",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "HttpClient.ts",
+							"line": 136,
+							"character": 25
+						}
+					],
+					"signatures": [
+						{
+							"id": 196,
+							"name": "isUrlLike",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Checks if [value] is a URL-like component"
+							},
+							"parameters": [
+								{
+									"id": 197,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The value to check\n"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "unknown"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						212
+					]
+				},
+				{
+					"title": "Interfaces",
+					"kind": 256,
+					"children": [
+						198
+					]
+				},
+				{
+					"title": "Type aliases",
+					"kind": 4194304,
+					"children": [
+						209
+					]
+				},
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						208
+					]
+				},
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						192,
+						195
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "HttpClient.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "core/AbortController",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 25,
+					"name": "AbortController",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"comment": {
+						"shortText": "Polyfill for AbortController specified here: https://developer.mozilla.org/en-US/docs/Web/API/AbortController",
+						"text": "I made my own polyfill to not add over-head polyfill dependencies\n"
+					},
+					"children": [
+						{
+							"id": 26,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 27,
+									"name": "new AbortController",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"id": 25,
+										"name": "AbortController"
+									}
+								}
+							]
+						},
+						{
+							"id": 28,
+							"name": "signal",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 107,
+									"character": 15
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 2,
+								"name": "AbortSignal"
+							},
+							"defaultValue": "..."
+						},
+						{
+							"id": 33,
+							"name": "[Symbol.toStringTag]",
+							"kind": 262144,
+							"kindString": "Accessor",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 127,
+									"character": 26
+								}
+							],
+							"getSignature": [
+								{
+									"id": 34,
+									"name": "[Symbol.toStringTag]",
+									"kind": 524288,
+									"kindString": "Get signature",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							]
+						},
+						{
+							"id": 29,
+							"name": "abort",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 112,
+									"character": 7
+								}
+							],
+							"signatures": [
+								{
+									"id": 30,
+									"name": "abort",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Aborts the request"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 31,
+							"name": "toString",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 123,
+									"character": 10
+								}
+							],
+							"signatures": [
+								{
+									"id": 32,
+									"name": "toString",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Returns a string representation of this object"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								26
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								28
+							]
+						},
+						{
+							"title": "Accessors",
+							"kind": 262144,
+							"children": [
+								33
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								29,
+								31
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/AbortController.ts",
+							"line": 106,
+							"character": 28
+						}
+					]
+				},
+				{
+					"id": 2,
+					"name": "AbortSignal",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"comment": {
+						"shortText": "Polyfill for [[AbortSignal]] without adding any over-head dependencies"
+					},
+					"children": [
+						{
+							"id": 3,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 4,
+									"name": "new AbortSignal",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"id": 2,
+										"name": "AbortSignal"
+									}
+								}
+							]
+						},
+						{
+							"id": 6,
+							"name": "aborted",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "If this signal is aborted or not"
+							},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 55,
+									"character": 16
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							},
+							"defaultValue": "false"
+						},
+						{
+							"id": 5,
+							"name": "eventEmitter",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The event emitter to dispatch events"
+							},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 50,
+									"character": 21
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "reference",
+										"name": "AbortSignalEvents"
+									}
+								],
+								"name": "EventBus"
+							},
+							"defaultValue": "..."
+						},
+						{
+							"id": 7,
+							"name": "[Symbol.toStringTag]",
+							"kind": 262144,
+							"kindString": "Accessor",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 57,
+									"character": 26
+								}
+							],
+							"getSignature": [
+								{
+									"id": 8,
+									"name": "[Symbol.toStringTag]",
+									"kind": 524288,
+									"kindString": "Get signature",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							]
+						},
+						{
+							"id": 16,
+							"name": "addEventListener",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 82,
+									"character": 18
+								}
+							],
+							"signatures": [
+								{
+									"id": 17,
+									"name": "addEventListener",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Pushes a new event to the event callstack"
+									},
+									"typeParameter": [
+										{
+											"id": 18,
+											"name": "K",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"type": {
+												"type": "literal",
+												"value": "onabort"
+											}
+										}
+									],
+									"parameters": [
+										{
+											"id": 19,
+											"name": "name",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The name of the event to push"
+											},
+											"type": {
+												"type": "reference",
+												"name": "K"
+											}
+										},
+										{
+											"id": 20,
+											"name": "handler",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The handler function\n"
+											},
+											"type": {
+												"type": "indexedAccess",
+												"indexType": {
+													"type": "reference",
+													"name": "K"
+												},
+												"objectType": {
+													"type": "reference",
+													"name": "AbortSignalEvents"
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 21,
+							"name": "dispatchEvent",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 90,
+									"character": 15
+								}
+							],
+							"signatures": [
+								{
+									"id": 22,
+									"name": "dispatchEvent",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Dispatch a event from this [[AbortSignal]]"
+									},
+									"typeParameter": [
+										{
+											"id": 23,
+											"name": "K",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"type": {
+												"type": "literal",
+												"value": "onabort"
+											}
+										}
+									],
+									"parameters": [
+										{
+											"id": 24,
+											"name": "type",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The type to dispatch\n"
+											},
+											"type": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "reference",
+														"name": "K"
+													}
+												],
+												"name": "DispatchEventName"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 11,
+							"name": "removeEventListener",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 73,
+									"character": 21
+								}
+							],
+							"signatures": [
+								{
+									"id": 12,
+									"name": "removeEventListener",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Pops a event's specific listener from the callstack."
+									},
+									"typeParameter": [
+										{
+											"id": 13,
+											"name": "K",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"type": {
+												"type": "literal",
+												"value": "onabort"
+											}
+										}
+									],
+									"parameters": [
+										{
+											"id": 14,
+											"name": "name",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The name of the event to pop out"
+											},
+											"type": {
+												"type": "reference",
+												"name": "K"
+											}
+										},
+										{
+											"id": 15,
+											"name": "handler",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The handler function\n"
+											},
+											"type": {
+												"type": "indexedAccess",
+												"indexType": {
+													"type": "reference",
+													"name": "K"
+												},
+												"objectType": {
+													"type": "reference",
+													"name": "AbortSignalEvents"
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 9,
+							"name": "toString",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/AbortController.ts",
+									"line": 64,
+									"character": 10
+								}
+							],
+							"signatures": [
+								{
+									"id": 10,
+									"name": "toString",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Returns a string representation of this object"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								3
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								6,
+								5
+							]
+						},
+						{
+							"title": "Accessors",
+							"kind": 262144,
+							"children": [
+								7
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								16,
+								21,
+								11,
+								9
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/AbortController.ts",
+							"line": 46,
+							"character": 24
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						25,
+						2
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "core/AbortController.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 35,
+			"name": "core/Middleware",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 36,
+					"name": "MiddlewareType",
+					"kind": 4,
+					"kindString": "Enumeration",
+					"flags": {},
+					"comment": {
+						"shortText": "List of middleware types available"
+					},
+					"children": [
+						{
+							"id": 38,
+							"name": "Request",
+							"kind": 16,
+							"kindString": "Enumeration member",
+							"flags": {},
+							"comment": {
+								"shortText": "Called when a [[Request]] was *just* made"
+							},
+							"sources": [
+								{
+									"fileName": "core/Middleware.ts",
+									"line": 38,
+									"character": 9
+								}
+							],
+							"defaultValue": "\"on:request\""
+						},
+						{
+							"id": 37,
+							"name": "Response",
+							"kind": 16,
+							"kindString": "Enumeration member",
+							"flags": {},
+							"comment": {
+								"shortText": "Called when a [[Response]] object is serialized"
+							},
+							"sources": [
+								{
+									"fileName": "core/Middleware.ts",
+									"line": 33,
+									"character": 10
+								}
+							],
+							"defaultValue": "\"on:response\""
+						}
+					],
+					"groups": [
+						{
+							"title": "Enumeration members",
+							"kind": 16,
+							"children": [
+								38,
+								37
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 29,
+							"character": 26
+						}
+					]
+				},
+				{
+					"id": 55,
+					"name": "MiddlewareDefinition",
+					"kind": 256,
+					"kindString": "Interface",
+					"flags": {},
+					"comment": {
+						"shortText": "Definition object for middleware, read the [[Middleware]] type\nfor more in-depth information."
+					},
+					"children": [
+						{
+							"id": 59,
+							"name": "name",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {},
+							"comment": {
+								"shortText": "The name of the middleware"
+							},
+							"sources": [
+								{
+									"fileName": "core/Middleware.ts",
+									"line": 104,
+									"character": 6
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						},
+						{
+							"id": 60,
+							"name": "run",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {},
+							"comment": {
+								"shortText": "The run function to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Middleware.ts",
+									"line": 109,
+									"character": 5
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 39,
+								"typeArguments": [
+									{
+										"type": "reference",
+										"name": "Type"
+									}
+								],
+								"name": "RunFunction"
+							}
+						},
+						{
+							"id": 58,
+							"name": "type",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {},
+							"comment": {
+								"shortText": "The middleware type"
+							},
+							"sources": [
+								{
+									"fileName": "core/Middleware.ts",
+									"line": 99,
+									"character": 6
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Type"
+							}
+						},
+						{
+							"id": 56,
+							"name": "init",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {
+								"isOptional": true
+							},
+							"signatures": [
+								{
+									"id": 57,
+									"name": "init",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Called when [[HttpClient.use]] is called, to initialize this middleware\nwith any additional properties it desires."
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								59,
+								60,
+								58
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								56
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 89,
+							"character": 37
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 61,
+							"name": "Type",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"id": 36,
+								"name": "MiddlewareType"
+							}
+						}
+					]
+				},
+				{
+					"id": 47,
+					"name": "Middleware",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "Represents a middleware object, this is used for [[HttpClient.use]]. When [[HttpClient.use]] is called,\nit'll run the `init` lifecycle hook (can be omitted), to append any [[Props]] (if any), then the specific\n[[Type]] is called, it'll run the middleware with the `run` function, where all logic happens with extra\narguments dependent on the [[Type]] with a `next` parameter which will call the next middleware.",
+						"text": "Example middleware:\n\n```js\nconst mod: Middleware<MiddlewareFunction<MiddlewareType.Request>, {}> = {\n  name: 'my.middleware',\n  type: MiddlewareType.Request,\n  init() {\n     // init function when `client.use` is called\n  },\n  run(req, next) {\n    // req => orchid.Request\n    next();\n  }\n};\n```\n"
+					},
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 73,
+							"character": 22
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 48,
+							"name": "Type",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"id": 36,
+								"name": "MiddlewareType"
+							}
+						},
+						{
+							"id": 50,
+							"name": "Props",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"default": {
+								"type": "reflection",
+								"declaration": {
+									"id": 49,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "core/Middleware.ts",
+											"line": 73,
+											"character": 59
+										}
+									]
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "intersection",
+						"types": [
+							{
+								"type": "reference",
+								"id": 55,
+								"typeArguments": [
+									{
+										"type": "reference",
+										"name": "Type"
+									}
+								],
+								"name": "MiddlewareDefinition"
+							},
+							{
+								"type": "mapped",
+								"parameter": "P",
+								"parameterType": {
+									"type": "typeOperator",
+									"operator": "keyof",
+									"target": {
+										"type": "reference",
+										"name": "Props"
+									}
+								},
+								"templateType": {
+									"type": "indexedAccess",
+									"indexType": {
+										"type": "reference",
+										"name": "P"
+									},
+									"objectType": {
+										"type": "reference",
+										"name": "Props"
+									}
+								},
+								"optionalModifier": "+"
+							}
+						]
+					}
+				},
+				{
+					"id": 51,
+					"name": "MultiMiddleware",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "Represents middleware definition to multiple types, refer to the [[Middleware]] type alias\nfor more information."
+					},
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 81,
+							"character": 27
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 52,
+							"name": "Type",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"id": 36,
+								"name": "MiddlewareType"
+							}
+						},
+						{
+							"id": 54,
+							"name": "Props",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"default": {
+								"type": "reflection",
+								"declaration": {
+									"id": 53,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "core/Middleware.ts",
+											"line": 81,
+											"character": 64
+										}
+									]
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "intersection",
+						"types": [
+							{
+								"type": "reference",
+								"id": 62,
+								"typeArguments": [
+									{
+										"type": "reference",
+										"name": "Type"
+									}
+								],
+								"name": "MultiMiddlewareDefinition"
+							},
+							{
+								"type": "mapped",
+								"parameter": "P",
+								"parameterType": {
+									"type": "typeOperator",
+									"operator": "keyof",
+									"target": {
+										"type": "reference",
+										"name": "Props"
+									}
+								},
+								"templateType": {
+									"type": "indexedAccess",
+									"indexType": {
+										"type": "reference",
+										"name": "P"
+									},
+									"objectType": {
+										"type": "reference",
+										"name": "Props"
+									}
+								},
+								"optionalModifier": "+"
+							}
+						]
+					}
+				},
+				{
+					"id": 62,
+					"name": "MultiMiddlewareDefinition",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "Definition object for multi-middleware; read the [[Middleware]] type\nfor more of an in-depth explaination"
+					},
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 117,
+							"character": 37
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 75,
+							"name": "Type",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"id": 36,
+								"name": "MiddlewareType"
+							}
+						}
+					],
+					"type": {
+						"type": "intersection",
+						"types": [
+							{
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "reference",
+										"id": 55,
+										"typeArguments": [
+											{
+												"type": "reference",
+												"name": "Type"
+											}
+										],
+										"name": "MiddlewareDefinition"
+									},
+									{
+										"type": "union",
+										"types": [
+											{
+												"type": "literal",
+												"value": "type"
+											},
+											{
+												"type": "literal",
+												"value": "run"
+											}
+										]
+									}
+								],
+								"name": "Omit"
+							},
+							{
+								"type": "reflection",
+								"declaration": {
+									"id": 63,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"children": [
+										{
+											"id": 64,
+											"name": "types",
+											"kind": 1024,
+											"kindString": "Property",
+											"flags": {},
+											"sources": [
+												{
+													"fileName": "core/Middleware.ts",
+													"line": 118,
+													"character": 7
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "reference",
+													"id": 36,
+													"name": "MiddlewareType"
+												}
+											}
+										}
+									],
+									"groups": [
+										{
+											"title": "Properties",
+											"kind": 1024,
+											"children": [
+												64
+											]
+										}
+									],
+									"sources": [
+										{
+											"fileName": "core/Middleware.ts",
+											"line": 117,
+											"character": 119
+										}
+									]
+								}
+							},
+							{
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "conditional",
+										"checkType": {
+											"type": "reference",
+											"name": "Type"
+										},
+										"extendsType": {
+											"type": "reference",
+											"id": 36,
+											"name": "MiddlewareType"
+										},
+										"trueType": {
+											"type": "conditional",
+											"checkType": {
+												"type": "reference",
+												"name": "Type"
+											},
+											"extendsType": {
+												"type": "reference",
+												"id": 37,
+												"name": "MiddlewareType.Response"
+											},
+											"trueType": {
+												"type": "reflection",
+												"declaration": {
+													"id": 65,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"children": [
+														{
+															"id": 66,
+															"name": "onResponse",
+															"kind": 2048,
+															"kindString": "Method",
+															"flags": {},
+															"signatures": [
+																{
+																	"id": 67,
+																	"name": "onResponse",
+																	"kind": 4096,
+																	"kindString": "Call signature",
+																	"flags": {},
+																	"comment": {
+																		"shortText": "Ran when Orchid has serialized a response when requesting"
+																	},
+																	"parameters": [
+																		{
+																			"id": 68,
+																			"name": "client",
+																			"kind": 32768,
+																			"kindString": "Parameter",
+																			"flags": {},
+																			"type": {
+																				"type": "intrinsic",
+																				"name": "any"
+																			}
+																		},
+																		{
+																			"id": 69,
+																			"name": "req",
+																			"kind": 32768,
+																			"kindString": "Parameter",
+																			"flags": {},
+																			"type": {
+																				"type": "reference",
+																				"id": 90,
+																				"name": "Request"
+																			}
+																		},
+																		{
+																			"id": 70,
+																			"name": "res",
+																			"kind": 32768,
+																			"kindString": "Parameter",
+																			"flags": {},
+																			"comment": {
+																				"text": "The response object"
+																			},
+																			"type": {
+																				"type": "reference",
+																				"id": 151,
+																				"name": "Response"
+																			}
+																		}
+																	],
+																	"type": {
+																		"type": "intrinsic",
+																		"name": "void"
+																	}
+																}
+															]
+														}
+													],
+													"groups": [
+														{
+															"title": "Methods",
+															"kind": 2048,
+															"children": [
+																66
+															]
+														}
+													],
+													"sources": [
+														{
+															"fileName": "core/Middleware.ts",
+															"line": 121,
+															"character": 5
+														}
+													]
+												}
+											},
+											"falseType": {
+												"type": "conditional",
+												"checkType": {
+													"type": "reference",
+													"name": "Type"
+												},
+												"extendsType": {
+													"type": "reference",
+													"id": 38,
+													"name": "MiddlewareType.Request"
+												},
+												"trueType": {
+													"type": "reflection",
+													"declaration": {
+														"id": 71,
+														"name": "__type",
+														"kind": 65536,
+														"kindString": "Type literal",
+														"flags": {},
+														"children": [
+															{
+																"id": 72,
+																"name": "onRequest",
+																"kind": 2048,
+																"kindString": "Method",
+																"flags": {},
+																"signatures": [
+																	{
+																		"id": 73,
+																		"name": "onRequest",
+																		"kind": 4096,
+																		"kindString": "Call signature",
+																		"flags": {},
+																		"comment": {
+																			"shortText": "Ran when the FIRST hit of a request has been made"
+																		},
+																		"parameters": [
+																			{
+																				"id": 74,
+																				"name": "req",
+																				"kind": 32768,
+																				"kindString": "Parameter",
+																				"flags": {},
+																				"comment": {
+																					"text": "The request object"
+																				},
+																				"type": {
+																					"type": "reference",
+																					"id": 90,
+																					"name": "Request"
+																				}
+																			}
+																		],
+																		"type": {
+																			"type": "intrinsic",
+																			"name": "void"
+																		}
+																	}
+																]
+															}
+														],
+														"groups": [
+															{
+																"title": "Methods",
+																"kind": 2048,
+																"children": [
+																	72
+																]
+															}
+														],
+														"sources": [
+															{
+																"fileName": "core/Middleware.ts",
+																"line": 130,
+																"character": 7
+															}
+														]
+													}
+												},
+												"falseType": {
+													"type": "intrinsic",
+													"name": "never"
+												}
+											}
+										},
+										"falseType": {
+											"type": "intrinsic",
+											"name": "never"
+										}
+									}
+								],
+								"name": "Required"
+							}
+						]
+					}
+				},
+				{
+					"id": 39,
+					"name": "RunFunction",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "The runner function to use based on it's [[Type]]."
+					},
+					"sources": [
+						{
+							"fileName": "core/Middleware.ts",
+							"line": 45,
+							"character": 23
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 46,
+							"name": "Type",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"id": 36,
+								"name": "MiddlewareType"
+							}
+						}
+					],
+					"type": {
+						"type": "conditional",
+						"checkType": {
+							"type": "reference",
+							"name": "Type"
+						},
+						"extendsType": {
+							"type": "reference",
+							"id": 38,
+							"name": "MiddlewareType.Request"
+						},
+						"trueType": {
+							"type": "reflection",
+							"declaration": {
+								"id": 40,
+								"name": "__type",
+								"kind": 65536,
+								"kindString": "Type literal",
+								"flags": {},
+								"sources": [
+									{
+										"fileName": "core/Middleware.ts",
+										"line": 46,
+										"character": 7
+									}
+								],
+								"signatures": [
+									{
+										"id": 41,
+										"name": "__type",
+										"kind": 4096,
+										"kindString": "Call signature",
+										"flags": {},
+										"parameters": [
+											{
+												"id": 42,
+												"name": "req",
+												"kind": 32768,
+												"kindString": "Parameter",
+												"flags": {},
+												"type": {
+													"type": "reference",
+													"id": 90,
+													"name": "Request"
+												}
+											}
+										],
+										"type": {
+											"type": "intrinsic",
+											"name": "void"
+										}
+									}
+								]
+							}
+						},
+						"falseType": {
+							"type": "conditional",
+							"checkType": {
+								"type": "reference",
+								"name": "Type"
+							},
+							"extendsType": {
+								"type": "reference",
+								"id": 37,
+								"name": "MiddlewareType.Response"
+							},
+							"trueType": {
+								"type": "reflection",
+								"declaration": {
+									"id": 43,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "core/Middleware.ts",
+											"line": 48,
+											"character": 9
+										}
+									],
+									"signatures": [
+										{
+											"id": 44,
+											"name": "__type",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 45,
+													"name": "res",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "reference",
+														"id": 151,
+														"name": "Response"
+													}
+												}
+											],
+											"type": {
+												"type": "intrinsic",
+												"name": "void"
+											}
+										}
+									]
+								}
+							},
+							"falseType": {
+								"type": "intrinsic",
+								"name": "never"
+							}
+						}
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Enumerations",
+					"kind": 4,
+					"children": [
+						36
+					]
+				},
+				{
+					"title": "Interfaces",
+					"kind": 256,
+					"children": [
+						55
+					]
+				},
+				{
+					"title": "Type aliases",
+					"kind": 4194304,
+					"children": [
+						47,
+						51,
+						62,
+						39
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "core/Middleware.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 76,
+			"name": "core/Request",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 90,
+					"name": "Request",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"children": [
+						{
+							"id": 91,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 92,
+									"name": "new Request",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"comment": {},
+									"parameters": [
+										{
+											"id": 93,
+											"name": "client",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The [[HttpClient]] attached to this [[Request]]"
+											},
+											"type": {
+												"type": "reference",
+												"id": 212,
+												"name": "HttpClient"
+											}
+										},
+										{
+											"id": 94,
+											"name": "url",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The URL to use"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "reference",
+														"name": "URL"
+													}
+												]
+											}
+										},
+										{
+											"id": 95,
+											"name": "method",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The HTTP method verb to use"
+											},
+											"type": {
+												"type": "reference",
+												"id": 78,
+												"name": "HttpMethod"
+											}
+										},
+										{
+											"id": 96,
+											"name": "options",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "Any additional options to construct this Request\n"
+											},
+											"type": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "reference",
+														"id": 79,
+														"name": "RequestOptions"
+													},
+													{
+														"type": "union",
+														"types": [
+															{
+																"type": "literal",
+																"value": "url"
+															},
+															{
+																"type": "literal",
+																"value": "method"
+															}
+														]
+													}
+												],
+												"name": "Omit"
+											},
+											"defaultValue": "{}"
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 104,
+							"name": "agent",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The undici agent to use, or it'll default to orchid's undici agent."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 168,
+									"character": 14
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Agent"
+							}
+						},
+						{
+							"id": 102,
+							"name": "client",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The undici client to use, or it'll create a new undici client\nto use. If [[HttpClientOptions.baseURL]] is set, it'll\ncreate a public undici client under the [[HttpClient]] to\nuse."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 158,
+									"character": 15
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Client"
+							}
+						},
+						{
+							"id": 98,
+							"name": "compressData",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "If orchid should apply compression headers or not"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 131,
+									"character": 21
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 99,
+							"name": "controller",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The abort controller to cancel the request\nif needed."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 137,
+									"character": 19
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 25,
+								"name": "AbortController"
+							}
+						},
+						{
+							"id": 105,
+							"name": "data",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true,
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "Links this request with some data, cannot use this in GET requests"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 173,
+									"character": 13
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 77,
+								"name": "DataLike"
+							}
+						},
+						{
+							"id": 97,
+							"name": "followRedirects",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "If we should follow 3xx status-code redirects"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 126,
+									"character": 24
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 101,
+							"name": "headers",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "Dictionary of headers to apply"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 150,
+									"character": 16
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "intrinsic",
+										"name": "any"
+									}
+								],
+								"name": "Record"
+							}
+						},
+						{
+							"id": 100,
+							"name": "keepClient",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "If we should close the client or we don't. This is based\nif [[HttpClient.kClient]] is available or not if this option\nisn't set. To squeeze more performance, set a `baseURL`\nclient option to keep the client cached."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 145,
+									"character": 19
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 103,
+							"name": "method",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The HTTP method verb to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 163,
+									"character": 15
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 78,
+								"name": "HttpMethod"
+							}
+						},
+						{
+							"id": 106,
+							"name": "url",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The URL to point to when requesting"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 178,
+									"character": 12
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "URL"
+							}
+						},
+						{
+							"id": 128,
+							"name": "body",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 304,
+									"character": 6
+								}
+							],
+							"signatures": [
+								{
+									"id": 129,
+									"name": "body",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Attach any data to this Request"
+									},
+									"parameters": [
+										{
+											"id": 130,
+											"name": "data",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The data\n"
+											},
+											"type": {
+												"type": "reference",
+												"id": 77,
+												"name": "DataLike"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 141,
+							"name": "catch",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 332,
+									"character": 7
+								}
+							],
+							"signatures": [
+								{
+									"id": 142,
+									"name": "catch",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Attaches a callback only when the Promise is rejected",
+										"returns": "A Promise for the completion of the callback\n"
+									},
+									"typeParameter": [
+										{
+											"id": 143,
+											"name": "TResult",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {}
+										}
+									],
+									"parameters": [
+										{
+											"id": 144,
+											"name": "rejecter",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The callback function to execute"
+											},
+											"type": {
+												"type": "reflection",
+												"declaration": {
+													"id": 145,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"signatures": [
+														{
+															"id": 146,
+															"name": "__type",
+															"kind": 4096,
+															"kindString": "Call signature",
+															"flags": {},
+															"parameters": [
+																{
+																	"id": 147,
+																	"name": "reason",
+																	"kind": 32768,
+																	"kindString": "Parameter",
+																	"flags": {},
+																	"type": {
+																		"type": "intrinsic",
+																		"name": "any"
+																	}
+																}
+															],
+															"type": {
+																"type": "union",
+																"types": [
+																	{
+																		"type": "reference",
+																		"name": "TResult"
+																	},
+																	{
+																		"type": "reference",
+																		"typeArguments": [
+																			{
+																				"type": "reference",
+																				"name": "TResult"
+																			}
+																		],
+																		"name": "PromiseLike"
+																	}
+																]
+															}
+														}
+													]
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"typeArguments": [
+											{
+												"type": "intrinsic",
+												"name": "unknown"
+											}
+										],
+										"name": "Promise"
+									}
+								}
+							]
+						},
+						{
+							"id": 108,
+							"name": "compress",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 208,
+									"character": 10
+								}
+							],
+							"signatures": [
+								{
+									"id": 109,
+									"name": "compress",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Adds or removes any compression header details to this request",
+										"returns": "This request object to chain methods\n"
+									},
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 119,
+							"name": "header",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 263,
+									"character": 8
+								}
+							],
+							"signatures": [
+								{
+									"id": 120,
+									"name": "header",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Adds a header to the request"
+									},
+									"parameters": [
+										{
+											"id": 121,
+											"name": "obj",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The headers as an object of `key`=`value`\n"
+											},
+											"type": {
+												"type": "reflection",
+												"declaration": {
+													"id": 122,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"indexSignature": {
+														"id": 123,
+														"name": "__index",
+														"kind": 8192,
+														"kindString": "Index signature",
+														"flags": {},
+														"parameters": [
+															{
+																"id": 124,
+																"name": "x",
+																"kind": 32768,
+																"flags": {},
+																"type": {
+																	"type": "intrinsic",
+																	"name": "string"
+																}
+															}
+														],
+														"type": {
+															"type": "intrinsic",
+															"name": "string"
+														}
+													}
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								},
+								{
+									"id": 125,
+									"name": "header",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Adds a header to the request"
+									},
+									"parameters": [
+										{
+											"id": 126,
+											"name": "name",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The name of the header"
+											},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										},
+										{
+											"id": 127,
+											"name": "value",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The value of the header\n"
+											},
+											"type": {
+												"type": "intrinsic",
+												"name": "any"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 110,
+							"name": "query",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 224,
+									"character": 7
+								}
+							],
+							"signatures": [
+								{
+									"id": 111,
+									"name": "query",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Adds a query parameter to the URL"
+									},
+									"parameters": [
+										{
+											"id": 112,
+											"name": "obj",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The queries as an object of `key`=`value`\n"
+											},
+											"type": {
+												"type": "reflection",
+												"declaration": {
+													"id": 113,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"indexSignature": {
+														"id": 114,
+														"name": "__index",
+														"kind": 8192,
+														"kindString": "Index signature",
+														"flags": {},
+														"parameters": [
+															{
+																"id": 115,
+																"name": "x",
+																"kind": 32768,
+																"flags": {},
+																"type": {
+																	"type": "intrinsic",
+																	"name": "string"
+																}
+															}
+														],
+														"type": {
+															"type": "intrinsic",
+															"name": "string"
+														}
+													}
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								},
+								{
+									"id": 116,
+									"name": "query",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Adds a query parameter to the URL"
+									},
+									"parameters": [
+										{
+											"id": 117,
+											"name": "name",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The name of the query"
+											},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										},
+										{
+											"id": 118,
+											"name": "value",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The value of the query\n"
+											},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 90,
+										"name": "Request"
+									}
+								}
+							]
+						},
+						{
+							"id": 131,
+							"name": "then",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 321,
+									"character": 6
+								}
+							],
+							"signatures": [
+								{
+									"id": 132,
+									"name": "then",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Attaches callbacks for the resolution and/or rejection of this Request promise",
+										"returns": "A Promise for the completion of which ever callback has been executed\n"
+									},
+									"parameters": [
+										{
+											"id": 133,
+											"name": "resolver",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {
+												"isOptional": true
+											},
+											"comment": {
+												"text": "The callback to execute when the Promise is resolved"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "literal",
+														"value": null
+													},
+													{
+														"type": "reflection",
+														"declaration": {
+															"id": 134,
+															"name": "__type",
+															"kind": 65536,
+															"kindString": "Type literal",
+															"flags": {},
+															"signatures": [
+																{
+																	"id": 135,
+																	"name": "__type",
+																	"kind": 4096,
+																	"kindString": "Call signature",
+																	"flags": {},
+																	"parameters": [
+																		{
+																			"id": 136,
+																			"name": "res",
+																			"kind": 32768,
+																			"kindString": "Parameter",
+																			"flags": {},
+																			"type": {
+																				"type": "union",
+																				"types": [
+																					{
+																						"type": "reference",
+																						"id": 151,
+																						"name": "Response"
+																					},
+																					{
+																						"type": "reference",
+																						"typeArguments": [
+																							{
+																								"type": "reference",
+																								"id": 151,
+																								"name": "Response"
+																							}
+																						],
+																						"name": "PromiseLike"
+																					}
+																				]
+																			}
+																		}
+																	],
+																	"type": {
+																		"type": "intrinsic",
+																		"name": "unknown"
+																	}
+																}
+															]
+														}
+													}
+												]
+											}
+										},
+										{
+											"id": 137,
+											"name": "rejecter",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {
+												"isOptional": true
+											},
+											"comment": {
+												"text": "The callback to execute when the Promise is rejected"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "literal",
+														"value": null
+													},
+													{
+														"type": "reflection",
+														"declaration": {
+															"id": 138,
+															"name": "__type",
+															"kind": 65536,
+															"kindString": "Type literal",
+															"flags": {},
+															"signatures": [
+																{
+																	"id": 139,
+																	"name": "__type",
+																	"kind": 4096,
+																	"kindString": "Call signature",
+																	"flags": {},
+																	"parameters": [
+																		{
+																			"id": 140,
+																			"name": "error",
+																			"kind": 32768,
+																			"kindString": "Parameter",
+																			"flags": {},
+																			"type": {
+																				"type": "intrinsic",
+																				"name": "any"
+																			}
+																		}
+																	],
+																	"type": {
+																		"type": "intrinsic",
+																		"name": "unknown"
+																	}
+																}
+															]
+														}
+													}
+												]
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"typeArguments": [
+											{
+												"type": "intrinsic",
+												"name": "unknown"
+											}
+										],
+										"name": "Promise"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								91
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								104,
+								102,
+								98,
+								99,
+								105,
+								97,
+								101,
+								100,
+								103,
+								106
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								128,
+								141,
+								108,
+								119,
+								110,
+								131
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Request.ts",
+							"line": 122,
+							"character": 20
+						}
+					]
+				},
+				{
+					"id": 79,
+					"name": "RequestOptions",
+					"kind": 256,
+					"kindString": "Interface",
+					"flags": {},
+					"comment": {
+						"shortText": "List of options to use for constructing a new [[Request]]."
+					},
+					"children": [
+						{
+							"id": 87,
+							"name": "agent",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The undici agent to use, or it'll default to orchid's undici agent."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 105,
+									"character": 7
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Agent"
+							}
+						},
+						{
+							"id": 85,
+							"name": "client",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The undici client to use, or it'll create a new undici client\nto use."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 95,
+									"character": 8
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Client"
+							}
+						},
+						{
+							"id": 83,
+							"name": "compress",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "If orchid should apply compression headers or not"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 84,
+									"character": 10
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 81,
+							"name": "controller",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "The abort controller to cancel the request\nif needed."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 73,
+									"character": 12
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 25,
+								"name": "AbortController"
+							}
+						},
+						{
+							"id": 88,
+							"name": "data",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "Links this request with some data, cannot use this in GET requests"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 110,
+									"character": 6
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 77,
+								"name": "DataLike"
+							}
+						},
+						{
+							"id": 80,
+							"name": "followRedirects",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "If we should follow 3xx status-code redirects"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 67,
+									"character": 17
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 84,
+							"name": "headers",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "Dictionary of headers to apply"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 89,
+									"character": 9
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "intrinsic",
+										"name": "any"
+									}
+								],
+								"name": "Record"
+							}
+						},
+						{
+							"id": 82,
+							"name": "keepClient",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isOptional": true
+							},
+							"comment": {
+								"shortText": "If we should keep the undici client or just\nclose it and construct a new one."
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 79,
+									"character": 12
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "boolean"
+							}
+						},
+						{
+							"id": 86,
+							"name": "method",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {},
+							"comment": {
+								"shortText": "The HTTP method verb to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 100,
+									"character": 8
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 78,
+								"name": "HttpMethod"
+							}
+						},
+						{
+							"id": 89,
+							"name": "url",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {},
+							"comment": {
+								"shortText": "The URL to point to when requesting"
+							},
+							"sources": [
+								{
+									"fileName": "core/Request.ts",
+									"line": 115,
+									"character": 5
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "URL"
+									}
+								]
+							}
+						}
+					],
+					"groups": [
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								87,
+								85,
+								83,
+								81,
+								88,
+								80,
+								84,
+								82,
+								86,
+								89
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Request.ts",
+							"line": 63,
+							"character": 31
+						}
+					]
+				},
+				{
+					"id": 77,
+					"name": "DataLike",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "Represents what you should be able to pass in [[RequestOptions.data]]"
+					},
+					"sources": [
+						{
+							"fileName": "core/Request.ts",
+							"line": 35,
+							"character": 20
+						}
+					],
+					"type": {
+						"type": "union",
+						"types": [
+							{
+								"type": "intrinsic",
+								"name": "string"
+							},
+							{
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "intrinsic",
+										"name": "unknown"
+									}
+								],
+								"name": "Record"
+							},
+							{
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "unknown"
+								}
+							},
+							{
+								"type": "reference",
+								"name": "Buffer"
+							},
+							{
+								"type": "reference",
+								"name": "FormData"
+							}
+						]
+					}
+				},
+				{
+					"id": 78,
+					"name": "HttpMethod",
+					"kind": 4194304,
+					"kindString": "Type alias",
+					"flags": {},
+					"comment": {
+						"shortText": "List of HTTP methods available under HTTP/1.1"
+					},
+					"sources": [
+						{
+							"fileName": "core/Request.ts",
+							"line": 40,
+							"character": 22
+						}
+					],
+					"type": {
+						"type": "union",
+						"types": [
+							{
+								"type": "literal",
+								"value": "options"
+							},
+							{
+								"type": "literal",
+								"value": "connect"
+							},
+							{
+								"type": "literal",
+								"value": "delete"
+							},
+							{
+								"type": "literal",
+								"value": "trace"
+							},
+							{
+								"type": "literal",
+								"value": "head"
+							},
+							{
+								"type": "literal",
+								"value": "post"
+							},
+							{
+								"type": "literal",
+								"value": "put"
+							},
+							{
+								"type": "literal",
+								"value": "get"
+							},
+							{
+								"type": "literal",
+								"value": "patch"
+							},
+							{
+								"type": "literal",
+								"value": "OPTIONS"
+							},
+							{
+								"type": "literal",
+								"value": "CONNECT"
+							},
+							{
+								"type": "literal",
+								"value": "DELETE"
+							},
+							{
+								"type": "literal",
+								"value": "TRACE"
+							},
+							{
+								"type": "literal",
+								"value": "HEAD"
+							},
+							{
+								"type": "literal",
+								"value": "POST"
+							},
+							{
+								"type": "literal",
+								"value": "PUT"
+							},
+							{
+								"type": "literal",
+								"value": "GET"
+							},
+							{
+								"type": "literal",
+								"value": "PATCH"
+							}
+						]
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						90
+					]
+				},
+				{
+					"title": "Interfaces",
+					"kind": 256,
+					"children": [
+						79
+					]
+				},
+				{
+					"title": "Type aliases",
+					"kind": 4194304,
+					"children": [
+						77,
+						78
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "core/Request.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 150,
+			"name": "core/Response",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 151,
+					"name": "Response",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"comment": {
+						"shortText": "Represents a http response from the initial request"
+					},
+					"children": [
+						{
+							"id": 152,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 153,
+									"name": "new Response",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 154,
+											"name": "client",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "intrinsic",
+												"name": "any"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 151,
+										"name": "Response"
+									}
+								}
+							]
+						},
+						{
+							"id": 156,
+							"name": "headers",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 30,
+									"character": 16
+								}
+							],
+							"type": {
+								"type": "reference",
+								"typeArguments": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "array",
+												"elementType": {
+													"type": "intrinsic",
+													"name": "string"
+												}
+											}
+										]
+									}
+								],
+								"name": "Record"
+							},
+							"defaultValue": "{}"
+						},
+						{
+							"id": 155,
+							"name": "statusCode",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 29,
+									"character": 19
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "number"
+							},
+							"defaultValue": "0"
+						},
+						{
+							"id": 161,
+							"name": "empty",
+							"kind": 262144,
+							"kindString": "Accessor",
+							"flags": {},
+							"comment": {
+								"shortText": "Check if the response body is empty or not"
+							},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 48,
+									"character": 11
+								}
+							],
+							"getSignature": [
+								{
+									"id": 162,
+									"name": "empty",
+									"kind": 524288,
+									"kindString": "Get signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Check if the response body is empty or not"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								}
+							]
+						},
+						{
+							"id": 159,
+							"name": "success",
+							"kind": 262144,
+							"kindString": "Accessor",
+							"flags": {},
+							"comment": {
+								"shortText": "If the request was successful or not"
+							},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 41,
+									"character": 13
+								}
+							],
+							"getSignature": [
+								{
+									"id": 160,
+									"name": "success",
+									"kind": 524288,
+									"kindString": "Get signature",
+									"flags": {},
+									"comment": {
+										"shortText": "If the request was successful or not"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								}
+							]
+						},
+						{
+							"id": 177,
+							"name": "body",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 105,
+									"character": 6
+								}
+							],
+							"signatures": [
+								{
+									"id": 178,
+									"name": "body",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Converts the response body to any serializable entity. For text: use\n[[Response.text]]. For JSON, use [[Response.json]]. This function is only\nfor custom serialization entities like XML."
+									},
+									"typeParameter": [
+										{
+											"id": 179,
+											"name": "T",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"default": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										}
+									],
+									"type": {
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "reference",
+												"name": "T"
+											}
+										]
+									}
+								}
+							]
+						},
+						{
+							"id": 175,
+							"name": "buffer",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 96,
+									"character": 8
+								}
+							],
+							"signatures": [
+								{
+									"id": 176,
+									"name": "buffer",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Returns the response body as a buffer"
+									},
+									"type": {
+										"type": "reference",
+										"name": "Buffer"
+									}
+								}
+							]
+						},
+						{
+							"id": 169,
+							"name": "json",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 82,
+									"character": 6
+								}
+							],
+							"signatures": [
+								{
+									"id": 170,
+									"name": "json",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Converts the response body to a JSON object or array"
+									},
+									"typeParameter": [
+										{
+											"id": 171,
+											"name": "T",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "array",
+														"elementType": {
+															"type": "intrinsic",
+															"name": "any"
+														}
+													},
+													{
+														"type": "reference",
+														"typeArguments": [
+															{
+																"type": "intrinsic",
+																"name": "string"
+															},
+															{
+																"type": "intrinsic",
+																"name": "unknown"
+															}
+														],
+														"name": "Record"
+													}
+												]
+											},
+											"default": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "intrinsic",
+														"name": "unknown"
+													}
+												],
+												"name": "Record"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"name": "T"
+									}
+								}
+							]
+						},
+						{
+							"id": 163,
+							"name": "parseHeaders",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 54,
+									"character": 14
+								}
+							],
+							"signatures": [
+								{
+									"id": 164,
+									"name": "parseHeaders",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 165,
+											"name": "headers",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "intrinsic",
+													"name": "string"
+												}
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 166,
+							"name": "pushBody",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 74,
+									"character": 10
+								}
+							],
+							"signatures": [
+								{
+									"id": 167,
+									"name": "pushBody",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 168,
+											"name": "buffers",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "array",
+														"elementType": {
+															"type": "reference",
+															"name": "Uint8Array"
+														}
+													},
+													{
+														"type": "array",
+														"elementType": {
+															"type": "reference",
+															"name": "Buffer"
+														}
+													}
+												]
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "void"
+									}
+								}
+							]
+						},
+						{
+							"id": 172,
+							"name": "text",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Response.ts",
+									"line": 89,
+									"character": 6
+								}
+							],
+							"signatures": [
+								{
+									"id": 173,
+									"name": "text",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Converts the response body to a string"
+									},
+									"parameters": [
+										{
+											"id": 174,
+											"name": "encoding",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"name": "BufferEncoding"
+											},
+											"defaultValue": "'utf-8'"
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								152
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								156,
+								155
+							]
+						},
+						{
+							"title": "Accessors",
+							"kind": 262144,
+							"children": [
+								161,
+								159
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								177,
+								175,
+								169,
+								163,
+								166,
+								172
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Response.ts",
+							"line": 28,
+							"character": 21
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						151
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "core/Response.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 180,
+			"name": "core/Serializer",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"comment": {
+				"shortText": "Copyright (c) 2020-2021 August",
+				"text": "Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+			},
+			"children": [
+				{
+					"id": 181,
+					"name": "Serializer",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"comment": {
+						"shortText": "Represents a [Serializer] class, which serializes objects from a specific content-type",
+						"text": "__**Built-in Serializers**__\n- `application/json`: JsonSerializer\n- `*` or `text/html`: TextSerializer\n"
+					},
+					"children": [
+						{
+							"id": 182,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 183,
+									"name": "new Serializer",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Constructs a new instance of [Serializer]"
+									},
+									"typeParameter": [
+										{
+											"id": 184,
+											"name": "T",
+											"kind": 131072,
+											"kindString": "Type parameter",
+											"flags": {},
+											"default": {
+												"type": "intrinsic",
+												"name": "unknown"
+											}
+										}
+									],
+									"parameters": [
+										{
+											"id": 185,
+											"name": "contentType",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The content-type to use to serialize\n"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "reference",
+														"name": "RegExp"
+													}
+												]
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"id": 181,
+										"typeArguments": [
+											{
+												"type": "reference",
+												"name": "T"
+											}
+										],
+										"name": "Serializer"
+									}
+								}
+							]
+						},
+						{
+							"id": 186,
+							"name": "contentType",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The content-type to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Serializer.ts",
+									"line": 32,
+									"character": 20
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "RegExp"
+									}
+								]
+							}
+						},
+						{
+							"id": 187,
+							"name": "serialize",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "core/Serializer.ts",
+									"line": 48,
+									"character": 11
+								}
+							],
+							"signatures": [
+								{
+									"id": 188,
+									"name": "serialize",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Serializes data and returns the output",
+										"returns": "The data represented as [T].",
+										"tags": [
+											{
+												"tag": "throws",
+												"text": "{SyntaxError} When the user hasn't overloaded this function\n"
+											}
+										]
+									},
+									"parameters": [
+										{
+											"id": 189,
+											"name": "data",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The data (that is a Buffer) to serialize"
+											},
+											"type": {
+												"type": "reference",
+												"name": "Buffer"
+											}
+										}
+									],
+									"type": {
+										"type": "reference",
+										"name": "T"
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								182
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								186
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								187
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "core/Serializer.ts",
+							"line": 30,
+							"character": 23
+						}
+					],
+					"typeParameter": [
+						{
+							"id": 190,
+							"name": "T",
+							"kind": 131072,
+							"kindString": "Type parameter",
+							"flags": {},
+							"default": {
+								"type": "intrinsic",
+								"name": "unknown"
+							}
+						}
+					],
+					"extendedBy": [
+						{
+							"type": "reference",
+							"id": 257,
+							"name": "JsonSerializer"
+						},
+						{
+							"type": "reference",
+							"id": 265,
+							"name": "TextSerializer"
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						181
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "core/Serializer.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 247,
+			"name": "index",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 288,
+					"name": "AbortController",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 25
+				},
+				{
+					"id": 287,
+					"name": "AbortSignal",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 2
+				},
+				{
+					"id": 297,
+					"name": "DataLike",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 77
+				},
+				{
+					"id": 282,
+					"name": "HttpClient",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 38,
+							"character": 19
+						}
+					],
+					"target": 212
+				},
+				{
+					"id": 298,
+					"name": "HttpMethod",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 78
+				},
+				{
+					"id": 284,
+					"name": "HttpMethods",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 38,
+							"character": 52
+						}
+					],
+					"target": 208
+				},
+				{
+					"id": 283,
+					"name": "HttpRequestOptions",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 38,
+							"character": 39
+						}
+					],
+					"target": 209
+				},
+				{
+					"id": 292,
+					"name": "Middleware",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 47
+				},
+				{
+					"id": 294,
+					"name": "MiddlewareDefinition",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 55
+				},
+				{
+					"id": 290,
+					"name": "MiddlewareType",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 36
+				},
+				{
+					"id": 293,
+					"name": "MultiMiddleware",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 51
+				},
+				{
+					"id": 295,
+					"name": "MultiMiddlewareDefinition",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 62
+				},
+				{
+					"id": 300,
+					"name": "Request",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 90
+				},
+				{
+					"id": 299,
+					"name": "RequestOptions",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 79
+				},
+				{
+					"id": 296,
+					"name": "Response",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 151
+				},
+				{
+					"id": 291,
+					"name": "RunFunction",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 39
+				},
+				{
+					"id": 289,
+					"name": "Serializer",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"target": 181
+				},
+				{
+					"id": 285,
+					"name": "isRequestOptions",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 38,
+							"character": 70
+						}
+					],
+					"target": 192
+				},
+				{
+					"id": 286,
+					"name": "isUrlLike",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 38,
+							"character": 81
+						}
+					],
+					"target": 195
+				},
+				{
+					"id": 281,
+					"name": "middleware",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 31,
+							"character": 22
+						}
+					],
+					"target": 249
+				},
+				{
+					"id": 248,
+					"name": "version",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {
+						"isConst": true
+					},
+					"comment": {
+						"shortText": "Returns the version of `@augu/orchid`"
+					},
+					"sources": [
+						{
+							"fileName": "index.ts",
+							"line": 28,
+							"character": 20
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					},
+					"defaultValue": "..."
+				}
+			],
+			"groups": [
+				{
+					"title": "References",
+					"kind": 16777216,
+					"children": [
+						288,
+						287,
+						297,
+						282,
+						298,
+						284,
+						283,
+						292,
+						294,
+						290,
+						293,
+						295,
+						300,
+						299,
+						296,
+						291,
+						289,
+						285,
+						286,
+						281
+					]
+				},
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						248
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "index.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 249,
+			"name": "middleware",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 301,
+					"name": "logging",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "middleware/logging.ts",
+							"line": 69,
+							"character": 16
+						}
+					],
+					"target": 251
+				},
+				{
+					"id": 302,
+					"name": "pings",
+					"kind": 16777216,
+					"kindString": "Reference",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "middleware/timer.ts",
+							"line": 62,
+							"character": 21
+						}
+					],
+					"target": 255
+				}
+			],
+			"groups": [
+				{
+					"title": "References",
+					"kind": 16777216,
+					"children": [
+						301,
+						302
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "middleware/index.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 250,
+			"name": "middleware/logging",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 251,
+					"name": "logging",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isConst": true
+					},
+					"sources": [
+						{
+							"fileName": "middleware/logging.ts",
+							"line": 47,
+							"character": 13
+						}
+					],
+					"signatures": [
+						{
+							"id": 252,
+							"name": "logging",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Middleware to log request and responses"
+							},
+							"parameters": [
+								{
+									"id": 253,
+									"name": "options",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {
+										"isOptional": true
+									},
+									"comment": {
+										"text": "The options to use\n"
+									},
+									"type": {
+										"type": "reference",
+										"name": "LoggingOptions"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"id": 51,
+								"typeArguments": [
+									{
+										"type": "reference",
+										"name": "MiddlewareType"
+									},
+									{
+										"type": "reference",
+										"name": "LoggingProps"
+									}
+								],
+								"name": "MultiMiddleware"
+							}
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						251
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "middleware/logging.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 254,
+			"name": "middleware/timer",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 255,
+					"name": "pings",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {
+						"isConst": true
+					},
+					"sources": [
+						{
+							"fileName": "middleware/timer.ts",
+							"line": 37,
+							"character": 9
+						}
+					],
+					"type": {
+						"type": "reference",
+						"id": 51,
+						"typeArguments": [
+							{
+								"type": "union",
+								"types": [
+									{
+										"type": "reference",
+										"id": 38,
+										"name": "MiddlewareType.Request"
+									},
+									{
+										"type": "reference",
+										"id": 37,
+										"name": "MiddlewareType.Response"
+									}
+								]
+							},
+							{
+								"type": "reference",
+								"name": "PingsProps"
+							}
+						],
+						"name": "MultiMiddleware"
+					},
+					"defaultValue": "..."
+				}
+			],
+			"groups": [
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						255
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "middleware/timer.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 256,
+			"name": "serializers/JsonSerializer",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 257,
+					"name": "JsonSerializer",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"children": [
+						{
+							"id": 258,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 259,
+									"name": "new JsonSerializer",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"id": 257,
+										"name": "JsonSerializer"
+									},
+									"overwrites": {
+										"type": "reference",
+										"id": 183,
+										"name": "Serializer.constructor"
+									}
+								}
+							],
+							"overwrites": {
+								"type": "reference",
+								"id": 182,
+								"name": "Serializer.constructor"
+							}
+						},
+						{
+							"id": 263,
+							"name": "contentType",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The content-type to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Serializer.ts",
+									"line": 32,
+									"character": 20
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "RegExp"
+									}
+								]
+							},
+							"inheritedFrom": {
+								"type": "reference",
+								"id": 186,
+								"name": "Serializer.contentType"
+							}
+						},
+						{
+							"id": 260,
+							"name": "serialize",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "serializers/JsonSerializer.ts",
+									"line": 30,
+									"character": 11
+								}
+							],
+							"signatures": [
+								{
+									"id": 261,
+									"name": "serialize",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 262,
+											"name": "data",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"name": "Buffer"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "any"
+									},
+									"overwrites": {
+										"type": "reference",
+										"id": 188,
+										"name": "Serializer.serialize"
+									}
+								}
+							],
+							"overwrites": {
+								"type": "reference",
+								"id": 187,
+								"name": "Serializer.serialize"
+							}
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								258
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								263
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								260
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "serializers/JsonSerializer.ts",
+							"line": 25,
+							"character": 27
+						}
+					],
+					"extendedTypes": [
+						{
+							"type": "reference",
+							"id": 181,
+							"typeArguments": [
+								{
+									"type": "intrinsic",
+									"name": "any"
+								}
+							],
+							"name": "Serializer"
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						257
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "serializers/JsonSerializer.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 264,
+			"name": "serializers/TextSerializer",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 265,
+					"name": "TextSerializer",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"children": [
+						{
+							"id": 266,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 267,
+									"name": "new TextSerializer",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"id": 265,
+										"name": "TextSerializer"
+									},
+									"overwrites": {
+										"type": "reference",
+										"id": 183,
+										"name": "Serializer.constructor"
+									}
+								}
+							],
+							"overwrites": {
+								"type": "reference",
+								"id": 182,
+								"name": "Serializer.constructor"
+							}
+						},
+						{
+							"id": 271,
+							"name": "contentType",
+							"kind": 1024,
+							"kindString": "Property",
+							"flags": {
+								"isPublic": true
+							},
+							"comment": {
+								"shortText": "The content-type to use"
+							},
+							"sources": [
+								{
+									"fileName": "core/Serializer.ts",
+									"line": 32,
+									"character": 20
+								}
+							],
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "intrinsic",
+										"name": "string"
+									},
+									{
+										"type": "reference",
+										"name": "RegExp"
+									}
+								]
+							},
+							"inheritedFrom": {
+								"type": "reference",
+								"id": 186,
+								"name": "Serializer.contentType"
+							}
+						},
+						{
+							"id": 268,
+							"name": "serialize",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {},
+							"sources": [
+								{
+									"fileName": "serializers/TextSerializer.ts",
+									"line": 30,
+									"character": 11
+								}
+							],
+							"signatures": [
+								{
+									"id": 269,
+									"name": "serialize",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 270,
+											"name": "data",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "reference",
+												"name": "Buffer"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									},
+									"overwrites": {
+										"type": "reference",
+										"id": 188,
+										"name": "Serializer.serialize"
+									}
+								}
+							],
+							"overwrites": {
+								"type": "reference",
+								"id": 187,
+								"name": "Serializer.serialize"
+							}
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								266
+							]
+						},
+						{
+							"title": "Properties",
+							"kind": 1024,
+							"children": [
+								271
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								268
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "serializers/TextSerializer.ts",
+							"line": 25,
+							"character": 27
+						}
+					],
+					"extendedTypes": [
+						{
+							"type": "reference",
+							"id": 181,
+							"typeArguments": [
+								{
+									"type": "intrinsic",
+									"name": "string"
+								}
+							],
+							"name": "Serializer"
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						265
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "serializers/TextSerializer.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 272,
+			"name": "utils",
+			"kind": 1,
+			"kindString": "Module",
+			"flags": {},
+			"children": [
+				{
+					"id": 273,
+					"name": "Util",
+					"kind": 128,
+					"kindString": "Class",
+					"flags": {},
+					"comment": {
+						"shortText": "Extra utilities used through-out orchid"
+					},
+					"children": [
+						{
+							"id": 279,
+							"name": "constructor",
+							"kind": 512,
+							"kindString": "Constructor",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 280,
+									"name": "new Util",
+									"kind": 16384,
+									"kindString": "Constructor signature",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"id": 273,
+										"name": "Util"
+									}
+								}
+							]
+						},
+						{
+							"id": 275,
+							"name": "matchPathParams",
+							"kind": 2048,
+							"kindString": "Method",
+							"flags": {
+								"isStatic": true
+							},
+							"sources": [
+								{
+									"fileName": "utils.ts",
+									"line": 38,
+									"character": 24
+								}
+							],
+							"signatures": [
+								{
+									"id": 276,
+									"name": "matchPathParams",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"comment": {
+										"shortText": "Finds all the matches for `:...` in a URL and converts it"
+									},
+									"parameters": [
+										{
+											"id": 277,
+											"name": "url",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The URL to use"
+											},
+											"type": {
+												"type": "union",
+												"types": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "reference",
+														"name": "URL"
+													}
+												]
+											}
+										},
+										{
+											"id": 278,
+											"name": "params",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"comment": {
+												"text": "The parameters the request has specified\n"
+											},
+											"type": {
+												"type": "reference",
+												"typeArguments": [
+													{
+														"type": "intrinsic",
+														"name": "string"
+													},
+													{
+														"type": "intrinsic",
+														"name": "any"
+													}
+												],
+												"name": "Record"
+											},
+											"defaultValue": "{}"
+										}
+									],
+									"type": {
+										"type": "union",
+										"types": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "reference",
+												"name": "URL"
+											}
+										]
+									}
+								}
+							]
+						}
+					],
+					"groups": [
+						{
+							"title": "Constructors",
+							"kind": 512,
+							"children": [
+								279
+							]
+						},
+						{
+							"title": "Methods",
+							"kind": 2048,
+							"children": [
+								275
+							]
+						}
+					],
+					"sources": [
+						{
+							"fileName": "utils.ts",
+							"line": 29,
+							"character": 17
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Classes",
+					"kind": 128,
+					"children": [
+						273
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "utils.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "Modules",
+			"kind": 1,
+			"children": [
+				191,
+				1,
+				35,
+				76,
+				150,
+				180,
+				247,
+				249,
+				250,
+				254,
+				256,
+				264,
+				272
+			]
+		}
+	]
+}
