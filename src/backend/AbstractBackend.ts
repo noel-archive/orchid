@@ -19,15 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { Serializer } from '../core/Serializer';
-
-export class JsonSerializer extends Serializer<any> {
-  constructor() {
-    super(/application\/json/gi);
-  }
-
-  serialize(data: Buffer) {
-    return JSON.parse(data.toString());
-  }
-}

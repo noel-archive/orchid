@@ -19,33 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-/**
- * Represents a [Serializer] class, which serializes objects from a specific content-type
- *
- * __**Built-in Serializers**__
- * - `application/json`: JsonSerializer
- * - `*` or `text/html`: TextSerializer
- */
-export class Serializer<T = unknown> {
-  /** The content-type to use */
-  public contentType: RegExp | string;
-
-  /**
-   * Constructs a new instance of [Serializer]
-   * @param contentType The content-type to use to serialize
-   */
-  constructor(contentType: string | RegExp) {
-    this.contentType = contentType;
-  }
-
-  /**
-   * Serializes data and returns the output
-   * @param data The data (that is a Buffer) to serialize
-   * @returns The data represented as [T].
-   * @throws {SyntaxError} When the user hasn't overloaded this function
-   */
-  serialize(data: Buffer): T {
-    throw new SyntaxError(`Serializer.serialize was not over-ridden (content type: ${this.contentType})`);
-  }
-}

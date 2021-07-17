@@ -19,15 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { Serializer } from '../core/Serializer';
-
-export class TextSerializer extends Serializer<string> {
-  constructor() {
-    super('*');
-  }
-
-  serialize(data: Buffer) {
-    return data.toString();
-  }
-}
