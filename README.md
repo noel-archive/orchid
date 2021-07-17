@@ -1,7 +1,7 @@
 # @augu/orchid
 > 🛫 **Simple and lightweight way to create a HTTP request to the world, with more features sprinkled in.**
 >
-> 👉 View other branches: [1.x branch](https://github.com/auguwu/orchid/tree/1.x) | [2.x branch](https://github.com/auguwu/orchid/tree/2.x)
+> 👉 View other branches: [1.x branch](https://github.com/auguwu/orchid/tree/1.x) | [2.x branch](https://github.com/auguwu/orchid/tree/2.x) | [3.x branch](https://github.com/auguwu/orchid/tree/3.x)
 
 ## Features
 - Middleware: Orchid has a Express-like interface for creating middleware to extend classes like Request, Response, and HttpClient.
@@ -24,14 +24,12 @@ orchid
 ```
 
 ## Install
-@augu/orchid requires Node.js v14 or higher to use since it uses ES2020 features like optional chaining (`?.`)
-
 ```sh
 $ npm install @augu/orchid
 ```
 
 ## Middleware
-Orchid allows to have custom middleware to do whatever you want from a request or response. An example would be:
+**orchid** allows to have custom middleware to do whatever you want from a request or response. An example would be:
 
 ```js
 const { MiddlewareType } = require('@augu/orchid');
@@ -58,7 +56,7 @@ module.exports = {
 ```
 
 ## Serialization
-Orchid allows you to serialize your own data without doing it yourself every time you make a request. Currently, this is only limited
+**orchid** allows you to serialize your own data without doing it yourself every time you make a request. Currently, this is only limited
 to `Response.body()`.
 
 An example on building a XML serializer would look like this:
@@ -91,6 +89,17 @@ orchid.get({
   serializers: [new XMLSerializer()]
 });
 ```
+
+## Request Backends
+**orchid** has the ability to create your own http request backend. If you need debugging tools on requests, performance, etc, it is recommended
+to use the built-in middleware to check on request and response latency and response status.
+
+The built-in backends are:
+
+- [NodeHttpBackend](./src/backend/NodeHttpBackend.ts) - Uses the built-in `http` module
+- [UndiciBackend](./src/backend/UndiciBackend.ts) - Uses **undici** which is far faster than the `http` module, this will be the defaukt
+backend if the `undici` module is installed.
+- [IsomorphicBackend](./src/backend/IsomorphicBackend.ts) - Implements a request backend that is compatible with both the browser and Node.js. This has to be explicitly enabled, using the `.isomorphic()` static method in `HttpClient`.
 
 ## Migration Guide
 ### v1.0 / v1.1 -> v1.2
@@ -136,6 +145,9 @@ Read the [migration](./migrating/v2.md) notes for more information.
 
 ## v2.x -> v3.x
 Read the [migration](./migrating/v3.md) notes for more information.
+
+## v3.x -> v4.x
+Read the [migration](./migrating/v4.md) notes for more information.
 
 ## License
 **@augu/orchid** is released under the MIT License, read [here](/LICENSE) for more information. :heart:
