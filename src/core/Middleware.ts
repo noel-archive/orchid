@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,73 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import type { Response } from './Response';
+import type { Request } from './Request';
+
+/**
+ * Represents a definition object for constructing [[Middleware]]s.
+ */
+export interface MiddlewareDefinition {
+  [x: string]: any; // let any parameter be here
+
+  /**
+   * The name of this [[Middleware]].
+   */
+  name: string;
+
+  /**
+   * Function to call when [[HttpClient.use]] is called or when creatting a new instance of [[HttpClient]]
+   * with [[HttpClientOptions.middleware]] defined.
+   */
+  init?(): void;
+
+  /**
+   * Function to receive when a request is being executed.
+   * @param request The request object
+   */
+  onRequest?(request: Request): void;
+
+  /**
+   * Function to receive when a response has been created.
+   * @param response The response object
+   */
+  onResponse?(response: Response): void;
+}
+
+/**
+ * Represents a class to define middleware within **orchid**. You don't use
+ * this class, this is just an abstraction class for a [[MiddlewareDefinition]].
+ */
+export class Middleware {
+  // The definition object that was received
+  private _def: MiddlewareDefinition;
+
+  /**
+   * The name of this [[Middleware]] object.
+   */
+  public name: string;
+
+  constructor(definition: MiddlewareDefinition) {
+    this.name = definition.name;
+    this._def = definition;
+  }
+
+  /**
+   * Function to receive when a request is being executed.
+   * @param request The request object
+   */
+  onRequest(request: Request) {
+    if (this._def.onRequest !== undefined)
+      this._def.onRequest(request);
+  }
+
+  /**
+   * Function to receive when a response has been created.
+   * @param response The response object
+   */
+  onResponse(res: Response) {
+    if (this._def.onResponse !== undefined)
+      return this._def.onResponse(res);
+  }
+}

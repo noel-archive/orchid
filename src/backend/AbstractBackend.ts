@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import type { URL } from 'url';
+
+/**
+ * Represents a factory for constructing http request / responses for this specific
+ * [[**AbstractBackend**]].
+ */
+export abstract class AbstractBackend<Req = any, Res = any, Opts = any> {
+  /**
+   * The name of this backend.
+   */
+  public abstract name: string;
+
+  /**
+   * Constructs a new [[Req]] (request).
+   * @param url The URL object to use
+   * @param options The http request options
+   */
+  public abstract newRequest(url: URL, options: Opts): Req;
+
+  /**
+   * Constructs a new [[Res]] (response).
+   * @param body An array of buffers to construct a response body from
+   */
+  public abstract newResponse(body: Buffer[]): Res;
+}

@@ -32,14 +32,9 @@ $ npm install @augu/orchid
 **orchid** allows to have custom middleware to do whatever you want from a request or response. An example would be:
 
 ```js
-const { MiddlewareType } = require('@augu/orchid');
-
 module.exports = {
+  // the name of the middleware
   name: 'my.middleware',
-
-  // this is a "MultiMiddleware" type
-  types: [MiddlewareType.Request, MiddlewareType.Response],
-
   init() {
     // called when the middleware is added
   },
@@ -54,6 +49,8 @@ module.exports = {
   }
 };
 ```
+
+If you want a full example of a middleware, check out [`orchid-sentry`](https://github.com/Noelware/orchid-sentry).
 
 ## Serialization
 **orchid** allows you to serialize your own data without doing it yourself every time you make a request. Currently, this is only limited
@@ -99,7 +96,6 @@ The built-in backends are:
 - [NodeHttpBackend](./src/backend/NodeHttpBackend.ts) - Uses the built-in `http` module
 - [UndiciBackend](./src/backend/UndiciBackend.ts) - Uses **undici** which is far faster than the `http` module, this will be the defaukt
 backend if the `undici` module is installed.
-- [IsomorphicBackend](./src/backend/IsomorphicBackend.ts) - Implements a request backend that is compatible with both the browser and Node.js. This has to be explicitly enabled, using the `.isomorphic()` static method in `HttpClient`.
 
 ## Migration Guide
 ### v1.0 / v1.1 -> v1.2
