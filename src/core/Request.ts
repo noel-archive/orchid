@@ -20,4 +20,14 @@
  * SOFTWARE.
  */
 
+import * as types from '../types';
+
+/**
+ * Represents a object of the available [Request] options available.
+ */
+export interface RequestOptions {
+  headers?: Record<string, unknown>;
+  data?: types.DataLike;
+}
+
 export abstract class Request {}

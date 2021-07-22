@@ -1,6 +1,7 @@
 {
   "excludeProtected": true,
   "excludePrivate": true,
+  "hideBreadcrumbs": true,
   "tsconfig": "tsconfig.json",
   "readme": "README.md",
   "name": "orchid"

@@ -20,28 +20,32 @@
  * SOFTWARE.
  */
 
-import { HttpMethod } from './types';
+import type { Readable } from 'stream';
 
 /**
- * Represents all the [[HttpMethod]]s available as an array of settings
+ * Represents the `data` structure available.
  */
-export const HttpMethods: readonly HttpMethod[] = [
-  'options',
-  'connect',
-  'delete',
-  'trace',
-  'head',
-  'post',
-  'put',
-  'get',
-  'patch',
-  'OPTIONS',
-  'CONNECT',
-  'DELETE',
-  'TRACE',
-  'HEAD',
-  'POST',
-  'PUT',
-  'GET',
-  'PATCH',
-];
+export type DataLike = string | Buffer | Record<string, unknown> | any[] | Readable;
+
+/**
+ * Represents all the HTTP method verbs available under HTTP/1.1
+ */
+export type HttpMethod =
+  | 'options'
+  | 'connect'
+  | 'delete'
+  | 'trace'
+  | 'head'
+  | 'post'
+  | 'put'
+  | 'get'
+  | 'patch'
+  | 'OPTIONS'
+  | 'CONNECT'
+  | 'DELETE'
+  | 'TRACE'
+  | 'HEAD'
+  | 'POST'
+  | 'PUT'
+  | 'GET'
+  | 'PATCH';
