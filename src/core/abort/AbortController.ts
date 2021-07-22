@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { AbortSignal } from './AbortSignal';
+
+/**
+ * Polyfill for AbortController specified here: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+ *
+ * I made my own polyfill to not add over-head polyfill dependencies
+ */
+export class AbortController {
+  public signal: AbortSignal = new AbortSignal();
+
+  /**
+   * Aborts the request
+   */
+  abort() {
+    if (this.signal.aborted)
+      return;
+
+    this.signal.aborted = true;
+    this.signal.dispatchEvent('abort');
+  }
+
+  /**
+   * Returns a string representation of this object
+   */
+  toString() {
+    return '[object AbortController]';
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'orchid.AbortController';
+  }
+}

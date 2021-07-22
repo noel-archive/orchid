@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { EventBus } from '@augu/utils';
+
+/**
+  * List of events available to a single [[AbortSignal]]
+  */
+interface AbortSignalEvents {
+  /**
+   * Emitted when [[AbortController.abort]] is called.
+   * @param event The event packet
+   */
+  onabort(event: AbortSignalEvent): void;
+}
+
+interface AbortSignalEvent {
+  target: AbortSignal;
+  type: 'abort';
+}
+
+type DispatchEventName<K extends string> = K extends `on${infer P}` ? P : never;
+
+/**
+  * Polyfill for [[AbortSignal]] without adding any over-head dependencies
+  */
+export class AbortSignal {
+  /**
+    * The event emitter to dispatch events
+    */
+  public eventEmitter: EventBus<AbortSignalEvents> = new EventBus();
+
+  /**
+    * If this signal is aborted or not
+    */
+  public aborted: boolean = false;
+
+  get [Symbol.toStringTag]() {
+    return 'orchid.AbortSignal';
+  }
+
+  /**
+    * Returns a string representation of this object
+    */
+  toString() {
+    return '[object AbortSignal]';
+  }
+
+  /**
+    * Pops a event's specific listener from the callstack.
+    * @param name The name of the event to pop out
+    * @param handler The handler function
+    */
+  removeEventListener<K extends keyof AbortSignalEvents>(name: K, handler: AbortSignalEvents[K]) {
+    this.eventEmitter.removeListener(name, handler);
+  }
+
+  /**
+    * Pushes a new event to the event callstack
+    * @param name The name of the event to push
+    * @param handler The handler function
+    */
+  addEventListener<K extends keyof AbortSignalEvents>(name: K, handler: AbortSignalEvents[K]) {
+    this.eventEmitter.on(name, handler);
+  }
+
+  /**
+    * Dispatch a event from this [[AbortSignal]]
+    * @param type The type to dispatch
+    */
+  dispatchEvent<K extends keyof AbortSignalEvents>(type: DispatchEventName<K>) {
+    const event: AbortSignalEvent = { type, target: this };
+    const handler = `on${type}`;
+
+    if (typeof this[handler] === 'function')
+      this[handler](event);
+
+    this.eventEmitter.emit(handler as keyof AbortSignalEvents, event);
+  }
+}
