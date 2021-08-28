@@ -20,4 +20,86 @@
  * SOFTWARE.
  */
 
-export abstract class Response {}
+import { IncomingMessage, STATUS_CODES } from 'http';
+
+/**
+ * Represents a object of constructing a [[Response]].
+ */
+export interface ResponseOptions {
+  /**
+   * The status code of the [[Response]].
+   */
+  statusCode: number;
+
+  /**
+   * List of the response headers that was returned.
+   */
+  headers: Record<string, string | readonly string[]>;
+
+  /**
+   * Returns the current incoming message object from the http module.
+   * This is only supported in the node.js backend only, not in undici backend.
+   */
+  stream?: IncomingMessage;
+}
+
+/**
+ * Represents a http response from the initial request
+ */
+export class Response {
+  /**
+   * Returns the status code of this [[Response]].
+   */
+  public statusCode: number = 200;
+
+  /**
+   * List of the response headers that was returned.
+   */
+  public headers: Record<string, string | readonly string[]> = {};
+  #stream?: IncomingMessage;
+  #body!: Buffer;
+
+  /** @internal */
+  constructor(data: Buffer, options: ResponseOptions) {
+    this.statusCode = options.statusCode;
+    this.headers = options.headers;
+    this.#body = data;
+  }
+
+  /**
+   * Returns the status text, i.e, `200 OK`.
+   */
+  get statusText() {
+    return `${this.statusCode} ${STATUS_CODES[this.statusCode]}`;
+  }
+
+  /**
+   * Returns the body payload as a JSON object casted as [[T]].
+   */
+  json<T extends { [x: string]: any } | any[] = Record<string, unknown>>(): T {
+    return JSON.parse(this.#body.toString());
+  }
+
+  /**
+   * Returns the body payload a Buffer object
+   */
+  buffer() {
+    return this.#body;
+  }
+
+  /**
+   * Returns the body payload as a string of text.
+   * @param encoding The encoding to use to de-serialize
+   */
+  text(encoding: BufferEncoding = 'utf-8') {
+    return this.#body.toString(encoding);
+  }
+
+  /**
+   * Returns the current incoming message object from the http module.
+   * This is only supported in the node.js backend only, not in undici backend.
+   */
+  stream() {
+    return this.#stream;
+  }
+}

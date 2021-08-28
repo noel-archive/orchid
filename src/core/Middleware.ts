@@ -51,6 +51,13 @@ export interface MiddlewareDefinition {
    * @param response The response object
    */
   onResponse?(response: Response): void;
+
+  /**
+   * Function to receive when an error occured while running the request.
+   * @param request The request object
+   * @param error The error that occured
+   */
+  onRequestError?(request: Request, error: Error): void;
 }
 
 /**
@@ -76,8 +83,7 @@ export class Middleware {
    * @param request The request object
    */
   onRequest(request: Request) {
-    if (this._def.onRequest !== undefined)
-      this._def.onRequest(request);
+    if (this._def.onRequest !== undefined) this._def.onRequest(request);
   }
 
   /**
@@ -85,7 +91,16 @@ export class Middleware {
    * @param response The response object
    */
   onResponse(res: Response) {
-    if (this._def.onResponse !== undefined)
-      return this._def.onResponse(res);
+    if (this._def.onResponse !== undefined) return this._def.onResponse(res);
+  }
+
+  /**
+   * Function to receive when an error occured while running the request.
+   * @param request The request object
+   * @param error The error that occured
+   */
+  onRequestError(request: Request, error: Error) {
+    if (this._def.onRequestError !== undefined)
+      return this._def.onRequestError(request, error);
   }
 }

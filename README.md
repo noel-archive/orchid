@@ -14,13 +14,13 @@
 ## Usage
 
 ```js
-const { HttpClient, middleware } = require("@augu/orchid");
+const { HttpClient, middleware } = require('@augu/orchid');
 
 const orchid = new HttpClient();
 orchid.use(middleware.logging());
 
 orchid
-  .get("https://floofy.dev")
+  .get('https://floofy.dev')
   .then((res) => console.log(res.body()))
   .catch((error) => console.error(error));
 ```
@@ -38,7 +38,7 @@ $ npm install @augu/orchid
 ```js
 module.exports = {
   // the name of the middleware
-  name: "my.middleware",
+  name: 'my.middleware',
   init() {
     // called when the middleware is added
   },
@@ -55,42 +55,6 @@ module.exports = {
 ```
 
 If you want a full example of a middleware, check out [`orchid-sentry`](https://github.com/Noelware/orchid-sentry).
-
-## Serialization
-
-**orchid** allows you to serialize your own data without doing it yourself every time you make a request. Currently, this is only limited
-to `Response.body()`.
-
-An example on building a XML serializer would look like this:
-
-```js
-const { Serializer } = require("@augu/orchid");
-
-module.exports = class XMLSerializer extends Serializer {
-  constructor() {
-    super(/application\/xhtml[+]xml/gi);
-  }
-
-  serialize(data) {
-    const str = data.toString();
-    return someXMLParser(str);
-  }
-};
-```
-
-Then we inject it into our http client or adding it with `orchid#method`
-
-```js
-// HttpClient
-const client = new HttpClient({
-  serializers: [new XMLSerializer()],
-});
-
-// Method function
-orchid.get({
-  serializers: [new XMLSerializer()],
-});
-```
 
 ## Request Backends
 
@@ -111,8 +75,8 @@ All this version really does is add `middleware` or `agent` (or both!) to the co
 
 ```js
 new HttpClient([]); // adds middleware only
-new HttpClient("my agent"); // adds the agent only
-new HttpClient([], "my agent"); // adds middleware and the agent
+new HttpClient('my agent'); // adds the agent only
+new HttpClient([], 'my agent'); // adds middleware and the agent
 ```
 
 ### v1.2 -> v1.3

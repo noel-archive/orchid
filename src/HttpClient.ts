@@ -19,3 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import type { MiddlewareDefinition } from './core/Middleware';
+import { UndiciHttpClient } from './core/backend/undici/UndiciHttpClient';
+import { NodeHttpClient } from './core/backend/node/NodeHttpClient';
+
+/**
+ * Represents a object of constructing a [[HttpClient]].
+ */
+export interface HttpClientOptions {
+  middleware?: MiddlewareDefinition[];
+  userAgent?: string;
+  defaults?: HttpClientDefaults;
+  baseUrl?: string;
+}
+
+export interface HttpClientDefaults {
+  followRedirects?: boolean;
+  compress?: boolean;
+  headers?: Record<string, any>;
+}
+
+export class HttpClient {}

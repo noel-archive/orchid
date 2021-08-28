@@ -2,5 +2,9 @@
   "semi": true,
   "tabWidth": 2,
   "singleQuote": true,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false
 }

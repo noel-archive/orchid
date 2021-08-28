@@ -7,7 +7,6 @@
   "types": "index.d.ts",
   "repository": "https://github.com/Noelware/orchid",
   "bugs": "https://github.com/Noelware/orchid/issues",
-  "homepage": "https://orchid.floofy.dev",
   "funding": {
     "url": "https://github.com/sponsors/auguwu"
   },
@@ -17,18 +16,17 @@
     "index.d.ts"
   ],
   "exports": {
-    ".": [
-      {
-        "require": "./build/index.js",
-        "import": "./esm.mjs"
-      },
-      "./build/index.js"
-    ],
-    "./esm": "./build/index.mjs"
+    ".": {
+      "require": "./build/index.js",
+      "import": "./esm.js"
+    },
+    "./": [
+      "./*"
+    ]
   },
   "maintainers": [
     {
-      "name": "Chris \"August\" Hernandez",
+      "name": "Noel",
       "email": "cutie@floofy.dev",
       "url": "https://floofy.dev"
     }
@@ -36,7 +34,6 @@
   "scripts": {
     "prepare": "yarn build",
     "build": "yarn lint && rm -fr build && tsc",
-    "docs": "typedoc src/index.ts --theme minimal --out docs.json && cat orchid.floofy.dev >> docs/CNAME",
     "lint": "eslint src --ext .ts --fix"
   },
   "engines": {
@@ -48,20 +45,20 @@
     "form-data": "4.0.0"
   },
   "devDependencies": {
-    "@augu/eslint-config": "2.1.2",
+    "@augu/eslint-config": "2.2.0",
     "@augu/tsconfig": "1.1.1",
-    "@types/node": "14.17.5",
-    "@typescript-eslint/eslint-plugin": "4.28.4",
-    "@typescript-eslint/parser": "4.28.4",
-    "eslint": "7.31.0",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/node": "16.7.4",
+    "@typescript-eslint/eslint-plugin": "4.29.3",
+    "@typescript-eslint/parser": "4.29.3",
+    "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-prettier": "3.4.1",
     "prettier": "2.3.2",
-    "typedoc": "0.21.4",
-    "typedoc-plugin-markdown": "3.10.4",
-    "typescript": "4.3.5"
+    "typescript": "4.4.2"
   },
   "peerDependencies": {
     "isomorphic-fetch": "3.0.0",
-    "undici": "4.1.1"
+    "undici": "4.5.1"
   }
 }

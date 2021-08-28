@@ -19,3 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { Request, RequestOptions } from '../../Request';
+import { IsomorphicHttpClient } from './IsomorphicHttpClient';
+import { Response } from '../../Response';
+
+export class NodeRequest extends Request<RequestOptions, IsomorphicHttpClient> {
+  /** @inheritdoc */
+  override execute() {
+    // this.client.executeMiddleware('onrequest');
+
+    return new Promise<Response>((resolve, reject) => {
+      // TODO: this
+    });
+  }
+}
