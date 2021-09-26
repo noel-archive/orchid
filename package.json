@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@augu/collections": "1.1.0",
-    "@augu/utils": "1.5.5",
+    "@augu/utils": "1.5.6",
     "form-data": "4.0.0",
     "undici": "3.3.6"
   },
